@@ -160,39 +160,39 @@ Keep these constraints visible during the entire project.
 
 ## 2.1 Practice Home Layout
 
-- [ ] Replace Practice placeholder with Choose Your Drill screen
-- [ ] Add card for Cat/Clock
-- [ ] Add card for Character Creation
-- [ ] Add card for Two-Character Scenes
-- [ ] Add card for A-to-C / Bad Idea / Initiation
-- [ ] Add card for Five Line Game Drill
-- [ ] Add card for Tools
-- [ ] Each card has a name
-- [ ] Each card has a short subtitle
-- [ ] Cards do not display saved settings
-- [ ] Layout works on narrow phones
+- [x] Replace Practice placeholder with Choose Your Drill screen
+- [x] Add card for Cat/Clock
+- [x] Add card for Character Creation
+- [x] Add card for Two-Character Scenes
+- [x] Add card for A-to-C / Bad Idea / Initiation
+- [x] Add card for Five Line Game Drill
+- [x] Add card for Tools
+- [x] Each card has a name
+- [x] Each card has a short subtitle
+- [x] Cards do not display saved settings
+- [x] Layout works on narrow phones
 - [ ] Layout has room to adapt for tablets later
 
 ## 2.2 Drill Start Placeholder Routing
 
-- [ ] Tapping Cat/Clock opens Cat/Clock start placeholder
-- [ ] Tapping Character Creation opens Character Creation start placeholder
-- [ ] Tapping Two-Character Scenes opens Two-Character Scenes start placeholder
-- [ ] Tapping A-to-C / Bad Idea / Initiation opens A-to-C start placeholder
-- [ ] Tapping Five Line Game Drill opens Five Line Game start placeholder
-- [ ] Tapping Tools opens Tools placeholder
-- [ ] Each drill start placeholder shows drill name
-- [ ] Each drill start placeholder shows Start button
-- [ ] Each drill start placeholder shows Configure button
-- [ ] Each drill start placeholder shows info/help button
+- [x] Tapping Cat/Clock opens Cat/Clock start placeholder
+- [x] Tapping Character Creation opens Character Creation start placeholder
+- [x] Tapping Two-Character Scenes opens Two-Character Scenes start placeholder
+- [x] Tapping A-to-C / Bad Idea / Initiation opens A-to-C start placeholder
+- [x] Tapping Five Line Game Drill opens Five Line Game start placeholder
+- [x] Tapping Tools opens Tools placeholder
+- [x] Each drill start placeholder shows drill name
+- [x] Each drill start placeholder shows Start button
+- [x] Each drill start placeholder shows Configure button
+- [x] Each drill start placeholder shows info/help button
 
 ## 2.3 Tests
 
-- [ ] Widget test: all five drill cards appear
-- [ ] Widget test: Tools card appears
-- [ ] Widget test: tapping each drill card opens correct start screen
-- [ ] Widget test: tapping Tools opens Tools screen
-- [ ] Widget test: each start screen has Start, Configure, and info/help controls
+- [x] Widget test: all five drill cards appear
+- [x] Widget test: Tools card appears
+- [x] Widget test: tapping each drill card opens correct start screen
+- [x] Widget test: tapping Tools opens Tools screen
+- [x] Widget test: each start screen has Start, Configure, and info/help controls
 
 ---
 

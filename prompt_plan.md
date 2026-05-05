@@ -512,7 +512,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 2 — Practice Home Cards and Placeholder Routing
+## Prompt 2 — Practice Home Cards and Placeholder Routing [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
