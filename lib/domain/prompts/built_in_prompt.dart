@@ -3,7 +3,7 @@
 
 import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
 
-class BuiltInPrompt {
+final class BuiltInPrompt {
   const BuiltInPrompt({
     required this.id,
     required this.text,

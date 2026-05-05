@@ -3,49 +3,50 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/features/practice/drill_start_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
 
-  static final List<({String name, String subtitle, Widget icon, Color color})> _drills = [
+  static final List<({DrillId drillId, String subtitle, Widget icon, Color color})> _drills = [
     (
-      name: 'Cat/Clock',
+      drillId: DrillId.catClock,
       subtitle: 'Connect two prompts through association.',
       icon: const FaIcon(FontAwesomeIcons.cat, color: Colors.white, size: 20),
       color: const Color(0xFF0EA5E9), // sky blue
     ),
     (
-      name: 'Character Creation',
+      drillId: DrillId.characterCreation,
       subtitle: 'Cycle through solo character reps.',
       icon: const Icon(Icons.person, color: Colors.white, size: 24),
       color: const Color(0xFFF97316), // vivid orange
     ),
     (
-      name: 'Two-Character Scenes',
+      drillId: DrillId.twoCharacterScenes,
       subtitle: 'Prompt + timed two-character scene.',
       icon: const Icon(Icons.people, color: Colors.white, size: 24),
       color: const Color(0xFF22C55E), // vivid green
     ),
     (
-      name: 'A-to-C / Bad Idea / Initiation',
+      drillId: DrillId.atoC,
       subtitle: 'Rapid-fire prompt reps.',
       icon: const Icon(Icons.flash_on, color: Colors.white, size: 24),
       color: const Color(0xFFEF4444), // vivid red
     ),
     (
-      name: 'Five Line Game Drill',
+      drillId: DrillId.fiveLineGame,
       subtitle: 'One prompt, fast five-line scenes.',
       icon: const FaIcon(FontAwesomeIcons.film, color: Colors.white, size: 20),
       color: const Color(0xFF7C3AED), // violet (matches brand seed)
     ),
   ];
 
-  void _openDrill(BuildContext context, String drillName) {
+  void _openDrill(BuildContext context, DrillId drillId) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => DrillStartScreen(drillName: drillName),
+        builder: (_) => DrillStartScreen(drillId: drillId),
       ),
     );
   }
@@ -84,11 +85,11 @@ class PracticeScreen extends StatelessWidget {
               delegate: SliverChildListDelegate([
                 ..._drills.map(
                   (drill) => _DrillCard(
-                    name: drill.name,
+                    drillId: drill.drillId,
                     subtitle: drill.subtitle,
                     icon: drill.icon,
                     color: drill.color,
-                    onTap: () => _openDrill(context, drill.name),
+                    onTap: () => _openDrill(context, drill.drillId),
                   ),
                 ),
                 _ToolsCard(onTap: () => _openTools(context)),
@@ -105,14 +106,14 @@ class PracticeScreen extends StatelessWidget {
 
 class _DrillCard extends StatelessWidget {
   const _DrillCard({
-    required this.name,
+    required this.drillId,
     required this.subtitle,
     required this.icon,
     required this.color,
     required this.onTap,
   });
 
-  final String name;
+  final DrillId drillId;
   final String subtitle;
   final Widget icon;
   final Color color;
@@ -149,7 +150,7 @@ class _DrillCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        drillId.displayName,
                         style: tt.titleLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: cs.onSurface,

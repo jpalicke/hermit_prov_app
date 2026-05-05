@@ -9,10 +9,12 @@ class CustomPrompt {
     required this.text,
     required this.category,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   final String id;
   final String text;
   final PromptCategory category;
   final DateTime createdAt;
+  final DateTime updatedAt;
 }

@@ -1,5 +1,8 @@
 // ABOUTME: Sealed class hierarchy for per-drill settings with built-in defaults.
 // ABOUTME: Each subclass covers one drill's configurable options and allowed values.
+//
+// Usage pattern: switch (settings) { case CatClockSettings s: ... }
+// The sealed keyword enforces exhaustive switches at compile time.
 
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
@@ -8,6 +11,11 @@ sealed class DrillSettings {
   const DrillSettings();
 
   DrillId get drillId;
+
+  /// Whether this drill repeats indefinitely until the user manually stops it.
+  /// False for Character Creation (ends after the cycle) and Five Line Game
+  /// (manual tap or explicit auto-advance session).
+  bool get loopsUntilStopped;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -27,6 +35,9 @@ final class CatClockSettings extends DrillSettings {
 
   @override
   DrillId get drillId => DrillId.catClock;
+
+  @override
+  bool get loopsUntilStopped => true;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -45,11 +56,17 @@ final class CharacterCreationSettings extends DrillSettings {
   @override
   DrillId get drillId => DrillId.characterCreation;
 
+  @override
+  bool get loopsUntilStopped => false;
+
   static const List<Duration> allowedSegmentDurations = [
     Duration(seconds: 60),
     Duration(seconds: 90),
     Duration(seconds: 120),
   ];
+
+  /// Valid character counts. The drill supports 2–5 characters per session.
+  static const List<int> allowedCharacterCounts = [2, 3, 4, 5];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -67,6 +84,9 @@ final class TwoCharacterScenesSettings extends DrillSettings {
 
   @override
   DrillId get drillId => DrillId.twoCharacterScenes;
+
+  @override
+  bool get loopsUntilStopped => true;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -83,6 +103,9 @@ final class AtoCSettings extends DrillSettings {
   @override
   DrillId get drillId => DrillId.atoC;
 
+  @override
+  bool get loopsUntilStopped => true;
+
   static const List<Duration> allowedIntervals = [
     Duration(seconds: 15),
     Duration(seconds: 30),
@@ -96,16 +119,23 @@ final class AtoCSettings extends DrillSettings {
 final class FiveLineGameSettings extends DrillSettings {
   const FiveLineGameSettings({
     this.autoAdvance = false,
-    this.autoAdvanceInterval = const Duration(seconds: 30),
+    this.autoAdvanceInterval,
     this.promptCategories = PromptCategory.wordBucket,
   });
 
   final bool autoAdvance;
-  final Duration autoAdvanceInterval;
+
+  /// Only meaningful when [autoAdvance] is true. Null means the user has not
+  /// yet configured an interval; consumers should default to
+  /// [allowedAutoAdvanceIntervals.first] (30 seconds) when this is null.
+  final Duration? autoAdvanceInterval;
   final List<PromptCategory> promptCategories;
 
   @override
   DrillId get drillId => DrillId.fiveLineGame;
+
+  @override
+  bool get loopsUntilStopped => false;
 
   static const List<Duration> allowedAutoAdvanceIntervals = [
     Duration(seconds: 30),

@@ -2,11 +2,12 @@
 // ABOUTME: Shows drill name, Start, Configure, and info/help controls — wired up in Prompt 9.
 
 import 'package:flutter/material.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 
 class DrillStartScreen extends StatelessWidget {
-  const DrillStartScreen({super.key, required this.drillName});
+  const DrillStartScreen({super.key, required this.drillId});
 
-  final String drillName;
+  final DrillId drillId;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class DrillStartScreen extends StatelessWidget {
             Expanded(
               child: Center(
                 child: Text(
-                  drillName,
+                  drillId.displayName,
                   textAlign: TextAlign.center,
                   style: tt.displaySmall?.copyWith(
                     fontWeight: FontWeight.w800,

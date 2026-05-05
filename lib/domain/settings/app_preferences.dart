@@ -14,5 +14,9 @@ class AppPreferences {
   final String? ttsVoice;
   final double ttsSpeakingRate;
 
+  /// Inclusive bounds for [ttsSpeakingRate]. Matches common Flutter TTS plugin ranges.
+  static const double minSpeakingRate = 0.25;
+  static const double maxSpeakingRate = 2.0;
+
   static const AppPreferences defaults = AppPreferences();
 }
