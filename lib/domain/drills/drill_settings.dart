@@ -16,6 +16,16 @@ sealed class DrillSettings {
   /// False for Character Creation (ends after the cycle) and Five Line Game
   /// (manual tap or explicit auto-advance session).
   bool get loopsUntilStopped;
+
+  /// Returns the factory-default [DrillSettings] for [drillId].
+  /// Repositories use this to return defaults before any settings are saved.
+  static DrillSettings defaultsFor(DrillId drillId) => switch (drillId) {
+        DrillId.catClock => const CatClockSettings(),
+        DrillId.characterCreation => const CharacterCreationSettings(),
+        DrillId.twoCharacterScenes => const TwoCharacterScenesSettings(),
+        DrillId.atoC => const AtoCSettings(),
+        DrillId.fiveLineGame => const FiveLineGameSettings(),
+      };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
