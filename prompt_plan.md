@@ -614,7 +614,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 4 — In-Memory Repositories and Seed Prompt System
+## Prompt 4 — In-Memory Repositories and Seed Prompt System [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
