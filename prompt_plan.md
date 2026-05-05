@@ -560,7 +560,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 3 — Domain Models, Defaults, and Repository Interfaces
+## Prompt 3 — Domain Models, Defaults, and Repository Interfaces [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
