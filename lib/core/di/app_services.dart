@@ -52,8 +52,9 @@ class AppServices extends InheritedWidget {
     return result!;
   }
 
-  /// Repositories are immutable value objects; the tree never needs to rebuild
-  /// due to a settings change inside a repository.
+  /// The repository references held by this widget never change after
+  /// construction, so the tree never needs to rebuild when data inside
+  /// a repository changes.
   @override
   bool updateShouldNotify(AppServices oldWidget) => false;
 }

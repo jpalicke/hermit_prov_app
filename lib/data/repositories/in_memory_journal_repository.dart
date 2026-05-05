@@ -39,6 +39,7 @@ class InMemoryJournalRepository implements JournalRepository {
   // ── helpers ────────────────────────────────────────────────────────────────
 
   List<JournalEntry> _newestFirst(List<JournalEntry> list) {
-    return list..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return List<JournalEntry>.from(list)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 }

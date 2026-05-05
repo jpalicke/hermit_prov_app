@@ -28,12 +28,10 @@ void main() {
       expect(categories, containsAll(PromptCategory.values));
     });
 
-    test('cannot delete a built-in prompt via custom prompt API', () {
-      expect(
-        () async {
-          final builtIns = await repo.getBuiltInPrompts();
-          await repo.deleteCustomPrompt(builtIns.first.id);
-        },
+    test('cannot delete a built-in prompt via custom prompt API', () async {
+      final builtIns = await repo.getBuiltInPrompts();
+      await expectLater(
+        () => repo.deleteCustomPrompt(builtIns.first.id),
         throwsArgumentError,
       );
     });
@@ -48,8 +46,8 @@ void main() {
         createdAt: now,
         updatedAt: now,
       );
-      expect(
-        () async => repo.updateCustomPrompt(fakeUpdate),
+      await expectLater(
+        () => repo.updateCustomPrompt(fakeUpdate),
         throwsArgumentError,
       );
     });
