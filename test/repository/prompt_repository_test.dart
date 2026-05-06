@@ -22,7 +22,7 @@ void main() {
       }
     });
 
-    test('getBuiltInPrompts with no filter returns all six categories', () async {
+    test('getBuiltInPrompts with no filter returns all eight categories', () async {
       final all = await repo.getBuiltInPrompts();
       final categories = all.map((p) => p.category).toSet();
       expect(categories, containsAll(PromptCategory.values));

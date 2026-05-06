@@ -1,4 +1,4 @@
-// ABOUTME: Unit tests verifying the word bucket contains all six prompt categories.
+// ABOUTME: Unit tests verifying the word bucket contains all eight prompt categories.
 // ABOUTME: The word bucket is the union of all PromptCategory values.
 
 import 'package:flutter_test/flutter_test.dart';
@@ -6,8 +6,8 @@ import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
 
 void main() {
   group('PromptCategory word bucket', () {
-    test('contains all six prompt categories', () {
-      expect(PromptCategory.wordBucket.length, 6);
+    test('contains all eight prompt categories', () {
+      expect(PromptCategory.wordBucket.length, 8);
       expect(PromptCategory.wordBucket, containsAll(PromptCategory.values));
     });
 
@@ -33,6 +33,14 @@ void main() {
 
     test('contains activities', () {
       expect(PromptCategory.wordBucket, contains(PromptCategory.activities));
+    });
+
+    test('contains genre', () {
+      expect(PromptCategory.wordBucket, contains(PromptCategory.genre));
+    });
+
+    test('contains events', () {
+      expect(PromptCategory.wordBucket, contains(PromptCategory.events));
     });
   });
 }

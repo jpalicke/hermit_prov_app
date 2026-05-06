@@ -1,4 +1,4 @@
-// ABOUTME: Placeholder seed prompts bundled with the app for each prompt category.
+// ABOUTME: Placeholder seed prompts bundled with the app for each of the eight prompt categories.
 // ABOUTME: These are temporary stand-ins; the final lists are a separate content task.
 
 // ⚠️  PLACEHOLDER CONTENT — Replace with human-curated lists before release.
@@ -14,6 +14,8 @@ List<BuiltInPrompt> buildSeedPrompts() => [
       ..._occupations,
       ..._emotions,
       ..._activities,
+      ..._genre,
+      ..._events,
     ];
 
 // ── Objects ───────────────────────────────────────────────────────────────────
@@ -104,4 +106,34 @@ const _activities = [
   BuiltInPrompt(id: 'act-008', text: 'getting lost',         category: PromptCategory.activities),
   BuiltInPrompt(id: 'act-009', text: 'raising money for a cause', category: PromptCategory.activities),
   BuiltInPrompt(id: 'act-010', text: 'cleaning out a storage unit', category: PromptCategory.activities),
+];
+
+// ── Genre ─────────────────────────────────────────────────────────────────────
+
+const _genre = [
+  BuiltInPrompt(id: 'gen-001', text: 'action',              category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-002', text: 'horror',              category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-003', text: 'romantic comedy',     category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-004', text: 'western',             category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-005', text: 'noir',                category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-006', text: 'fairy tale',          category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-007', text: 'soap opera',          category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-008', text: 'sci-fi',              category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-009', text: 'documentary',         category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-010', text: 'musical',             category: PromptCategory.genre),
+];
+
+// ── Events ────────────────────────────────────────────────────────────────────
+
+const _events = [
+  BuiltInPrompt(id: 'evt-001', text: 'a first date',        category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-002', text: 'a wake',              category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-003', text: 'election day',        category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-004', text: 'a high school reunion', category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-005', text: 'the moon landing',    category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-006', text: 'moving day',          category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-007', text: 'the championship game', category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-008', text: 'a wedding',           category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-009', text: 'a job interview',     category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-010', text: 'the last day of school', category: PromptCategory.events),
 ];
