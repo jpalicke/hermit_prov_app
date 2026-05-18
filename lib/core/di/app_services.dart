@@ -2,11 +2,19 @@
 // ABOUTME: Use AppServices.of(context) to obtain any repository from any widget.
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hermit_prov_app/data/local/database_opener.dart';
+import 'package:hermit_prov_app/data/repositories/drift_drill_settings_repository.dart';
+import 'package:hermit_prov_app/data/repositories/drift_journal_repository.dart';
+import 'package:hermit_prov_app/data/repositories/drift_practice_history_repository.dart';
+import 'package:hermit_prov_app/data/repositories/drift_prompt_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
+import 'package:hermit_prov_app/data/repositories/shared_preferences_app_preferences_repository.dart';
+import 'package:hermit_prov_app/data/seed/seed_prompts.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/journal/journal_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
@@ -33,6 +41,26 @@ class AppServices extends InheritedWidget {
       practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
       journalRepository: InMemoryJournalRepository(),
       appPreferencesRepository: InMemoryAppPreferencesRepository(),
+      child: child,
+    );
+  }
+
+  /// Creates an [AppServices] wired with persistent on-device storage.
+  /// Uses Drift/SQLite for structured data and SharedPreferences for app settings.
+  static Future<AppServices> withLocalStorage({
+    Key? key,
+    required Widget child,
+  }) async {
+    final db = openAppDatabase();
+    final prefs = await SharedPreferences.getInstance();
+    return AppServices(
+      key: key,
+      promptRepository: DriftPromptRepository(db, builtIns: buildSeedPrompts()),
+      drillSettingsRepository: DriftDrillSettingsRepository(db),
+      practiceHistoryRepository: DriftPracticeHistoryRepository(db),
+      journalRepository: DriftJournalRepository(db),
+      appPreferencesRepository:
+          SharedPreferencesAppPreferencesRepository(prefs),
       child: child,
     );
   }
