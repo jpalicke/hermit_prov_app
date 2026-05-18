@@ -1,0 +1,11 @@
+Hermit Prov is licensed under the GNU General Public License v3.0 (see LICENSE).
+
+The copyright holders are aware that the terms of the GPL may conflict with
+Apple's App Store terms of service. As a special accommodation, the copyright
+holders commit not to pursue any license violation that results solely from
+the conflict between the GPL and the Apple App Store terms of service.
+
+This accommodation applies only to distribution through the Apple App Store.
+All other terms of the GPL v3 remain in full effect. Any fork or derivative
+work distributed through the App Store must still make its source code
+publicly available and must be licensed under the GPL v3.
