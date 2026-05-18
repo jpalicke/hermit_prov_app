@@ -661,7 +661,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 5 — Prompt Picker, Word Bucket, and Custom Prompt Validation
+## Prompt 5 — Prompt Picker, Word Bucket, and Custom Prompt Validation [DONE]
 
 ```text
 Continue implementing Hermit-Prov.

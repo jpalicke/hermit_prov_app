@@ -200,117 +200,117 @@ Keep these constraints visible during the entire project.
 
 ## 3.1 Core Enums and IDs
 
-- [ ] Add `DrillId.catClock`
-- [ ] Add `DrillId.characterCreation`
-- [ ] Add `DrillId.twoCharacterScenes`
-- [ ] Add `DrillId.atoC`
-- [ ] Add `DrillId.fiveLineGame`
-- [ ] Add `PromptCategory.objects`
-- [ ] Add `PromptCategory.locations`
-- [ ] Add `PromptCategory.relationships`
-- [ ] Add `PromptCategory.occupations`
-- [ ] Add `PromptCategory.emotions`
-- [ ] Add `PromptCategory.activities`
-- [ ] Add theme preference enum: system/light/dark
-- [ ] Define word bucket as all prompt categories combined
-- [ ] Confirm word bucket is not a separate persisted prompt category
+- [x] Add `DrillId.catClock`
+- [x] Add `DrillId.characterCreation`
+- [x] Add `DrillId.twoCharacterScenes`
+- [x] Add `DrillId.atoC`
+- [x] Add `DrillId.fiveLineGame`
+- [x] Add `PromptCategory.objects`
+- [x] Add `PromptCategory.locations`
+- [x] Add `PromptCategory.relationships`
+- [x] Add `PromptCategory.occupations`
+- [x] Add `PromptCategory.emotions`
+- [x] Add `PromptCategory.activities`
+- [x] Add theme preference enum: system/light/dark
+- [x] Define word bucket as all prompt categories combined
+- [x] Confirm word bucket is not a separate persisted prompt category
 
 ## 3.2 Prompt Models
 
-- [ ] Add `BuiltInPrompt` model
-- [ ] Add `CustomPrompt` model
-- [ ] Add prompt ID field
-- [ ] Add prompt category field
-- [ ] Add prompt text field
-- [ ] Add created timestamp for custom prompts
-- [ ] Add updated timestamp for custom prompts
+- [x] Add `BuiltInPrompt` model
+- [x] Add `CustomPrompt` model
+- [x] Add prompt ID field
+- [x] Add prompt category field
+- [x] Add prompt text field
+- [x] Add created timestamp for custom prompts
+- [x] Add updated timestamp for custom prompts
 - [ ] Add serialization/deserialization if needed
 - [ ] Add equality behavior if needed
 
 ## 3.3 Drill Settings Models
 
-- [ ] Add base `DrillSettings` model or per-drill settings models
-- [ ] Add Cat/Clock settings
-- [ ] Add Character Creation settings
-- [ ] Add Two-Character Scenes settings
-- [ ] Add A-to-C settings
-- [ ] Add Five Line Game settings
-- [ ] Add saved prompt category selections
-- [ ] Add Hands-Free Mode flag per drill/session configuration
-- [ ] Add default factory for every drill
+- [x] Add base `DrillSettings` model or per-drill settings models
+- [x] Add Cat/Clock settings
+- [x] Add Character Creation settings
+- [x] Add Two-Character Scenes settings
+- [x] Add A-to-C settings
+- [x] Add Five Line Game settings
+- [x] Add saved prompt category selections
+- [x] Add Hands-Free Mode flag per drill/session configuration
+- [x] Add default factory for every drill
 
 ## 3.4 Drill Defaults
 
-- [ ] Cat/Clock default speaking duration is 3 minutes
-- [ ] Cat/Clock default regroup duration is 30 seconds
-- [ ] Cat/Clock default prompt source is word + word
-- [ ] Cat/Clock loops until stopped
-- [ ] Character Creation default character count is 2
-- [ ] Character Creation default segment duration is 60 seconds
-- [ ] Character Creation allowed segment durations are 60/90/120 seconds
-- [ ] Character Creation default prompt source is word bucket
-- [ ] Character Creation has finite cycle, no indefinite loop
-- [ ] Two-Character Scenes default scene duration is 90 seconds
-- [ ] Two-Character Scenes default regroup duration is 30 seconds
-- [ ] Two-Character Scenes default prompt source is word bucket
-- [ ] Two-Character Scenes loops until stopped
-- [ ] A-to-C default interval is 30 seconds
-- [ ] A-to-C allowed intervals are 15/30/45/60 seconds
-- [ ] A-to-C default prompt source is word bucket
-- [ ] A-to-C loops until stopped
-- [ ] Five Line Game default is prompt only
-- [ ] Five Line Game auto-advance default is off
-- [ ] Five Line Game allowed auto-advance intervals are 30/60/90 seconds
-- [ ] Five Line Game default prompt source is word bucket
+- [x] Cat/Clock default speaking duration is 3 minutes
+- [x] Cat/Clock default regroup duration is 30 seconds
+- [x] Cat/Clock default prompt source is word + word
+- [x] Cat/Clock loops until stopped
+- [x] Character Creation default character count is 2
+- [x] Character Creation default segment duration is 60 seconds
+- [x] Character Creation allowed segment durations are 60/90/120 seconds
+- [x] Character Creation default prompt source is word bucket
+- [x] Character Creation has finite cycle, no indefinite loop
+- [x] Two-Character Scenes default scene duration is 90 seconds
+- [x] Two-Character Scenes default regroup duration is 30 seconds
+- [x] Two-Character Scenes default prompt source is word bucket
+- [x] Two-Character Scenes loops until stopped
+- [x] A-to-C default interval is 30 seconds
+- [x] A-to-C allowed intervals are 15/30/45/60 seconds
+- [x] A-to-C default prompt source is word bucket
+- [x] A-to-C loops until stopped
+- [x] Five Line Game default is prompt only
+- [x] Five Line Game auto-advance default is off
+- [x] Five Line Game allowed auto-advance intervals are 30/60/90 seconds
+- [x] Five Line Game default prompt source is word bucket
 
 ## 3.5 Practice History and Journal Models
 
-- [ ] Add `PracticeSession` model
-- [ ] PracticeSession stores drill ID/name
-- [ ] PracticeSession stores date/time
-- [ ] PracticeSession stores duration
-- [ ] PracticeSession does not store prompts used
-- [ ] PracticeSession does not store settings used
-- [ ] Add `JournalEntry` model
-- [ ] JournalEntry stores date/createdAt
-- [ ] JournalEntry stores updatedAt
-- [ ] JournalEntry stores optional drill tag
-- [ ] JournalEntry stores body text
-- [ ] JournalEntry does not require a linked practice session
+- [x] Add `PracticeSession` model
+- [x] PracticeSession stores drill ID/name
+- [x] PracticeSession stores date/time
+- [x] PracticeSession stores duration
+- [x] PracticeSession does not store prompts used
+- [x] PracticeSession does not store settings used
+- [x] Add `JournalEntry` model
+- [x] JournalEntry stores date/createdAt
+- [x] JournalEntry stores updatedAt
+- [x] JournalEntry stores optional drill tag
+- [x] JournalEntry stores body text
+- [x] JournalEntry does not require a linked practice session
 
 ## 3.6 App Preferences Model
 
-- [ ] Add `AppPreferences` model
-- [ ] Add theme preference
-- [ ] Add TTS voice setting
-- [ ] Add TTS speaking rate setting
-- [ ] Add any other safe app-level preference fields
-- [ ] Do not add persistent crash-report opt-in preference
+- [x] Add `AppPreferences` model
+- [x] Add theme preference
+- [x] Add TTS voice setting
+- [x] Add TTS speaking rate setting
+- [x] Add any other safe app-level preference fields
+- [x] Do not add persistent crash-report opt-in preference
 
 ## 3.7 Repository Interfaces
 
-- [ ] Add `PromptRepository` interface
-- [ ] Add `DrillSettingsRepository` interface
-- [ ] Add `PracticeHistoryRepository` interface
-- [ ] Add `JournalRepository` interface
-- [ ] Add `AppPreferencesRepository` interface
-- [ ] Keep repository interfaces independent of a database package
-- [ ] Add clear method contracts
-- [ ] Add error/result handling strategy
+- [x] Add `PromptRepository` interface
+- [x] Add `DrillSettingsRepository` interface
+- [x] Add `PracticeHistoryRepository` interface
+- [x] Add `JournalRepository` interface
+- [x] Add `AppPreferencesRepository` interface
+- [x] Keep repository interfaces independent of a database package
+- [x] Add clear method contracts
+- [x] Add error/result handling strategy
 
 ## 3.8 Tests
 
-- [ ] Unit test: word bucket expands to all six categories
-- [ ] Unit test: Cat/Clock defaults
-- [ ] Unit test: Character Creation defaults
-- [ ] Unit test: Two-Character Scenes defaults
-- [ ] Unit test: A-to-C defaults
-- [ ] Unit test: Five Line Game defaults
-- [ ] Unit test: Character Creation duration options
-- [ ] Unit test: A-to-C interval options
-- [ ] Unit test: Five Line Game interval options
-- [ ] Unit test: PracticeSession excludes prompts/settings
-- [ ] Unit test: AppPreferences default theme is system
+- [x] Unit test: word bucket expands to all six categories
+- [x] Unit test: Cat/Clock defaults
+- [x] Unit test: Character Creation defaults
+- [x] Unit test: Two-Character Scenes defaults
+- [x] Unit test: A-to-C defaults
+- [x] Unit test: Five Line Game defaults
+- [x] Unit test: Character Creation duration options
+- [x] Unit test: A-to-C interval options
+- [x] Unit test: Five Line Game interval options
+- [x] Unit test: PracticeSession excludes prompts/settings
+- [x] Unit test: AppPreferences default theme is system
 
 ---
 
@@ -318,51 +318,51 @@ Keep these constraints visible during the entire project.
 
 ## 4.1 In-Memory Repositories
 
-- [ ] Implement in-memory PromptRepository
-- [ ] Implement in-memory DrillSettingsRepository
-- [ ] Implement in-memory PracticeHistoryRepository
-- [ ] Implement in-memory JournalRepository
-- [ ] Implement in-memory AppPreferencesRepository
-- [ ] Wire repositories into app using chosen dependency pattern
-- [ ] Ensure repositories can be swapped later for durable local persistence
-- [ ] Ensure tests can inject fake/in-memory repositories
+- [x] Implement in-memory PromptRepository
+- [x] Implement in-memory DrillSettingsRepository
+- [x] Implement in-memory PracticeHistoryRepository
+- [x] Implement in-memory JournalRepository
+- [x] Implement in-memory AppPreferencesRepository
+- [x] Wire repositories into app using chosen dependency pattern
+- [x] Ensure repositories can be swapped later for durable local persistence
+- [x] Ensure tests can inject fake/in-memory repositories
 
 ## 4.2 Seed Prompt System
 
-- [ ] Add seed prompt source
-- [ ] Add placeholder built-in Object prompts
-- [ ] Add placeholder built-in Location prompts
-- [ ] Add placeholder built-in Relationship prompts
-- [ ] Add placeholder built-in Occupation prompts
-- [ ] Add placeholder built-in Emotion prompts
-- [ ] Add placeholder built-in Activity prompts
-- [ ] Clearly mark seed prompts as placeholder content
-- [ ] Ensure final robust prompt lists are documented as separate content task
-- [ ] Built-in prompts are read-only
-- [ ] Custom prompts are stored separately
+- [x] Add seed prompt source
+- [x] Add placeholder built-in Object prompts
+- [x] Add placeholder built-in Location prompts
+- [x] Add placeholder built-in Relationship prompts
+- [x] Add placeholder built-in Occupation prompts
+- [x] Add placeholder built-in Emotion prompts
+- [x] Add placeholder built-in Activity prompts
+- [x] Clearly mark seed prompts as placeholder content
+- [x] Ensure final robust prompt lists are documented as separate content task
+- [x] Built-in prompts are read-only
+- [x] Custom prompts are stored separately
 
 ## 4.3 Repository Behavior
 
-- [ ] Built-in prompts load by category
-- [ ] Built-in prompts load into word bucket
-- [ ] Custom prompts can be added
-- [ ] Custom prompts can be listed by category
-- [ ] Built-in prompts cannot be edited
-- [ ] Built-in prompts cannot be deleted
-- [ ] Drill settings repository returns defaults if no saved settings exist
-- [ ] Drill settings repository returns saved settings after update
-- [ ] App preferences repository returns defaults if none saved
+- [x] Built-in prompts load by category
+- [x] Built-in prompts load into word bucket
+- [x] Custom prompts can be added
+- [x] Custom prompts can be listed by category
+- [x] Built-in prompts cannot be edited
+- [x] Built-in prompts cannot be deleted
+- [x] Drill settings repository returns defaults if no saved settings exist
+- [x] Drill settings repository returns saved settings after update
+- [x] App preferences repository returns defaults if none saved
 
 ## 4.4 Tests
 
-- [ ] Repository test: built-in prompts load for every category
-- [ ] Repository test: custom prompts are separate from built-in prompts
-- [ ] Repository test: built-in prompts cannot be edited
-- [ ] Repository test: built-in prompts cannot be deleted
-- [ ] Repository test: drill settings defaults are returned
-- [ ] Repository test: saved drill settings override defaults
-- [ ] Repository test: app preferences defaults are returned
-- [ ] Repository test: saved app preferences are returned
+- [x] Repository test: built-in prompts load for every category
+- [x] Repository test: custom prompts are separate from built-in prompts
+- [x] Repository test: built-in prompts cannot be edited
+- [x] Repository test: built-in prompts cannot be deleted
+- [x] Repository test: drill settings defaults are returned
+- [x] Repository test: saved drill settings override defaults
+- [x] Repository test: app preferences defaults are returned
+- [x] Repository test: saved app preferences are returned
 
 ---
 
