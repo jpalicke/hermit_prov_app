@@ -25,7 +25,7 @@ class PracticeScreen extends StatelessWidget {
     (
       drillId: DrillId.catClock,
       subtitle: 'Connect two prompts through association.',
-      icon: const FaIcon(FontAwesomeIcons.cat, color: Colors.white, size: 20),
+      icon: Image.asset('assets/icons/kitty.png', width: 28, height: 28),
       color: const Color(0xFF0EA5E9), // sky blue
     ),
     (
