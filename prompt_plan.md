@@ -1199,7 +1199,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 16 — Text-to-Speech Abstraction and Global TTS Settings
+## Prompt 16 — Text-to-Speech Abstraction and Global TTS Settings [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1244,7 +1244,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 17 — Hands-Free Announcement Policy
+## Prompt 17 — Hands-Free Announcement Policy [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1300,7 +1300,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 18 — Wire Hands-Free Mode Into All Drills
+## Prompt 18 — Wire Hands-Free Mode Into All Drills [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1549,7 +1549,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 23 — Settings Sections, Appearance, Reset Drill Defaults, Reset All Data
+## Prompt 23 — Settings Sections, Appearance, Reset Drill Defaults, Reset All Data [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1674,7 +1674,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 25 — Privacy/About, Credits, Support Email, Ko-fi Link
+## Prompt 25 — Privacy/About, Credits, Support Email, Ko-fi Link [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1734,7 +1734,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 26 — Optional Crash-Report Prompt Shell and Privacy Exclusions
+## Prompt 26 — Optional Crash-Report Prompt Shell and Privacy Exclusions [DONE]
 
 ```text
 Continue implementing Hermit-Prov.

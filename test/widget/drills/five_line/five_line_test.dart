@@ -129,7 +129,22 @@ void main() {
     expect(saved.autoAdvance, isTrue);
   });
 
-  // 6. Pause/Resume works when auto-advance is on.
+  // 6. Hands-Free toggle is present and off by default in configure screen.
+  testWidgets('Configure has Hands-Free toggle off by default', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: FiveLineConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.byKey(const Key('hands_free_toggle')),
+    );
+    expect(toggle.value, isFalse);
+  });
+
+  // 7. Pause/Resume works when auto-advance is on.
   testWidgets('Pause and Resume work in auto-advance mode', (tester) async {
     await tester.pumpWidget(
       _wrap(

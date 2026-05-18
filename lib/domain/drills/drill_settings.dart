@@ -17,6 +17,9 @@ sealed class DrillSettings {
   /// (manual tap or explicit auto-advance session).
   bool get loopsUntilStopped;
 
+  /// Whether to run hands-free TTS announcements during this drill session.
+  bool get handsFreeModeEnabled;
+
   /// Serializes this settings object to a JSON-compatible map.
   Map<String, dynamic> toJson();
 
@@ -49,12 +52,16 @@ final class CatClockSettings extends DrillSettings {
     this.regroupDuration = const Duration(seconds: 30),
     this.prompt1Categories = const [PromptCategory.objects],
     this.prompt2Categories = const [PromptCategory.objects],
+    this.handsFreeModeEnabled = false,
   });
 
   final Duration speakingDuration;
   final Duration regroupDuration;
   final List<PromptCategory> prompt1Categories;
   final List<PromptCategory> prompt2Categories;
+
+  @override
+  final bool handsFreeModeEnabled;
 
   @override
   DrillId get drillId => DrillId.catClock;
@@ -68,6 +75,7 @@ final class CatClockSettings extends DrillSettings {
         'regroupDuration': regroupDuration.inMilliseconds,
         'prompt1Categories': prompt1Categories.map((c) => c.name).toList(),
         'prompt2Categories': prompt2Categories.map((c) => c.name).toList(),
+        'handsFreeModeEnabled': handsFreeModeEnabled,
       };
 
   factory CatClockSettings.fromJson(Map<String, dynamic> json) =>
@@ -82,6 +90,8 @@ final class CatClockSettings extends DrillSettings {
         prompt2Categories: (json['prompt2Categories'] as List)
             .map((e) => PromptCategory.values.byName(e as String))
             .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
       );
 }
 
@@ -92,11 +102,15 @@ final class CharacterCreationSettings extends DrillSettings {
     this.characterCount = 2,
     this.segmentDuration = const Duration(seconds: 60),
     this.promptCategories = PromptCategory.wordBucket,
+    this.handsFreeModeEnabled = false,
   });
 
   final int characterCount;
   final Duration segmentDuration;
   final List<PromptCategory> promptCategories;
+
+  @override
+  final bool handsFreeModeEnabled;
 
   @override
   DrillId get drillId => DrillId.characterCreation;
@@ -118,6 +132,7 @@ final class CharacterCreationSettings extends DrillSettings {
         'characterCount': characterCount,
         'segmentDuration': segmentDuration.inMilliseconds,
         'promptCategories': promptCategories.map((c) => c.name).toList(),
+        'handsFreeModeEnabled': handsFreeModeEnabled,
       };
 
   factory CharacterCreationSettings.fromJson(Map<String, dynamic> json) =>
@@ -128,6 +143,8 @@ final class CharacterCreationSettings extends DrillSettings {
         promptCategories: (json['promptCategories'] as List)
             .map((e) => PromptCategory.values.byName(e as String))
             .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
       );
 }
 
@@ -138,11 +155,15 @@ final class TwoCharacterScenesSettings extends DrillSettings {
     this.sceneDuration = const Duration(seconds: 90),
     this.regroupDuration = const Duration(seconds: 30),
     this.promptCategories = PromptCategory.wordBucket,
+    this.handsFreeModeEnabled = false,
   });
 
   final Duration sceneDuration;
   final Duration regroupDuration;
   final List<PromptCategory> promptCategories;
+
+  @override
+  final bool handsFreeModeEnabled;
 
   @override
   DrillId get drillId => DrillId.twoCharacterScenes;
@@ -155,6 +176,7 @@ final class TwoCharacterScenesSettings extends DrillSettings {
         'sceneDuration': sceneDuration.inMilliseconds,
         'regroupDuration': regroupDuration.inMilliseconds,
         'promptCategories': promptCategories.map((c) => c.name).toList(),
+        'handsFreeModeEnabled': handsFreeModeEnabled,
       };
 
   factory TwoCharacterScenesSettings.fromJson(Map<String, dynamic> json) =>
@@ -165,6 +187,8 @@ final class TwoCharacterScenesSettings extends DrillSettings {
         promptCategories: (json['promptCategories'] as List)
             .map((e) => PromptCategory.values.byName(e as String))
             .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
       );
 }
 
@@ -174,10 +198,14 @@ final class AtoCSettings extends DrillSettings {
   const AtoCSettings({
     this.interval = const Duration(seconds: 30),
     this.promptCategories = PromptCategory.wordBucket,
+    this.handsFreeModeEnabled = false,
   });
 
   final Duration interval;
   final List<PromptCategory> promptCategories;
+
+  @override
+  final bool handsFreeModeEnabled;
 
   @override
   DrillId get drillId => DrillId.atoC;
@@ -196,6 +224,7 @@ final class AtoCSettings extends DrillSettings {
   Map<String, dynamic> toJson() => {
         'interval': interval.inMilliseconds,
         'promptCategories': promptCategories.map((c) => c.name).toList(),
+        'handsFreeModeEnabled': handsFreeModeEnabled,
       };
 
   factory AtoCSettings.fromJson(Map<String, dynamic> json) => AtoCSettings(
@@ -203,6 +232,8 @@ final class AtoCSettings extends DrillSettings {
         promptCategories: (json['promptCategories'] as List)
             .map((e) => PromptCategory.values.byName(e as String))
             .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
       );
 }
 
@@ -213,6 +244,7 @@ final class FiveLineGameSettings extends DrillSettings {
     this.autoAdvance = false,
     this.autoAdvanceInterval,
     this.promptCategories = PromptCategory.wordBucket,
+    this.handsFreeModeEnabled = false,
   });
 
   final bool autoAdvance;
@@ -222,6 +254,9 @@ final class FiveLineGameSettings extends DrillSettings {
   /// [allowedAutoAdvanceIntervals.first] (30 seconds) when this is null.
   final Duration? autoAdvanceInterval;
   final List<PromptCategory> promptCategories;
+
+  @override
+  final bool handsFreeModeEnabled;
 
   @override
   DrillId get drillId => DrillId.fiveLineGame;
@@ -240,6 +275,7 @@ final class FiveLineGameSettings extends DrillSettings {
         'autoAdvance': autoAdvance,
         'autoAdvanceInterval': autoAdvanceInterval?.inMilliseconds,
         'promptCategories': promptCategories.map((c) => c.name).toList(),
+        'handsFreeModeEnabled': handsFreeModeEnabled,
       };
 
   factory FiveLineGameSettings.fromJson(Map<String, dynamic> json) =>
@@ -253,5 +289,7 @@ final class FiveLineGameSettings extends DrillSettings {
         promptCategories: (json['promptCategories'] as List)
             .map((e) => PromptCategory.values.byName(e as String))
             .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
       );
 }

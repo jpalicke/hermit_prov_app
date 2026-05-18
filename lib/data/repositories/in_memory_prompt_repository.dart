@@ -52,6 +52,9 @@ class InMemoryPromptRepository implements PromptRepository {
     _customs.remove(id);
   }
 
+  @override
+  Future<void> clearAll() async => _customs.clear();
+
   // ── helpers ────────────────────────────────────────────────────────────────
 
   void _assertNotBuiltIn(String id, {required String action}) {

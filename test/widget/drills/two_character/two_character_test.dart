@@ -54,7 +54,22 @@ void main() {
     expect(find.textContaining('Speaker'), findsNothing);
   });
 
-  // 3. Configure saves timer/category settings.
+  // 3. Hands-Free toggle is present and off by default in configure screen.
+  testWidgets('Configure has Hands-Free toggle off by default', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: TwoCharacterConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.byKey(const Key('hands_free_toggle')),
+    );
+    expect(toggle.value, isFalse);
+  });
+
+  // 4. Configure saves timer/category settings.
   testWidgets('Configure saves scene duration', (tester) async {
     await tester.pumpWidget(
       AppServices.withInMemory(

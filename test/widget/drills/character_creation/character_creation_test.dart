@@ -121,6 +121,21 @@ void main() {
     expect(find.byKey(const Key('char_prompt_first_1')), findsOneWidget);
   });
 
+  // 10. Hands-Free toggle is present and off by default in configure screen.
+  testWidgets('Configure has Hands-Free toggle off by default', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CharacterCreationConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.byKey(const Key('hands_free_toggle')),
+    );
+    expect(toggle.value, isFalse);
+  });
+
   // 7. Configure saves character count, segment duration, and category.
   testWidgets('Configure saves character count 3', (tester) async {
     await tester.pumpWidget(

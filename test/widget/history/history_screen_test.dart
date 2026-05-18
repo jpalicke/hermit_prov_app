@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
+import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/history/practice_session.dart';
 import 'package:hermit_prov_app/features/history/history_screen.dart';
@@ -28,6 +29,7 @@ Widget _wrap({
             journalRepository: AppServices.of(context).journalRepository,
             appPreferencesRepository:
                 AppServices.of(context).appPreferencesRepository,
+            ttsService: FakeTtsService(),
             child: child,
           );
         }

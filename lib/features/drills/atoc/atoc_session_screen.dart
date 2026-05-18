@@ -10,6 +10,8 @@ import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
+import 'package:hermit_prov_app/domain/tts/hands_free_announcement_policy.dart';
+import 'package:hermit_prov_app/domain/tts/tts_service.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 class AtoCSessionScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class AtoCSessionScreen extends StatefulWidget {
     required this.onSessionEnd,
     this.onConfigure,
     this.historyRepository,
+    this.ttsService,
   });
 
   final AtoCSettings settings;
@@ -27,6 +30,10 @@ class AtoCSessionScreen extends StatefulWidget {
   final VoidCallback onSessionEnd;
   final VoidCallback? onConfigure;
   final PracticeHistoryRepository? historyRepository;
+
+  /// When provided and [settings.handsFreeModeEnabled] is true, drives TTS
+  /// announcements during the session. Null-safe: no-op when null.
+  final TtsService? ttsService;
 
   @override
   State<AtoCSessionScreen> createState() => _AtoCSessionScreenState();
@@ -38,10 +45,18 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
   DrillSessionController? _controller;
   String? _prompt;
   int _repIndex = 0;
+  HandsFreeAnnouncementPolicy? _policy;
+  String? _lastAnnouncedSegmentId;
+
+  bool get _handsFreActive =>
+      widget.settings.handsFreeModeEnabled && widget.ttsService != null;
 
   @override
   void initState() {
     super.initState();
+    if (_handsFreActive) {
+      _policy = HandsFreeAnnouncementPolicy(widget.ttsService!);
+    }
     _initSession();
   }
 
@@ -95,6 +110,35 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
     });
   }
 
+  void _handleTick(DrillSessionState state) {
+    final policy = _policy;
+    if (policy == null) return;
+    final seg = state.currentSegment;
+    if (seg == null) return;
+
+    final paused = state.isPaused;
+
+    if (_lastAnnouncedSegmentId != seg.id) {
+      _lastAnnouncedSegmentId = seg.id;
+      if (_prompt != null) {
+        policy.onSegmentStart(
+          seg.copyWith(promptPayload: _prompt),
+          paused: paused,
+        );
+      } else {
+        policy.onSegmentStart(seg, paused: paused);
+      }
+    }
+
+    // AtoC default interval is 30 s — no timer announcements per spec.
+    policy.onTick(seg, state.segmentRemaining, paused: paused);
+  }
+
+  void _handleStop() {
+    widget.ttsService?.stop();
+    widget.onSessionEnd();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ctrl = _controller;
@@ -104,7 +148,7 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
 
     return DrillSessionShell(
       controller: ctrl,
-      onSessionEnd: widget.onSessionEnd,
+      onSessionEnd: _handleStop,
       onConfigure: widget.onConfigure,
       historyRepository: widget.historyRepository,
       drillId: DrillId.atoC,
@@ -113,6 +157,7 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
           'When the timer hits, a new prompt appears automatically. Runs until you stop it.',
       contentBuilder: (context, state) {
         _onStateChanged(state);
+        _handleTick(state);
         if (_prompt == null) return const SizedBox.shrink();
 
         final tt = Theme.of(context).textTheme;

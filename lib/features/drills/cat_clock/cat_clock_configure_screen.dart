@@ -48,6 +48,7 @@ class _CatClockConfigureScreenState extends State<CatClockConfigureScreen> {
         regroupDuration: _settings!.regroupDuration,
         prompt1Categories: _settings!.prompt1Categories,
         prompt2Categories: _settings!.prompt2Categories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
       );
     });
   }
@@ -59,6 +60,19 @@ class _CatClockConfigureScreenState extends State<CatClockConfigureScreen> {
         regroupDuration: Duration(seconds: seconds),
         prompt1Categories: _settings!.prompt1Categories,
         prompt2Categories: _settings!.prompt2Categories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
+      );
+    });
+  }
+
+  void _setHandsFree(bool value) {
+    setState(() {
+      _settings = CatClockSettings(
+        speakingDuration: _settings!.speakingDuration,
+        regroupDuration: _settings!.regroupDuration,
+        prompt1Categories: _settings!.prompt1Categories,
+        prompt2Categories: _settings!.prompt2Categories,
+        handsFreeModeEnabled: value,
       );
     });
   }
@@ -77,6 +91,7 @@ class _CatClockConfigureScreenState extends State<CatClockConfigureScreen> {
         settings: settings,
         onSpeakingMinutesChanged: _setSpeakingMinutes,
         onRegroupSecondsChanged: _setRegroupSeconds,
+        onHandsFreeChanged: _setHandsFree,
       ),
     );
   }
@@ -89,11 +104,13 @@ class _CatClockConfigBody extends StatelessWidget {
     required this.settings,
     required this.onSpeakingMinutesChanged,
     required this.onRegroupSecondsChanged,
+    required this.onHandsFreeChanged,
   });
 
   final CatClockSettings settings;
   final void Function(int minutes) onSpeakingMinutesChanged;
   final void Function(int seconds) onRegroupSecondsChanged;
+  final void Function(bool) onHandsFreeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -125,15 +142,13 @@ class _CatClockConfigBody extends StatelessWidget {
           onChanged: onRegroupSecondsChanged,
         ),
         const SizedBox(height: 24),
-        // Hands-Free toggle — placeholder, no TTS yet.
-        Text('Hands-Free (coming soon)', style: tt.titleMedium),
-        const SizedBox(height: 8),
-        const SwitchListTile(
-          key: Key('hands_free_toggle'),
-          title: Text('Hands-Free mode'),
-          subtitle: Text('TTS not yet available'),
-          value: false,
-          onChanged: null,
+        SwitchListTile(
+          key: const Key('hands_free_toggle'),
+          title: const Text('Hands-Free Mode'),
+          subtitle: const Text(
+              'Speak prompts and countdown cues aloud during the session'),
+          value: settings.handsFreeModeEnabled,
+          onChanged: onHandsFreeChanged,
         ),
       ],
     );

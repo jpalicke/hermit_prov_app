@@ -13,6 +13,8 @@ import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
+import 'package:hermit_prov_app/domain/tts/hands_free_announcement_policy.dart';
+import 'package:hermit_prov_app/domain/tts/tts_service.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 class CatClockSessionScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class CatClockSessionScreen extends StatefulWidget {
     required this.onSessionEnd,
     this.onConfigure,
     this.historyRepository,
+    this.ttsService,
   });
 
   final CatClockSettings settings;
@@ -30,6 +33,10 @@ class CatClockSessionScreen extends StatefulWidget {
   final VoidCallback onSessionEnd;
   final VoidCallback? onConfigure;
   final PracticeHistoryRepository? historyRepository;
+
+  /// When provided and [settings.handsFreeModeEnabled] is true, drives TTS
+  /// announcements during the session. Null-safe: no-op when null.
+  final TtsService? ttsService;
 
   @override
   State<CatClockSessionScreen> createState() => _CatClockSessionScreenState();
@@ -42,10 +49,20 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
   String? _prompt1;
   String? _prompt2;
   int _repIndex = 0;
+  HandsFreeAnnouncementPolicy? _policy;
+
+  // Tracks which segment TTS was last fired for to avoid re-announcing.
+  String? _lastAnnouncedSegmentId;
+
+  bool get _handsFreActive =>
+      widget.settings.handsFreeModeEnabled && widget.ttsService != null;
 
   @override
   void initState() {
     super.initState();
+    if (_handsFreActive) {
+      _policy = HandsFreeAnnouncementPolicy(widget.ttsService!);
+    }
     _initSession();
   }
 
@@ -110,6 +127,39 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
     });
   }
 
+  void _handleTick(DrillSessionState state) {
+    final policy = _policy;
+    if (policy == null) return;
+    final seg = state.currentSegment;
+    if (seg == null) return;
+
+    final paused = state.isPaused;
+
+    // Fire segment start announcement when we enter a new segment.
+    if (_lastAnnouncedSegmentId != seg.id) {
+      _lastAnnouncedSegmentId = seg.id;
+      // For Cat/Clock speaking segments, speak both prompts.
+      if (seg.type != DrillSegmentType.regroup &&
+          _prompt1 != null &&
+          _prompt2 != null) {
+        policy.onSegmentStart(
+          seg.copyWith(promptPayload: '$_prompt1 — $_prompt2'),
+          paused: paused,
+        );
+      } else {
+        policy.onSegmentStart(seg, paused: paused);
+      }
+    }
+
+    // Timer countdown ticks.
+    policy.onTick(seg, state.segmentRemaining, paused: paused);
+  }
+
+  void _handleStop() {
+    widget.ttsService?.stop();
+    widget.onSessionEnd();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ctrl = _controller;
@@ -119,7 +169,7 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
 
     return DrillSessionShell(
       controller: ctrl,
-      onSessionEnd: widget.onSessionEnd,
+      onSessionEnd: _handleStop,
       onConfigure: widget.onConfigure,
       historyRepository: widget.historyRepository,
       drillId: DrillId.catClock,
@@ -128,6 +178,7 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
           'speaking out loud until the timer ends. A short regroup follows, then fresh prompts '
           'appear automatically for the next rep. Runs until you stop it.',
       contentBuilder: (context, state) {
+        _handleTick(state);
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();
 

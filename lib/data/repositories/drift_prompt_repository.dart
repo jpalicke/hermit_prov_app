@@ -56,6 +56,11 @@ class DriftPromptRepository implements PromptRepository {
         .go();
   }
 
+  @override
+  Future<void> clearAll() async {
+    await _db.delete(_db.customPrompts).go();
+  }
+
   // ── helpers ────────────────────────────────────────────────────────────────
 
   CustomPrompt _rowToDomain(CustomPromptData row) => CustomPrompt(
