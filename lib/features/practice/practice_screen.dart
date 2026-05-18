@@ -1,14 +1,21 @@
 // ABOUTME: Practice tab home screen — the "Choose Your Drill" entry point.
-// ABOUTME: Shows cards for all five drills and the Tools section; tapping navigates to each.
+// ABOUTME: Card tap starts the drill directly; gear icon opens configure screen.
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
-import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_start_screen.dart';
-import 'package:hermit_prov_app/features/drills/atoc/atoc_start_screen.dart';
-import 'package:hermit_prov_app/features/drills/character_creation/character_creation_start_screen.dart';
-import 'package:hermit_prov_app/features/drills/five_line/five_line_start_screen.dart';
-import 'package:hermit_prov_app/features/drills/two_character/two_character_start_screen.dart';
+import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
+import 'package:hermit_prov_app/features/drills/atoc/atoc_configure_screen.dart';
+import 'package:hermit_prov_app/features/drills/atoc/atoc_session_screen.dart';
+import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_configure_screen.dart';
+import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_session_screen.dart';
+import 'package:hermit_prov_app/features/drills/character_creation/character_creation_configure_screen.dart';
+import 'package:hermit_prov_app/features/drills/character_creation/character_creation_session_screen.dart';
+import 'package:hermit_prov_app/features/drills/five_line/five_line_configure_screen.dart';
+import 'package:hermit_prov_app/features/drills/five_line/five_line_session_screen.dart';
+import 'package:hermit_prov_app/features/drills/two_character/two_character_configure_screen.dart';
+import 'package:hermit_prov_app/features/drills/two_character/two_character_session_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
@@ -47,19 +54,84 @@ class PracticeScreen extends StatelessWidget {
     ),
   ];
 
-  void _openDrill(BuildContext context, DrillId drillId) {
+  /// Navigates directly to the session screen for [drillId] using saved settings.
+  Future<void> _startDrill(BuildContext context, DrillId drillId) async {
+    final services = AppServices.of(context);
+    final settings =
+        await services.drillSettingsRepository.getSettings(drillId);
+    if (!context.mounted) return;
+
     Widget screen;
     switch (drillId) {
       case DrillId.catClock:
-        screen = const CatClockStartScreen();
+        final s = settings as CatClockSettings;
+        screen = CatClockSessionScreen(
+          settings: s,
+          promptRepository: services.promptRepository,
+          onSessionEnd: () => Navigator.of(context).pop(),
+          onConfigure: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const CatClockConfigureScreen()),
+          ),
+        );
       case DrillId.twoCharacterScenes:
-        screen = const TwoCharacterStartScreen();
+        final s = settings as TwoCharacterScenesSettings;
+        screen = TwoCharacterSessionScreen(
+          settings: s,
+          promptRepository: services.promptRepository,
+          onSessionEnd: () => Navigator.of(context).pop(),
+          onConfigure: () => Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (_) => const TwoCharacterConfigureScreen()),
+          ),
+        );
       case DrillId.atoC:
-        screen = const AtoCStartScreen();
+        final s = settings as AtoCSettings;
+        screen = AtoCSessionScreen(
+          settings: s,
+          promptRepository: services.promptRepository,
+          onSessionEnd: () => Navigator.of(context).pop(),
+          onConfigure: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const AtoCConfigureScreen()),
+          ),
+        );
       case DrillId.fiveLineGame:
-        screen = const FiveLineStartScreen();
+        final s = settings as FiveLineGameSettings;
+        screen = FiveLineSessionScreen(
+          settings: s,
+          onSessionEnd: () => Navigator.of(context).pop(),
+          onConfigure: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const FiveLineConfigureScreen()),
+          ),
+        );
       case DrillId.characterCreation:
-        screen = const CharacterCreationStartScreen();
+        final s = settings as CharacterCreationSettings;
+        screen = CharacterCreationSessionScreen(
+          settings: s,
+          onSessionEnd: () => Navigator.of(context).pop(),
+          onConfigure: () => Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (_) => const CharacterCreationConfigureScreen()),
+          ),
+        );
+    }
+    if (!context.mounted) return;
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+
+  /// Opens the configure screen for [drillId] without starting a session.
+  void _configureDrill(BuildContext context, DrillId drillId) {
+    Widget screen;
+    switch (drillId) {
+      case DrillId.catClock:
+        screen = const CatClockConfigureScreen();
+      case DrillId.twoCharacterScenes:
+        screen = const TwoCharacterConfigureScreen();
+      case DrillId.atoC:
+        screen = const AtoCConfigureScreen();
+      case DrillId.fiveLineGame:
+        screen = const FiveLineConfigureScreen();
+      case DrillId.characterCreation:
+        screen = const CharacterCreationConfigureScreen();
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
@@ -102,7 +174,9 @@ class PracticeScreen extends StatelessWidget {
                     subtitle: drill.subtitle,
                     icon: drill.icon,
                     color: drill.color,
-                    onTap: () => _openDrill(context, drill.drillId),
+                    onTap: () => _startDrill(context, drill.drillId),
+                    onConfigure: () =>
+                        _configureDrill(context, drill.drillId),
                   ),
                 ),
                 _ToolsCard(onTap: () => _openTools(context)),
@@ -124,6 +198,7 @@ class _DrillCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
+    required this.onConfigure,
   });
 
   final DrillId drillId;
@@ -131,6 +206,7 @@ class _DrillCard extends StatelessWidget {
   final Widget icon;
   final Color color;
   final VoidCallback onTap;
+  final VoidCallback onConfigure;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +221,7 @@ class _DrillCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(20, 20, 8, 20),
             child: Row(
               children: [
                 Container(
@@ -179,7 +255,13 @@ class _DrillCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
+                IconButton(
+                  key: Key('drill_card_configure_${drillId.name}'),
+                  onPressed: onConfigure,
+                  icon: const Icon(Icons.settings),
+                  tooltip: 'Configure',
+                  color: cs.onSurfaceVariant,
+                ),
               ],
             ),
           ),

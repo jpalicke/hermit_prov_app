@@ -1,14 +1,14 @@
-// ABOUTME: Widget tests for the reusable drill shell (start, configure, session).
+// ABOUTME: Widget tests for the reusable drill session shell.
 // ABOUTME: Uses a stub drill and manual controller ticks for deterministic timer testing.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
-import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/features/practice/drill_configure_screen.dart';
-import 'package:hermit_prov_app/features/practice/drill_start_screen.dart';
+import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -31,10 +31,12 @@ class _ManualSessionShell extends StatefulWidget {
   const _ManualSessionShell({
     required this.controller,
     required this.onSessionEnd,
+    required this.onConfigure,
   });
 
   final DrillSessionController controller;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
 
   @override
   State<_ManualSessionShell> createState() => _ManualSessionShellState();
@@ -115,6 +117,13 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
             icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
             label: Text(isPaused ? 'Resume' : 'Pause'),
           ),
+          if (isPaused && widget.onConfigure != null)
+            OutlinedButton.icon(
+              key: const Key('session_configure_button'),
+              onPressed: widget.onConfigure,
+              icon: const Icon(Icons.settings),
+              label: const Text('Configure'),
+            ),
           OutlinedButton(
             key: const Key('stop_end_button'),
             onPressed: _handleStop,
@@ -129,29 +138,7 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void main() {
-  // 1. DrillStartScreen shows Start, Configure, and info/help.
-  testWidgets('DrillStartScreen shows Start, Configure, and Help buttons',
-      (tester) async {
-    await tester.pumpWidget(
-      _wrap(
-        DrillStartScreen(
-          drillId: DrillId.catClock,
-          subtitle: 'A test subtitle',
-          onStart: () {},
-          onConfigure: () {},
-        ),
-      ),
-    );
-
-    expect(find.byKey(const Key('drill_start_start_button')), findsOneWidget);
-    expect(
-        find.byKey(const Key('drill_start_configure_button')), findsOneWidget);
-    expect(find.byKey(const Key('drill_start_help_button')), findsOneWidget);
-    expect(find.text('Cat/Clock'), findsWidgets);
-    expect(find.text('A test subtitle'), findsOneWidget);
-  });
-
-  // 2. Configure can update a simple saved setting (basic interaction test).
+  // 1. Configure screen shows Save button and form content.
   testWidgets('DrillConfigureScreen shows Save button and form content',
       (tester) async {
     var saved = false;
@@ -172,27 +159,7 @@ void main() {
     expect(saved, isTrue);
   });
 
-  // 3. Start launches the session shell.
-  testWidgets('Start button navigates to session shell', (tester) async {
-    var sessionStarted = false;
-
-    await tester.pumpWidget(
-      _wrap(
-        DrillStartScreen(
-          drillId: DrillId.catClock,
-          onStart: () => sessionStarted = true,
-          onConfigure: () {},
-        ),
-      ),
-    );
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
-    await tester.pump();
-
-    expect(sessionStarted, isTrue);
-  });
-
-  // 4. Pause changes to Resume and freezes displayed timer.
+  // 2. Pause changes to Resume and freezes displayed timer.
   testWidgets('Pause changes button to Resume and freezes timer',
       (tester) async {
     final controller = DrillSessionController(
@@ -206,6 +173,7 @@ void main() {
         _ManualSessionShell(
           controller: controller,
           onSessionEnd: () {},
+          onConfigure: null,
         ),
       ),
     );
@@ -241,7 +209,7 @@ void main() {
         frozenTime);
   });
 
-  // 5. Stop/End shows confirmation dialog.
+  // 3. Stop/End shows confirmation dialog.
   testWidgets('Stop/End button shows confirmation dialog', (tester) async {
     final controller = DrillSessionController(
       segments: [_seg('s0', seconds: 60)],
@@ -253,6 +221,7 @@ void main() {
         _ManualSessionShell(
           controller: controller,
           onSessionEnd: () {},
+          onConfigure: null,
         ),
       ),
     );
@@ -265,7 +234,7 @@ void main() {
     expect(find.byKey(const Key('stop_cancel_button')), findsOneWidget);
   });
 
-  // 6. Confirming Stop returns to Drill Start (via onSessionEnd callback).
+  // 4. Confirming Stop calls onSessionEnd callback.
   testWidgets('Confirming Stop calls onSessionEnd callback', (tester) async {
     final controller = DrillSessionController(
       segments: [_seg('s0', seconds: 60)],
@@ -278,6 +247,7 @@ void main() {
         _ManualSessionShell(
           controller: controller,
           onSessionEnd: () => ended = true,
+          onConfigure: null,
         ),
       ),
     );
@@ -290,5 +260,70 @@ void main() {
 
     expect(ended, isTrue);
     expect(controller.state.isStopped, isTrue);
+  });
+
+  // 5. DrillSessionShell shows gear icon when paused and onConfigure is provided.
+  testWidgets(
+      'DrillSessionShell shows configure button when paused with onConfigure',
+      (tester) async {
+    var configureOpened = false;
+    final controller = DrillSessionController(
+      segments: [_seg('s0', seconds: 60)],
+      loops: true,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        DrillSessionShell(
+          controller: controller,
+          onSessionEnd: () {},
+          onConfigure: () => configureOpened = true,
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // Gear icon not visible while running.
+    expect(find.byKey(const Key('session_configure_button')), findsNothing);
+
+    // Pause.
+    await tester.tap(find.byKey(const Key('pause_resume_button')));
+    await tester.pump();
+
+    // Gear icon appears when paused.
+    expect(find.byKey(const Key('session_configure_button')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('session_configure_button')));
+    await tester.pump();
+
+    expect(configureOpened, isTrue);
+  });
+
+  // 6. DrillSessionShell does NOT show gear icon when onConfigure is null.
+  testWidgets(
+      'DrillSessionShell does not show configure button when onConfigure is null',
+      (tester) async {
+    final controller = DrillSessionController(
+      segments: [_seg('s0', seconds: 60)],
+      loops: true,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        DrillSessionShell(
+          controller: controller,
+          onSessionEnd: () {},
+          // No onConfigure provided.
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // Pause.
+    await tester.tap(find.byKey(const Key('pause_resume_button')));
+    await tester.pump();
+
+    // Gear icon must not appear.
+    expect(find.byKey(const Key('session_configure_button')), findsNothing);
   });
 }

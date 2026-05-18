@@ -8,7 +8,6 @@ import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/features/drills/five_line/five_line_configure_screen.dart';
 import 'package:hermit_prov_app/features/drills/five_line/five_line_session_screen.dart';
-import 'package:hermit_prov_app/features/drills/five_line/five_line_start_screen.dart';
 
 Widget _wrap(Widget child) =>
     AppServices.withInMemory(child: MaterialApp(home: child));
@@ -132,13 +131,6 @@ void main() {
 
   // 6. Pause/Resume works when auto-advance is on.
   testWidgets('Pause and Resume work in auto-advance mode', (tester) async {
-    await tester.pumpWidget(
-      _wrap(const FiveLineStartScreen()),
-    );
-    await tester.pump();
-
-    // Tap Start — settings default to autoAdvance = false so we go manual.
-    // To test auto-advance, use the session screen directly.
     await tester.pumpWidget(
       _wrap(
         const FiveLineSessionScreen(

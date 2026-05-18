@@ -26,6 +26,7 @@ class FiveLineSessionScreen extends StatefulWidget {
     required this.settings,
     required this.onSessionEnd,
     this.promptRepository,
+    this.onConfigure,
   });
 
   final FiveLineGameSettings settings;
@@ -34,6 +35,7 @@ class FiveLineSessionScreen extends StatefulWidget {
   /// Injected prompt repository. When null, AppServices.of(context) is used
   /// (must be called outside initState via didChangeDependencies).
   final PromptRepository? promptRepository;
+  final VoidCallback? onConfigure;
 
   @override
   State<FiveLineSessionScreen> createState() => _FiveLineSessionScreenState();
@@ -228,6 +230,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       key: const Key('five_line_auto_shell'),
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
+      onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
         if (_loading || _prompt == null) return const SizedBox.shrink();
         return Text(
