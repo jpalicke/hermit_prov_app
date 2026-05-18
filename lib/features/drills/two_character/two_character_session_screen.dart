@@ -17,11 +17,13 @@ class TwoCharacterSessionScreen extends StatefulWidget {
     required this.settings,
     required this.promptRepository,
     required this.onSessionEnd,
+    this.onConfigure,
   });
 
   final TwoCharacterScenesSettings settings;
   final PromptRepository promptRepository;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
 
   @override
   State<TwoCharacterSessionScreen> createState() =>
@@ -102,6 +104,7 @@ class _TwoCharacterSessionScreenState
     return DrillSessionShell(
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
+      onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();

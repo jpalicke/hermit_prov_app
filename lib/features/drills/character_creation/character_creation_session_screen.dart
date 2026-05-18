@@ -14,10 +14,12 @@ class CharacterCreationSessionScreen extends StatefulWidget {
     super.key,
     required this.settings,
     required this.onSessionEnd,
+    this.onConfigure,
   });
 
   final CharacterCreationSettings settings;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
 
   @override
   State<CharacterCreationSessionScreen> createState() =>
@@ -70,6 +72,7 @@ class _CharacterCreationSessionScreenState
     return DrillSessionShell(
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
+      onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();

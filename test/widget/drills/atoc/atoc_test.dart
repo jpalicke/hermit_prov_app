@@ -1,5 +1,5 @@
 // ABOUTME: Widget tests for the A-to-C / Bad Idea / Initiation drill.
-// ABOUTME: Verifies start, configure interval, pause/resume, and stop behaviour.
+// ABOUTME: Verifies session, configure interval, and pause/resume behaviour.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,18 +7,29 @@ import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/features/drills/atoc/atoc_configure_screen.dart';
-import 'package:hermit_prov_app/features/drills/atoc/atoc_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/atoc/atoc_session_screen.dart';
 
-Widget _wrap(Widget child) =>
-    AppServices.withInMemory(child: MaterialApp(home: child));
+Widget _wrapSession() {
+  return AppServices.withInMemory(
+    child: Builder(
+      builder: (context) {
+        final services = AppServices.of(context);
+        return MaterialApp(
+          home: AtoCSessionScreen(
+            settings: const AtoCSettings(),
+            promptRepository: services.promptRepository,
+            onSessionEnd: () {},
+          ),
+        );
+      },
+    ),
+  );
+}
 
 void main() {
-  // 1. Start launches with one prompt.
-  testWidgets('Start launches session shell', (tester) async {
-    await tester.pumpWidget(_wrap(const AtoCStartScreen()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
+  // 1. Session shows session shell controls.
+  testWidgets('Session launches session shell', (tester) async {
+    await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
@@ -49,10 +60,7 @@ void main() {
 
   // 3. Pause/Resume freezes prompt changes.
   testWidgets('Pause shows Resume and session is paused', (tester) async {
-    await tester.pumpWidget(_wrap(const AtoCStartScreen()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
+    await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     // Pause.

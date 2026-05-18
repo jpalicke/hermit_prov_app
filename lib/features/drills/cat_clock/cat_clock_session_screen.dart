@@ -19,11 +19,13 @@ class CatClockSessionScreen extends StatefulWidget {
     required this.settings,
     required this.promptRepository,
     required this.onSessionEnd,
+    this.onConfigure,
   });
 
   final CatClockSettings settings;
   final PromptRepository promptRepository;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
 
   @override
   State<CatClockSessionScreen> createState() => _CatClockSessionScreenState();
@@ -114,6 +116,7 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
     return DrillSessionShell(
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
+      onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();

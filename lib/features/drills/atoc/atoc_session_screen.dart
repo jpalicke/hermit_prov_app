@@ -16,11 +16,13 @@ class AtoCSessionScreen extends StatefulWidget {
     required this.settings,
     required this.promptRepository,
     required this.onSessionEnd,
+    this.onConfigure,
   });
 
   final AtoCSettings settings;
   final PromptRepository promptRepository;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
 
   @override
   State<AtoCSessionScreen> createState() => _AtoCSessionScreenState();
@@ -99,6 +101,7 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
     return DrillSessionShell(
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
+      onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
         _onStateChanged(state);
         if (_prompt == null) return const SizedBox.shrink();

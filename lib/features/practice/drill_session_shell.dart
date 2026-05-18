@@ -15,6 +15,8 @@ import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 ///
 /// [onSessionEnd] — called after the user confirms Stop OR when a finite
 ///                  session completes naturally.
+/// [onConfigure] — optional callback invoked when the user taps the gear icon
+///                 while paused. When null, no gear icon is shown.
 /// [contentBuilder] — builds the drill-specific content shown inside the
 ///                    session card (e.g. prompt text, character labels, etc.).
 class DrillSessionShell extends StatefulWidget {
@@ -22,11 +24,13 @@ class DrillSessionShell extends StatefulWidget {
     super.key,
     required this.controller,
     required this.onSessionEnd,
+    this.onConfigure,
     this.contentBuilder,
   });
 
   final DrillSessionController controller;
   final VoidCallback onSessionEnd;
+  final VoidCallback? onConfigure;
   final Widget Function(BuildContext context, DrillSessionState state)?
       contentBuilder;
 
@@ -201,6 +205,21 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                   ),
                 ),
               ),
+              if (isPaused && widget.onConfigure != null) ...[
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  key: const Key('session_configure_button'),
+                  onPressed: widget.onConfigure,
+                  icon: const Icon(Icons.settings),
+                  label: const Text('Configure'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    textStyle: tt.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 12),
               OutlinedButton(
                 key: const Key('stop_end_button'),

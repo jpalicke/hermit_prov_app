@@ -1,5 +1,5 @@
 // ABOUTME: Widget tests for the Two-Character Scenes drill.
-// ABOUTME: Verifies start → session, no character labels, configure, and stop confirmation.
+// ABOUTME: Verifies session → no character labels, configure, and stop confirmation.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,18 +7,29 @@ import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/features/drills/two_character/two_character_configure_screen.dart';
-import 'package:hermit_prov_app/features/drills/two_character/two_character_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/two_character/two_character_session_screen.dart';
 
-Widget _wrap(Widget child) =>
-    AppServices.withInMemory(child: MaterialApp(home: child));
+Widget _wrapSession({VoidCallback? onSessionEnd}) {
+  return AppServices.withInMemory(
+    child: Builder(
+      builder: (context) {
+        final services = AppServices.of(context);
+        return MaterialApp(
+          home: TwoCharacterSessionScreen(
+            settings: const TwoCharacterScenesSettings(),
+            promptRepository: services.promptRepository,
+            onSessionEnd: onSessionEnd ?? () {},
+          ),
+        );
+      },
+    ),
+  );
+}
 
 void main() {
-  // 1. Start launches with one prompt.
-  testWidgets('Start launches session shell', (tester) async {
-    await tester.pumpWidget(_wrap(const TwoCharacterStartScreen()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
+  // 1. Session shows session shell controls.
+  testWidgets('Session launches session shell', (tester) async {
+    await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
@@ -27,10 +38,7 @@ void main() {
 
   // 2. No character speaker labels anywhere.
   testWidgets('Session screen has no character speaker labels', (tester) async {
-    await tester.pumpWidget(_wrap(const TwoCharacterStartScreen()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
+    await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     // Make sure no "Character 1", "Character 2", "Speaker", etc. appear.
@@ -63,12 +71,10 @@ void main() {
     expect(saved.sceneDuration, const Duration(seconds: 120));
   });
 
-  // 4. Stop confirmation works.
-  testWidgets('Stop confirmation returns to Start screen', (tester) async {
-    await tester.pumpWidget(_wrap(const TwoCharacterStartScreen()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key('drill_start_start_button')));
+  // 4. Stop confirmation calls onSessionEnd.
+  testWidgets('Stop confirmation calls onSessionEnd', (tester) async {
+    var ended = false;
+    await tester.pumpWidget(_wrapSession(onSessionEnd: () => ended = true));
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     await tester.tap(find.byKey(const Key('stop_end_button')));
@@ -77,6 +83,6 @@ void main() {
     await tester.tap(find.byKey(const Key('stop_confirm_button')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('drill_start_start_button')), findsOneWidget);
+    expect(ended, isTrue);
   });
 }
