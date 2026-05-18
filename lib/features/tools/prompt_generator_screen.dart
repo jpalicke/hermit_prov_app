@@ -28,29 +28,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   int _autoAdvanceInterval = 30; // seconds
   Timer? _autoAdvanceTimer;
 
-  // Custom prompt counts per category, loaded from the repository.
-  Map<PromptCategory, int> _customCounts = {};
-
   @override
   void initState() {
     super.initState();
     _selectedCategories = Set.of(PromptCategory.values);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _loadCustomCounts();
-  }
-
-  Future<void> _loadCustomCounts() async {
-    final repo = AppServices.of(context).promptRepository;
-    final counts = <PromptCategory, int>{};
-    for (final cat in PromptCategory.values) {
-      final customs = await repo.getCustomPrompts(category: cat);
-      counts[cat] = customs.length;
-    }
-    if (mounted) setState(() => _customCounts = counts);
   }
 
   @override
@@ -217,20 +198,16 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
     );
   }
 
-  String _categoryLabel(PromptCategory cat) {
-    final base = switch (cat) {
-      PromptCategory.objects => 'Objects',
-      PromptCategory.locations => 'Locations',
-      PromptCategory.relationships => 'Relationships',
-      PromptCategory.occupations => 'Occupations',
-      PromptCategory.emotions => 'Emotions',
-      PromptCategory.activities => 'Activities',
-      PromptCategory.genre => 'Genre',
-      PromptCategory.events => 'Events',
-    };
-    final count = _customCounts[cat] ?? 0;
-    return count > 0 ? '$base ($count)' : base;
-  }
+  String _categoryLabel(PromptCategory cat) => switch (cat) {
+    PromptCategory.objects => 'Objects',
+    PromptCategory.locations => 'Locations',
+    PromptCategory.relationships => 'Relationships',
+    PromptCategory.occupations => 'Occupations',
+    PromptCategory.emotions => 'Emotions',
+    PromptCategory.activities => 'Activities',
+    PromptCategory.genre => 'Genre',
+    PromptCategory.events => 'Events',
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
