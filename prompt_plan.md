@@ -1045,7 +1045,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 13 — Five Line Game Drill
+## Prompt 13 — Five Line Game Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
