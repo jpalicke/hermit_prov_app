@@ -48,3 +48,9 @@ app.*.map.json
 /linux/
 /macos/
 /windows/
+
+# Claude Code tooling — local only, not project artifacts
+.claire/
+.claude/
+transcript_extract.txt
+trigg_wheel*
