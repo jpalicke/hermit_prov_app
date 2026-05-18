@@ -76,6 +76,11 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
     }
   }
 
+  Future<void> _regeneratePromptsNow() async {
+    await _loadNextPrompts();
+    if (mounted) setState(() {});
+  }
+
   Future<void> _regeneratePromptsForNextRep() async {
     await _loadNextPrompts();
     if (!mounted || _controller == null) return;
@@ -121,6 +126,7 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
           prompt1: _prompt1,
           prompt2: _prompt2,
           onStateChanged: () => _onLoopComplete(state),
+          onRegenerate: _regeneratePromptsNow,
         );
       },
     );
@@ -134,11 +140,13 @@ class _SpeakingContent extends StatelessWidget {
     required this.prompt1,
     required this.prompt2,
     required this.onStateChanged,
+    required this.onRegenerate,
   });
 
   final String? prompt1;
   final String? prompt2;
   final VoidCallback onStateChanged;
+  final VoidCallback onRegenerate;
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +178,13 @@ class _SpeakingContent extends StatelessWidget {
               color: cs.secondary,
             ),
           ),
+        const SizedBox(height: 16),
+        TextButton.icon(
+          key: const Key('cat_clock_regenerate'),
+          onPressed: onRegenerate,
+          icon: const Icon(Icons.refresh),
+          label: const Text('New Words'),
+        ),
       ],
     );
   }

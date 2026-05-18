@@ -29,9 +29,9 @@ void main() {
         );
       });
 
-      test('both prompt sources default to word bucket', () {
-        expect(const CatClockSettings().prompt1Categories, PromptCategory.wordBucket);
-        expect(const CatClockSettings().prompt2Categories, PromptCategory.wordBucket);
+      test('both prompt sources default to objects', () {
+        expect(const CatClockSettings().prompt1Categories, [PromptCategory.objects]);
+        expect(const CatClockSettings().prompt2Categories, [PromptCategory.objects]);
       });
 
       test('loops until stopped', () {

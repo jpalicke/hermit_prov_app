@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:glenntrigg.net)",
+      "WebFetch(domain:www.glenntrigg.net)",
+      "Bash(curl -s -I \"https://glenntrigg.net/wp-content/uploads/2019/02/\")",
+      "WebFetch(domain:i0.wp.com)",
+      "Bash(grep -o 'https://[^ \"\\\\\\\\]*\\\\.\\\\\\(png\\\\|jpg\\\\|jpeg\\\\\\)' \"C:\\\\Users\\\\jpali\\\\.claude\\\\projects\\\\C--git-hermit-prov-app\\\\1dd0de0a-eec6-4857-ae38-20c5a28c3f8d.jsonl\")",
+      "Bash(curl -L \"https://i0.wp.com/www.glenntrigg.net/wp-content/uploads/2019/02/emotion_wheel2_colour.png\" -o \"C:/git/hermit_prov_app/trigg_wheel.png\")",
+      "Bash(curl -L \"https://www.glenntrigg.net/wp-content/uploads/2019/02/emotion_wheel_white.pdf\" -o \"C:/git/hermit_prov_app/trigg_wheel.pdf\")",
+      "Bash(curl -L \"https://www.glenntrigg.net/wp-content/uploads/2019/02/emotion_wheel_colour.pdf\" -o \"C:/git/hermit_prov_app/trigg_wheel_colour.pdf\")",
+      "WebSearch",
+      "WebFetch(domain:improwiki.com)",
+      "WebFetch(domain:www.theatrefolk.com)",
+      "WebFetch(domain:www.can-i-get-a.com)",
+      "WebFetch(domain:impromuse.com)",
+      "WebFetch(domain:improvencyclopedia.org)",
+      "WebFetch(domain:ask.metafilter.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.andismith.com)",
+      "WebFetch(domain:www.theimprovimpact.com)",
+      "WebFetch(domain:newyorkimprovtheater.com)",
+      "WebFetch(domain:robinpiree.com)",
+      "Bash(flutter test *)",
+      "Bash(flutter analyze *)",
+      "Bash(git *)",
+      "WebFetch(domain:choosealicense.com)",
+      "WebFetch(domain:www.gnu.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh api *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:spdx.org)"
+    ]
+  }
+}

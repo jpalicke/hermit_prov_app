@@ -34,8 +34,8 @@ final class CatClockSettings extends DrillSettings {
   const CatClockSettings({
     this.speakingDuration = const Duration(minutes: 3),
     this.regroupDuration = const Duration(seconds: 30),
-    this.prompt1Categories = PromptCategory.wordBucket,
-    this.prompt2Categories = PromptCategory.wordBucket,
+    this.prompt1Categories = const [PromptCategory.objects],
+    this.prompt2Categories = const [PromptCategory.objects],
   });
 
   final Duration speakingDuration;
