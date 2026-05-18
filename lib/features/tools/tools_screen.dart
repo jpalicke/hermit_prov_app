@@ -1,7 +1,8 @@
-// ABOUTME: Tools screen listing the four utility tools available in the app.
-// ABOUTME: Links to Prompt Generator, Custom Prompts, Timer, and Emotion Wheel.
+// ABOUTME: Tools screen listing the utility tools available in the app.
+// ABOUTME: Links to Prompt Generator, Custom Prompts, Journal, Timer, and Emotion Wheel.
 
 import 'package:flutter/material.dart';
+import 'package:hermit_prov_app/features/journal/journal_screen.dart';
 import 'package:hermit_prov_app/features/prompts/custom_prompts_screen.dart';
 import 'package:hermit_prov_app/features/tools/emotion_wheel_screen.dart';
 import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
@@ -33,6 +34,16 @@ class ToolsScreen extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const CustomPromptsScreen(),
+              ),
+            ),
+          ),
+          _ToolTile(
+            icon: Icons.book_outlined,
+            title: 'Journal',
+            subtitle: 'Write notes about your practice.',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const JournalScreen(),
               ),
             ),
           ),

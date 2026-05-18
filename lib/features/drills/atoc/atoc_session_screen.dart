@@ -3,9 +3,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/domain/drills/atoc/atoc_sequence.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
+import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
@@ -17,12 +19,14 @@ class AtoCSessionScreen extends StatefulWidget {
     required this.promptRepository,
     required this.onSessionEnd,
     this.onConfigure,
+    this.historyRepository,
   });
 
   final AtoCSettings settings;
   final PromptRepository promptRepository;
   final VoidCallback onSessionEnd;
   final VoidCallback? onConfigure;
+  final PracticeHistoryRepository? historyRepository;
 
   @override
   State<AtoCSessionScreen> createState() => _AtoCSessionScreenState();
@@ -102,6 +106,8 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      historyRepository: widget.historyRepository,
+      drillId: DrillId.atoC,
       instructions:
           'A prompt appears and a countdown runs. React to the prompt out loud. '
           'When the timer hits, a new prompt appears automatically. Runs until you stop it.',

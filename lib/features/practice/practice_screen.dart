@@ -75,6 +75,7 @@ class PracticeScreen extends StatelessWidget {
         screen = CatClockSessionScreen(
           settings: s,
           promptRepository: services.promptRepository,
+          historyRepository: services.practiceHistoryRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -87,6 +88,7 @@ class PracticeScreen extends StatelessWidget {
         screen = TwoCharacterSessionScreen(
           settings: s,
           promptRepository: services.promptRepository,
+          historyRepository: services.practiceHistoryRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -99,6 +101,7 @@ class PracticeScreen extends StatelessWidget {
         screen = AtoCSessionScreen(
           settings: s,
           promptRepository: services.promptRepository,
+          historyRepository: services.practiceHistoryRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -110,6 +113,7 @@ class PracticeScreen extends StatelessWidget {
         final s = settings as FiveLineGameSettings;
         screen = FiveLineSessionScreen(
           settings: s,
+          historyRepository: services.practiceHistoryRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -121,6 +125,7 @@ class PracticeScreen extends StatelessWidget {
         final s = settings as CharacterCreationSettings;
         screen = CharacterCreationSessionScreen(
           settings: s,
+          historyRepository: services.practiceHistoryRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(

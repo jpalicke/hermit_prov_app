@@ -4,8 +4,10 @@
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/character_creation/character_creation_cycle.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
+import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
@@ -15,11 +17,13 @@ class CharacterCreationSessionScreen extends StatefulWidget {
     required this.settings,
     required this.onSessionEnd,
     this.onConfigure,
+    this.historyRepository,
   });
 
   final CharacterCreationSettings settings;
   final VoidCallback onSessionEnd;
   final VoidCallback? onConfigure;
+  final PracticeHistoryRepository? historyRepository;
 
   @override
   State<CharacterCreationSessionScreen> createState() =>
@@ -32,7 +36,7 @@ class _CharacterCreationSessionScreenState
 
   DrillSessionController? _controller;
 
-  // Maps segment id → generated prompt text.
+  // Maps segment id to generated prompt text.
   final Map<String, String> _prompts = {};
 
   @override
@@ -80,6 +84,8 @@ class _CharacterCreationSessionScreenState
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      historyRepository: widget.historyRepository,
+      drillId: DrillId.characterCreation,
       autoStart: true,
       instructions:
           'Each segment is one character. On the first pass, a prompt appears automatically. '

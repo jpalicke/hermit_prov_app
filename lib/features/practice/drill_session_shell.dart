@@ -4,8 +4,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
+import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
+import 'package:hermit_prov_app/domain/history/practice_session.dart';
 
 /// Reusable active session screen.
 ///
@@ -28,6 +31,9 @@ import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 ///                  of the body that opens a bottom sheet with the instructions.
 /// [ringLabelBuilder] — optional callback returning a label to display inside
 ///                      the progress ring above the countdown text.
+/// [historyRepository] — when provided together with [drillId], sessions lasting
+///                       at least 30 seconds are silently logged on stop or auto-complete.
+/// [drillId] — the drill being practiced; required for logging.
 class DrillSessionShell extends StatefulWidget {
   const DrillSessionShell({
     super.key,
@@ -38,6 +44,8 @@ class DrillSessionShell extends StatefulWidget {
     this.autoStart = false,
     this.instructions,
     this.ringLabelBuilder,
+    this.historyRepository,
+    this.drillId,
   });
 
   final DrillSessionController controller;
@@ -49,12 +57,22 @@ class DrillSessionShell extends StatefulWidget {
   final String? instructions;
   final String? Function(DrillSessionState)? ringLabelBuilder;
 
+  /// When provided together with [drillId], sessions lasting at least 30 seconds
+  /// are silently logged on stop or auto-complete.
+  final PracticeHistoryRepository? historyRepository;
+
+  /// The drill being practiced. Required for logging; ignored when [historyRepository] is null.
+  final DrillId? drillId;
+
   @override
   State<DrillSessionShell> createState() => _DrillSessionShellState();
 }
 
 class _DrillSessionShellState extends State<DrillSessionShell> {
   Timer? _ticker;
+
+  /// Set when the user taps Start; used to compute session duration for logging.
+  DateTime? _startedAt;
 
   @override
   void initState() {
@@ -81,12 +99,14 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
       // Auto-end when a finite session completes.
       if (widget.controller.state.isCompleted) {
         _ticker?.cancel();
+        _maybeLogSession();
         widget.onSessionEnd();
       }
     });
   }
 
   void _handleStart() {
+    _startedAt = DateTime.now();
     setState(() {
       widget.controller.start();
     });
@@ -106,7 +126,32 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
   void _handleStop() {
     _ticker?.cancel();
     widget.controller.stop();
+    _maybeLogSession();
     widget.onSessionEnd();
+  }
+
+  /// Silently logs the session when conditions are met.
+  ///
+  /// Conditions: historyRepository and drillId are set, the session was
+  /// started, and elapsed time is at least 30 seconds.
+  void _maybeLogSession() {
+    final repo = widget.historyRepository;
+    final drillId = widget.drillId;
+    final startedAt = _startedAt;
+    if (repo == null || drillId == null || startedAt == null) return;
+
+    final elapsed = widget.controller.state.sessionElapsed;
+    if (elapsed.inSeconds < 30) return;
+
+    final session = PracticeSession(
+      id: '${DateTime.now().millisecondsSinceEpoch}',
+      drillId: drillId,
+      startedAt: startedAt,
+      duration: elapsed,
+      loggedAt: DateTime.now(),
+    );
+    // Fire-and-forget: logging is silent, errors are not surfaced to the user.
+    repo.addSession(session);
   }
 
   void _showInstructions(BuildContext context) {
