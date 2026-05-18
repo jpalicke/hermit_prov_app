@@ -1,8 +1,9 @@
 // ABOUTME: Tools screen listing the four utility tools available in the app.
-// ABOUTME: Links to Prompt Generator, Custom Prompts, Timer (placeholder), and Emotion Wheel (placeholder).
+// ABOUTME: Links to Prompt Generator, Custom Prompts, Timer (placeholder), and Emotion Wheel.
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/features/prompts/custom_prompts_screen.dart';
+import 'package:hermit_prov_app/features/tools/emotion_wheel_screen.dart';
 import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
 
 class ToolsScreen extends StatelessWidget {
@@ -45,9 +46,11 @@ class ToolsScreen extends StatelessWidget {
           _ToolTile(
             icon: Icons.sentiment_satisfied_alt,
             title: 'Emotion Wheel',
-            subtitle: 'Coming soon.',
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Emotion Wheel coming soon.')),
+            subtitle: 'Browse the Trigg emotion wheel and pick a feeling.',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const EmotionWheelScreen(),
+              ),
             ),
           ),
         ],
