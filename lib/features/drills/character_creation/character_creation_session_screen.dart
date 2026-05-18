@@ -1,5 +1,5 @@
 // ABOUTME: Active session screen for the Character Creation drill.
-// ABOUTME: First pass shows label + Generate Prompt button; return pass shows label only, no prompt.
+// ABOUTME: First pass shows prompt + label; return pass shows label only, no prompt.
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
@@ -52,6 +52,13 @@ class _CharacterCreationSessionScreenState
         tickDuration: const Duration(seconds: 1),
       );
     });
+    // Auto-generate prompts for all first-pass segments.
+    for (final seg in segments) {
+      if (CharacterCreationCycleBuilder.passTypeForId(seg.id) ==
+          CharacterCreationPassType.firstPass) {
+        _generatePromptForSegment(seg.id);
+      }
+    }
   }
 
   Future<void> _generatePromptForSegment(String segmentId) async {
@@ -73,6 +80,16 @@ class _CharacterCreationSessionScreenState
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      autoStart: true,
+      instructions:
+          'Each segment is one character. On the first pass, a prompt appears automatically. '
+          'Tap New Prompt if you want a different one. On the return pass, return to that character. '
+          'No prompt is shown on return passes. The session ends when every character has had '
+          'both the initial and return passes.',
+      ringLabelBuilder: (state) {
+        final seg = state.currentSegment;
+        return seg?.label;
+      },
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();
@@ -85,38 +102,52 @@ class _CharacterCreationSessionScreenState
         final tt = Theme.of(context).textTheme;
         final cs = Theme.of(context).colorScheme;
 
+        if (!isFirstPass) {
+          // Return pass: show only the character label, no prompt, no button.
+          return Text(
+            seg.label ?? seg.id,
+            key: Key('char_label_${seg.id}'),
+            textAlign: TextAlign.center,
+            style: tt.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: cs.onSurface,
+            ),
+          );
+        }
+
+        // First pass: prompt is the hero above the character label.
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Character label.
+            // Prompt text — hero display.
+            if (prompt != null)
+              Text(
+                prompt,
+                key: Key('char_prompt_${seg.id}'),
+                textAlign: TextAlign.center,
+                style: tt.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: cs.primary,
+                ),
+              ),
+            const SizedBox(height: 8),
+            // Character label below the prompt.
             Text(
               seg.label ?? seg.id,
               key: Key('char_label_${seg.id}'),
               textAlign: TextAlign.center,
-              style: tt.titleLarge?.copyWith(
+              style: tt.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: cs.onSurface,
               ),
             ),
-            if (isFirstPass) ...[
-              const SizedBox(height: 16),
-              // Prompt display area.
-              if (prompt != null)
-                Text(
-                  prompt,
-                  key: Key('char_prompt_${seg.id}'),
-                  textAlign: TextAlign.center,
-                  style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
-                ),
-              const SizedBox(height: 12),
-              // Generate Prompt button — first pass only.
-              FilledButton.tonal(
-                key: const Key('generate_prompt_button'),
-                onPressed: () => _generatePromptForSegment(seg.id),
-                child: const Text('Generate Prompt'),
-              ),
-            ],
-            // Return pass: no prompt button, no prompt display.
+            const SizedBox(height: 12),
+            // New Prompt button — first pass only.
+            FilledButton.tonal(
+              key: const Key('generate_prompt_button'),
+              onPressed: () => _generatePromptForSegment(seg.id),
+              child: const Text('New Prompt'),
+            ),
           ],
         );
       },

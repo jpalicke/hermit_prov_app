@@ -28,8 +28,9 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // The first segment label is "Character 1".
+    // Note: "Character 1" appears both in the ring label and the content area.
     expect(find.byKey(const Key('char_label_first_1')), findsOneWidget);
-    expect(find.text('Character 1'), findsOneWidget);
+    expect(find.text('Character 1'), findsAtLeastNWidgets(1));
   });
 
   // 2. Generate Prompt button appears only on first passes.
@@ -97,6 +98,27 @@ void main() {
     // No confirmation dialog — session ends immediately.
     expect(find.byKey(const Key('stop_confirm_button')), findsNothing);
     expect(ended, isTrue);
+  });
+
+  // 8. Session auto-starts — Pause/Resume button visible, not Start button.
+  testWidgets('Session auto-starts and shows Pause button instead of Start',
+      (tester) async {
+    await tester.pumpWidget(_wrapSession());
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    // autoStart: true means the controller starts on the first frame.
+    expect(find.byKey(const Key('start_button')), findsNothing);
+    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+  });
+
+  // 9. Prompts are auto-generated for first-pass segments on init.
+  testWidgets('Prompts are auto-generated for first-pass segments on init',
+      (tester) async {
+    await tester.pumpWidget(_wrapSession());
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    // A prompt should already appear for the first segment without tapping.
+    expect(find.byKey(const Key('char_prompt_first_1')), findsOneWidget);
   });
 
   // 7. Configure saves character count, segment duration, and category.

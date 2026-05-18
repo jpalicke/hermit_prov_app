@@ -117,6 +117,10 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      instructions:
+          'Two prompts appear on screen. Connect the two words through free association, '
+          'speaking out loud until the timer ends. A short regroup follows, then fresh prompts '
+          'appear automatically for the next rep. Runs until you stop it.',
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();

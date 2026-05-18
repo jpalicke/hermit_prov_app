@@ -102,6 +102,9 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      instructions:
+          'A prompt appears and a countdown runs. React to the prompt out loud. '
+          'When the timer hits, a new prompt appears automatically. Runs until you stop it.',
       contentBuilder: (context, state) {
         _onStateChanged(state);
         if (_prompt == null) return const SizedBox.shrink();

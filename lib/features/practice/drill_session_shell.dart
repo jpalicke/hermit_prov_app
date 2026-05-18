@@ -22,6 +22,12 @@ import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 ///                 When null, no gear icon is shown.
 /// [contentBuilder] — builds the drill-specific content shown inside the
 ///                    session card (e.g. prompt text, character labels, etc.).
+/// [autoStart] — when true, [_handleStart] is called automatically after the
+///               first frame via [WidgetsBinding.instance.addPostFrameCallback].
+/// [instructions] — when provided, shows an info icon button in the top-right
+///                  of the body that opens a bottom sheet with the instructions.
+/// [ringLabelBuilder] — optional callback returning a label to display inside
+///                      the progress ring above the countdown text.
 class DrillSessionShell extends StatefulWidget {
   const DrillSessionShell({
     super.key,
@@ -29,6 +35,9 @@ class DrillSessionShell extends StatefulWidget {
     required this.onSessionEnd,
     this.onConfigure,
     this.contentBuilder,
+    this.autoStart = false,
+    this.instructions,
+    this.ringLabelBuilder,
   });
 
   final DrillSessionController controller;
@@ -36,6 +45,9 @@ class DrillSessionShell extends StatefulWidget {
   final VoidCallback? onConfigure;
   final Widget Function(BuildContext context, DrillSessionState state)?
       contentBuilder;
+  final bool autoStart;
+  final String? instructions;
+  final String? Function(DrillSessionState)? ringLabelBuilder;
 
   @override
   State<DrillSessionShell> createState() => _DrillSessionShellState();
@@ -43,6 +55,16 @@ class DrillSessionShell extends StatefulWidget {
 
 class _DrillSessionShellState extends State<DrillSessionShell> {
   Timer? _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoStart) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _handleStart();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -87,6 +109,24 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     widget.onSessionEnd();
   }
 
+  void _showInstructions(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) {
+        final tt = Theme.of(ctx).textTheme;
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              widget.instructions!,
+              style: tt.bodyMedium,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
@@ -102,6 +142,8 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     final isIdle = state.isIdle;
     final isPaused = state.isPaused;
 
+    final ringLabel = widget.ringLabelBuilder?.call(state);
+
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
@@ -110,6 +152,18 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // ── Info button row ─────────────────────────────────────────────
+              if (widget.instructions != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      key: const Key('session_info_button'),
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () => _showInstructions(context),
+                    ),
+                  ],
+                ),
               // ── Circular progress + countdown ───────────────────────────
               Expanded(
                 flex: 3,
@@ -132,6 +186,15 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if (ringLabel != null)
+                            Text(
+                              ringLabel,
+                              key: const Key('session_ring_label'),
+                              textAlign: TextAlign.center,
+                              style: tt.labelLarge?.copyWith(
+                                color: cs.onSurfaceVariant,
+                              ),
+                            ),
                           Text(
                             timeText,
                             key: const Key('session_countdown_text'),
@@ -168,10 +231,12 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
               // ── Drill-specific content ───────────────────────────────────
               Expanded(
                 flex: 2,
-                child: Center(
-                  child: widget.contentBuilder != null
-                      ? widget.contentBuilder!(context, state)
-                      : const SizedBox.shrink(),
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: widget.contentBuilder != null
+                        ? widget.contentBuilder!(context, state)
+                        : const SizedBox.shrink(),
+                  ),
                 ),
               ),
               // ── Controls ────────────────────────────────────────────────
