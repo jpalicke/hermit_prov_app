@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/two_character/two_character_start_screen.dart';
 import 'package:hermit_prov_app/features/practice/drill_start_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
@@ -49,6 +50,8 @@ class PracticeScreen extends StatelessWidget {
     switch (drillId) {
       case DrillId.catClock:
         screen = const CatClockStartScreen();
+      case DrillId.twoCharacterScenes:
+        screen = const TwoCharacterStartScreen();
       default:
         // Other drills get placeholder start screens until their prompts land.
         screen = DrillStartScreen(

@@ -952,7 +952,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 11 — Two-Character Scenes Drill
+## Prompt 11 — Two-Character Scenes Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
