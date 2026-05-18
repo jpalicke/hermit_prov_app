@@ -707,7 +707,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 6 — Custom Prompt CRUD and Management UI
+## Prompt 6 — Custom Prompt CRUD and Management UI [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -750,7 +750,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 7 — Standalone Prompt Generator Tool
+## Prompt 7 — Standalone Prompt Generator Tool [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
