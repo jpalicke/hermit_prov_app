@@ -1150,7 +1150,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 15 — Character Creation UI and Normal-Mode Prompt Generation
+## Prompt 15 — Character Creation UI and Normal-Mode Prompt Generation [DONE]
 
 ```text
 Continue implementing Hermit-Prov.

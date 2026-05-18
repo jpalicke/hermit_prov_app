@@ -6,9 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_start_screen.dart';
 import 'package:hermit_prov_app/features/drills/atoc/atoc_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/character_creation/character_creation_start_screen.dart';
 import 'package:hermit_prov_app/features/drills/five_line/five_line_start_screen.dart';
 import 'package:hermit_prov_app/features/drills/two_character/two_character_start_screen.dart';
-import 'package:hermit_prov_app/features/practice/drill_start_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
@@ -58,16 +58,8 @@ class PracticeScreen extends StatelessWidget {
         screen = const AtoCStartScreen();
       case DrillId.fiveLineGame:
         screen = const FiveLineStartScreen();
-      default:
-        // Other drills get placeholder start screens until their prompts land.
-        screen = DrillStartScreen(
-          drillId: drillId,
-          subtitle: _drills
-              .firstWhere((d) => d.drillId == drillId)
-              .subtitle,
-          onStart: () {},
-          onConfigure: () {},
-        );
+      case DrillId.characterCreation:
+        screen = const CharacterCreationStartScreen();
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
