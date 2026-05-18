@@ -1512,7 +1512,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 22 — Interactive Emotion Wheel Tool
+## Prompt 22 — Interactive Emotion Wheel Tool [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
