@@ -1,5 +1,5 @@
 // ABOUTME: Reusable active drill session UI shell with countdown, progress ring, and controls.
-// ABOUTME: Hosts a DrillSessionController and a real periodic timer; drives Pause/Resume/Stop.
+// ABOUTME: Hosts a DrillSessionController and a real periodic timer; drives Start/Pause/Resume/Stop.
 
 import 'dart:async';
 
@@ -10,13 +10,16 @@ import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 /// Reusable active session screen.
 ///
 /// The caller provides a [controller] that has already been configured with
-/// the correct segment list.  The shell starts an internal 1-second periodic
+/// the correct segment list.  The shell manages an internal 1-second periodic
 /// Timer that calls [controller.tick] and rebuilds via [setState].
 ///
-/// [onSessionEnd] — called after the user confirms Stop OR when a finite
-///                  session completes naturally.
-/// [onConfigure] — optional callback invoked when the user taps the gear icon
-///                 while paused. When null, no gear icon is shown.
+/// The session loads with the timer stopped.  A Start button is shown first;
+/// after starting it becomes a Pause / Resume toggle.  A separate Stop button
+/// ends the session immediately without any confirmation dialog.
+///
+/// [onSessionEnd] — called when Stop is tapped or a finite session completes.
+/// [onConfigure] — optional callback invoked when the user taps the gear icon.
+///                 When null, no gear icon is shown.
 /// [contentBuilder] — builds the drill-specific content shown inside the
 ///                    session card (e.g. prompt text, character labels, etc.).
 class DrillSessionShell extends StatefulWidget {
@@ -42,13 +45,6 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
   Timer? _ticker;
 
   @override
-  void initState() {
-    super.initState();
-    widget.controller.start();
-    _startTicker();
-  }
-
-  @override
   void dispose() {
     _ticker?.cancel();
     super.dispose();
@@ -68,6 +64,13 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     });
   }
 
+  void _handleStart() {
+    setState(() {
+      widget.controller.start();
+    });
+    _startTicker();
+  }
+
   void _handlePauseResume() {
     setState(() {
       if (widget.controller.state.isRunning) {
@@ -78,39 +81,10 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     });
   }
 
-  Future<void> _handleStop() async {
-    widget.controller.pause();
-    if (!mounted) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        key: const Key('stop_confirm_dialog'),
-        title: const Text('End session?'),
-        content: const Text('Are you sure you want to end this session?'),
-        actions: [
-          TextButton(
-            key: const Key('stop_cancel_button'),
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Keep going'),
-          ),
-          FilledButton(
-            key: const Key('stop_confirm_button'),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('End session'),
-          ),
-        ],
-      ),
-    );
-    if (!mounted) return;
-    if (confirmed == true) {
-      _ticker?.cancel();
-      widget.controller.stop();
-      widget.onSessionEnd();
-    } else {
-      // User cancelled — resume.
-      setState(() => widget.controller.resume());
-    }
+  void _handleStop() {
+    _ticker?.cancel();
+    widget.controller.stop();
+    widget.onSessionEnd();
   }
 
   @override
@@ -125,6 +99,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     final timeText =
         '${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
 
+    final isIdle = state.isIdle;
     final isPaused = state.isPaused;
 
     return Scaffold(
@@ -176,6 +151,14 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                                 letterSpacing: 2,
                               ),
                             ),
+                          if (isIdle)
+                            Text(
+                              'READY',
+                              style: tt.labelMedium?.copyWith(
+                                color: cs.outline,
+                                letterSpacing: 2,
+                              ),
+                            ),
                         ],
                       ),
                     ],
@@ -193,19 +176,33 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
               ),
               // ── Controls ────────────────────────────────────────────────
               const SizedBox(height: 16),
-              FilledButton.icon(
-                key: const Key('pause_resume_button'),
-                onPressed: _handlePauseResume,
-                icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
-                label: Text(isPaused ? 'Resume' : 'Pause'),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  textStyle: tt.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+              if (isIdle)
+                FilledButton.icon(
+                  key: const Key('start_button'),
+                  onPressed: _handleStart,
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Start'),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    textStyle: tt.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                )
+              else
+                FilledButton.icon(
+                  key: const Key('pause_resume_button'),
+                  onPressed: _handlePauseResume,
+                  icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+                  label: Text(isPaused ? 'Resume' : 'Pause'),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    textStyle: tt.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              if (isPaused && widget.onConfigure != null) ...[
+              if (widget.onConfigure != null) ...[
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   key: const Key('session_configure_button'),
@@ -232,7 +229,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                   side: BorderSide(color: cs.error),
                   foregroundColor: cs.error,
                 ),
-                child: const Text('Stop / End'),
+                child: const Text('Stop'),
               ),
             ],
           ),

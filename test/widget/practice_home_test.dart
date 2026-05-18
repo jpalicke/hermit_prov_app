@@ -60,7 +60,8 @@ void main() {
       await pumpPracticeHome(tester);
       await tapCard(tester, 'Cat/Clock');
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+      // Session loads idle — Start button shown before clock begins.
+      expect(find.byKey(const Key('start_button')), findsOneWidget);
       expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
     });
 
@@ -70,7 +71,8 @@ void main() {
       await pumpPracticeHome(tester);
       await tapCard(tester, 'Character Creation');
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+      // Session loads idle — Start button shown before clock begins.
+      expect(find.byKey(const Key('start_button')), findsOneWidget);
       expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
     });
 
@@ -80,7 +82,8 @@ void main() {
       await pumpPracticeHome(tester);
       await tapCard(tester, 'Two-Character Scenes');
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+      // Session loads idle — Start button shown before clock begins.
+      expect(find.byKey(const Key('start_button')), findsOneWidget);
       expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
     });
 
@@ -89,7 +92,8 @@ void main() {
       await pumpPracticeHome(tester);
       await tapCard(tester, 'A-to-C / Bad Idea / Initiation');
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+      // Session loads idle — Start button shown before clock begins.
+      expect(find.byKey(const Key('start_button')), findsOneWidget);
       expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
     });
 

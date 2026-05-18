@@ -179,5 +179,15 @@ void main() {
       expect(ctrl.state.segmentProgress, 0.0);
       expect(ctrl.state.segmentRemaining, const Duration(seconds: 5));
     });
+
+    test('stop from idle transitions to stopped', () {
+      final ctrl = DrillSessionController(
+        segments: [_seg('s0', seconds: 10)],
+      );
+      // Session never started — stop should still transition to stopped.
+      ctrl.stop();
+
+      expect(ctrl.state.status, DrillSessionStatus.stopped);
+    });
   });
 }

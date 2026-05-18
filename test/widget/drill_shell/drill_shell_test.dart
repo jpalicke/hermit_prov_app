@@ -27,6 +27,7 @@ DrillSegment _seg(String id, {int seconds = 60}) => DrillSegment(
 
 /// A manually-ticked session shell that does NOT start an internal Timer.
 /// This lets widget tests drive time without fake timers.
+/// Mirrors the production DrillSessionShell UX: loads idle, Start → Pause/Resume.
 class _ManualSessionShell extends StatefulWidget {
   const _ManualSessionShell({
     required this.controller,
@@ -43,14 +44,12 @@ class _ManualSessionShell extends StatefulWidget {
 }
 
 class _ManualSessionShellState extends State<_ManualSessionShell> {
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.start();
-  }
-
   void tick() {
     setState(() => widget.controller.tick());
+  }
+
+  void _handleStart() {
+    setState(() => widget.controller.start());
   }
 
   void _handlePauseResume() {
@@ -63,35 +62,9 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
     });
   }
 
-  Future<void> _handleStop() async {
-    widget.controller.pause();
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        key: const Key('stop_confirm_dialog'),
-        title: const Text('End session?'),
-        content: const Text('Are you sure you want to end this session?'),
-        actions: [
-          TextButton(
-            key: const Key('stop_cancel_button'),
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Keep going'),
-          ),
-          FilledButton(
-            key: const Key('stop_confirm_button'),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('End session'),
-          ),
-        ],
-      ),
-    );
-    if (!mounted) return;
-    if (confirmed == true) {
-      widget.controller.stop();
-      widget.onSessionEnd();
-    } else {
-      setState(() => widget.controller.resume());
-    }
+  void _handleStop() {
+    widget.controller.stop();
+    widget.onSessionEnd();
   }
 
   @override
@@ -104,6 +77,7 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
     final timeText =
         '${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
 
+    final isIdle = state.isIdle;
     final isPaused = state.isPaused;
 
     return Scaffold(
@@ -111,13 +85,21 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
         children: [
           Text(timeText, key: const Key('session_countdown_text')),
           if (isPaused) const Text('PAUSED', key: Key('paused_label')),
-          FilledButton.icon(
-            key: const Key('pause_resume_button'),
-            onPressed: _handlePauseResume,
-            icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
-            label: Text(isPaused ? 'Resume' : 'Pause'),
-          ),
-          if (isPaused && widget.onConfigure != null)
+          if (isIdle)
+            FilledButton.icon(
+              key: const Key('start_button'),
+              onPressed: _handleStart,
+              icon: const Icon(Icons.play_arrow),
+              label: const Text('Start'),
+            )
+          else
+            FilledButton.icon(
+              key: const Key('pause_resume_button'),
+              onPressed: _handlePauseResume,
+              icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+              label: Text(isPaused ? 'Resume' : 'Pause'),
+            ),
+          if (widget.onConfigure != null)
             OutlinedButton.icon(
               key: const Key('session_configure_button'),
               onPressed: widget.onConfigure,
@@ -127,7 +109,7 @@ class _ManualSessionShellState extends State<_ManualSessionShell> {
           OutlinedButton(
             key: const Key('stop_end_button'),
             onPressed: _handleStop,
-            child: const Text('Stop / End'),
+            child: const Text('Stop'),
           ),
         ],
       ),
@@ -159,7 +141,55 @@ void main() {
     expect(saved, isTrue);
   });
 
-  // 2. Pause changes to Resume and freezes displayed timer.
+  // 2. Session loads idle — Start button visible, Pause/Resume not yet shown.
+  testWidgets('Session loads idle with Start button', (tester) async {
+    final controller = DrillSessionController(
+      segments: [_seg('s0', seconds: 60)],
+      loops: true,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        _ManualSessionShell(
+          controller: controller,
+          onSessionEnd: () {},
+          onConfigure: null,
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('start_button')), findsOneWidget);
+    expect(find.byKey(const Key('pause_resume_button')), findsNothing);
+    expect(controller.state.isIdle, isTrue);
+  });
+
+  // 3. Tapping Start begins the session and shows Pause button.
+  testWidgets('Tapping Start begins session and shows Pause button',
+      (tester) async {
+    final controller = DrillSessionController(
+      segments: [_seg('s0', seconds: 60)],
+      loops: true,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        _ManualSessionShell(
+          controller: controller,
+          onSessionEnd: () {},
+          onConfigure: null,
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
+
+    expect(find.byKey(const Key('start_button')), findsNothing);
+    expect(find.text('Pause'), findsOneWidget);
+    expect(controller.state.isRunning, isTrue);
+  });
+
+  // 4. Pause changes to Resume and freezes displayed timer.
   testWidgets('Pause changes button to Resume and freezes timer',
       (tester) async {
     final controller = DrillSessionController(
@@ -179,6 +209,10 @@ void main() {
     );
 
     shellState = tester.state(find.byType(_ManualSessionShell));
+
+    // Start the session first.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
 
     // Advance a few ticks.
     shellState.tick();
@@ -209,33 +243,9 @@ void main() {
         frozenTime);
   });
 
-  // 3. Stop/End shows confirmation dialog.
-  testWidgets('Stop/End button shows confirmation dialog', (tester) async {
-    final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
-      loops: true,
-    );
-
-    await tester.pumpWidget(
-      _wrap(
-        _ManualSessionShell(
-          controller: controller,
-          onSessionEnd: () {},
-          onConfigure: null,
-        ),
-      ),
-    );
-
-    await tester.tap(find.byKey(const Key('stop_end_button')));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('stop_confirm_dialog')), findsOneWidget);
-    expect(find.byKey(const Key('stop_confirm_button')), findsOneWidget);
-    expect(find.byKey(const Key('stop_cancel_button')), findsOneWidget);
-  });
-
-  // 4. Confirming Stop calls onSessionEnd callback.
-  testWidgets('Confirming Stop calls onSessionEnd callback', (tester) async {
+  // 5. Stop button ends session immediately without a confirmation dialog.
+  testWidgets('Stop button ends session immediately without dialog',
+      (tester) async {
     final controller = DrillSessionController(
       segments: [_seg('s0', seconds: 60)],
       loops: true,
@@ -255,16 +265,15 @@ void main() {
     await tester.tap(find.byKey(const Key('stop_end_button')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('stop_confirm_button')));
-    await tester.pumpAndSettle();
-
+    // No confirmation dialog should appear.
+    expect(find.byKey(const Key('stop_confirm_dialog')), findsNothing);
     expect(ended, isTrue);
     expect(controller.state.isStopped, isTrue);
   });
 
-  // 5. DrillSessionShell shows gear icon when paused and onConfigure is provided.
+  // 6. DrillSessionShell shows gear icon always when onConfigure is provided.
   testWidgets(
-      'DrillSessionShell shows configure button when paused with onConfigure',
+      'DrillSessionShell shows configure button always when onConfigure provided',
       (tester) async {
     var configureOpened = false;
     final controller = DrillSessionController(
@@ -283,14 +292,21 @@ void main() {
     );
     await tester.pump();
 
-    // Gear icon not visible while running.
-    expect(find.byKey(const Key('session_configure_button')), findsNothing);
+    // Gear icon visible in idle state (before start).
+    expect(find.byKey(const Key('session_configure_button')), findsOneWidget);
+
+    // Tap Start.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
+
+    // Gear icon still visible while running.
+    expect(find.byKey(const Key('session_configure_button')), findsOneWidget);
 
     // Pause.
     await tester.tap(find.byKey(const Key('pause_resume_button')));
     await tester.pump();
 
-    // Gear icon appears when paused.
+    // Gear icon still visible when paused.
     expect(find.byKey(const Key('session_configure_button')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('session_configure_button')));
@@ -299,7 +315,7 @@ void main() {
     expect(configureOpened, isTrue);
   });
 
-  // 6. DrillSessionShell does NOT show gear icon when onConfigure is null.
+  // 7. DrillSessionShell does NOT show gear icon when onConfigure is null.
   testWidgets(
       'DrillSessionShell does not show configure button when onConfigure is null',
       (tester) async {
@@ -319,11 +335,13 @@ void main() {
     );
     await tester.pump();
 
-    // Pause.
-    await tester.tap(find.byKey(const Key('pause_resume_button')));
+    // Gear icon must never appear.
+    expect(find.byKey(const Key('session_configure_button')), findsNothing);
+
+    // Tap Start and verify still no gear icon.
+    await tester.tap(find.byKey(const Key('start_button')));
     await tester.pump();
 
-    // Gear icon must not appear.
     expect(find.byKey(const Key('session_configure_button')), findsNothing);
   });
 }

@@ -145,6 +145,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
+    // Session loads idle — Start button shown first.
+    expect(find.byKey(const Key('start_button')), findsOneWidget);
+
+    // Tap Start to begin the session.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
+
     expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('pause_resume_button')));

@@ -85,9 +85,8 @@ void main() {
   });
 
   // 6. Session end calls onSessionEnd.
-  //    (Covered by the DrillSessionShell's finite completion and onSessionEnd callback.)
-  //    We verify the stop confirmation path instead (same end result in practice).
-  testWidgets('Stop confirmation calls onSessionEnd', (tester) async {
+  //    Stop button ends session immediately without a confirmation dialog.
+  testWidgets('Stop calls onSessionEnd immediately without dialog', (tester) async {
     var ended = false;
     await tester.pumpWidget(_wrapSession(onSessionEnd: () => ended = true));
     await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -95,9 +94,8 @@ void main() {
     await tester.tap(find.byKey(const Key('stop_end_button')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('stop_confirm_button')));
-    await tester.pumpAndSettle();
-
+    // No confirmation dialog — session ends immediately.
+    expect(find.byKey(const Key('stop_confirm_button')), findsNothing);
     expect(ended, isTrue);
   });
 
