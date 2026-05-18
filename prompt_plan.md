@@ -999,7 +999,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 12 — A-to-C / Bad Idea / Initiation Drill
+## Prompt 12 — A-to-C / Bad Idea / Initiation Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
