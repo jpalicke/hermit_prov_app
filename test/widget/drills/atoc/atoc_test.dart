@@ -65,7 +65,22 @@ void main() {
     expect(saved.interval, const Duration(seconds: 60));
   });
 
-  // 3. Pause/Resume freezes prompt changes.
+  // 3. Hands-Free toggle is present and off by default in configure screen.
+  testWidgets('Configure has Hands-Free toggle off by default', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: AtoCConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.byKey(const Key('hands_free_toggle')),
+    );
+    expect(toggle.value, isFalse);
+  });
+
+  // 4. Pause/Resume freezes prompt changes.
   testWidgets('Pause shows Resume and session is paused', (tester) async {
     await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));

@@ -9,6 +9,7 @@ import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.da
 import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
+import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
 
@@ -19,6 +20,7 @@ Widget _wrapWithServices(Widget child) {
     practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
     journalRepository: InMemoryJournalRepository(),
     appPreferencesRepository: InMemoryAppPreferencesRepository(),
+    ttsService: FakeTtsService(),
     child: MaterialApp(home: child),
   );
 }

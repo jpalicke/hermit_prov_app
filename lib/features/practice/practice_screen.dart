@@ -76,6 +76,7 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           historyRepository: services.practiceHistoryRepository,
+          ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -89,6 +90,7 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           historyRepository: services.practiceHistoryRepository,
+          ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -102,6 +104,7 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           historyRepository: services.practiceHistoryRepository,
+          ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -114,6 +117,7 @@ class PracticeScreen extends StatelessWidget {
         screen = FiveLineSessionScreen(
           settings: s,
           historyRepository: services.practiceHistoryRepository,
+          ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(
@@ -126,6 +130,7 @@ class PracticeScreen extends StatelessWidget {
         screen = CharacterCreationSessionScreen(
           settings: s,
           historyRepository: services.practiceHistoryRepository,
+          ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
             await Navigator.of(context).push(MaterialPageRoute(

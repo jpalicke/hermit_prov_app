@@ -49,6 +49,7 @@ class _TwoCharacterConfigureScreenState
         sceneDuration: Duration(seconds: seconds),
         regroupDuration: _settings!.regroupDuration,
         promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
       );
     });
   }
@@ -59,6 +60,18 @@ class _TwoCharacterConfigureScreenState
         sceneDuration: _settings!.sceneDuration,
         regroupDuration: Duration(seconds: seconds),
         promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
+      );
+    });
+  }
+
+  void _setHandsFree(bool value) {
+    setState(() {
+      _settings = TwoCharacterScenesSettings(
+        sceneDuration: _settings!.sceneDuration,
+        regroupDuration: _settings!.regroupDuration,
+        promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: value,
       );
     });
   }
@@ -102,13 +115,13 @@ class _TwoCharacterConfigureScreenState
             onChanged: _setRegroupSeconds,
           ),
           const SizedBox(height: 24),
-          Text('Hands-Free (coming soon)', style: tt.titleMedium),
-          const SwitchListTile(
-            key: Key('hands_free_toggle'),
-            title: Text('Hands-Free mode'),
-            subtitle: Text('TTS not yet available'),
-            value: false,
-            onChanged: null,
+          SwitchListTile(
+            key: const Key('hands_free_toggle'),
+            title: const Text('Hands-Free Mode'),
+            subtitle: const Text(
+                'Speak prompts and countdown cues aloud during the session'),
+            value: settings.handsFreeModeEnabled,
+            onChanged: _setHandsFree,
           ),
         ],
       ),

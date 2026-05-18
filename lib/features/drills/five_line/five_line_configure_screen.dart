@@ -47,6 +47,7 @@ class _FiveLineConfigureScreenState extends State<FiveLineConfigureScreen> {
         autoAdvanceInterval: _settings!.autoAdvanceInterval ??
             FiveLineGameSettings.allowedAutoAdvanceIntervals.first,
         promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
       );
     });
   }
@@ -57,6 +58,18 @@ class _FiveLineConfigureScreenState extends State<FiveLineConfigureScreen> {
         autoAdvance: _settings!.autoAdvance,
         autoAdvanceInterval: d,
         promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
+      );
+    });
+  }
+
+  void _setHandsFree(bool value) {
+    setState(() {
+      _settings = FiveLineGameSettings(
+        autoAdvance: _settings!.autoAdvance,
+        autoAdvanceInterval: _settings!.autoAdvanceInterval,
+        promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: value,
       );
     });
   }
@@ -102,6 +115,15 @@ class _FiveLineConfigureScreenState extends State<FiveLineConfigureScreen> {
               }).toList(),
             ),
           ],
+          const SizedBox(height: 24),
+          SwitchListTile(
+            key: const Key('hands_free_toggle'),
+            title: const Text('Hands-Free Mode'),
+            subtitle: const Text(
+                'Speak prompts and countdown cues aloud during the session'),
+            value: settings.handsFreeModeEnabled,
+            onChanged: _setHandsFree,
+          ),
         ],
       ),
     );

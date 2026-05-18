@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/domain/journal/journal_entry.dart';
 import 'package:hermit_prov_app/features/journal/journal_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
@@ -184,6 +185,7 @@ void main() {
         drillSettingsRepository: services.drillSettingsRepository,
         practiceHistoryRepository: services.practiceHistoryRepository,
         appPreferencesRepository: services.appPreferencesRepository,
+        ttsService: FakeTtsService(),
         child: const MaterialApp(home: JournalScreen()),
       );
 

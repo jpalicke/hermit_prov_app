@@ -39,6 +39,16 @@ class _AtoCConfigureScreenState extends State<AtoCConfigureScreen> {
     if (mounted) Navigator.of(context).pop();
   }
 
+  void _setHandsFree(bool value) {
+    setState(() {
+      _settings = AtoCSettings(
+        interval: _settings!.interval,
+        promptCategories: _settings!.promptCategories,
+        handsFreeModeEnabled: value,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = _settings;
@@ -68,10 +78,20 @@ class _AtoCConfigureScreenState extends State<AtoCConfigureScreen> {
                   _settings = AtoCSettings(
                     interval: d,
                     promptCategories: settings.promptCategories,
+                    handsFreeModeEnabled: settings.handsFreeModeEnabled,
                   );
                 }),
               );
             }).toList(),
+          ),
+          const SizedBox(height: 24),
+          SwitchListTile(
+            key: const Key('hands_free_toggle'),
+            title: const Text('Hands-Free Mode'),
+            subtitle: const Text(
+                'Speak prompts and countdown cues aloud during the session'),
+            value: settings.handsFreeModeEnabled,
+            onChanged: _setHandsFree,
           ),
         ],
       ),

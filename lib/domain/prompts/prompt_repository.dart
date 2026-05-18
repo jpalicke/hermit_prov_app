@@ -11,4 +11,7 @@ abstract interface class PromptRepository {
   Future<void> addCustomPrompt(CustomPrompt prompt);
   Future<void> updateCustomPrompt(CustomPrompt prompt);
   Future<void> deleteCustomPrompt(String id);
+
+  /// Deletes all custom prompts. Built-in prompts are not affected.
+  Future<void> clearAll();
 }

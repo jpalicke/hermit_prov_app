@@ -44,7 +44,22 @@ void main() {
     expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
   });
 
-  // 2. Configure saves changed speaking/regroup durations.
+  // 2. Hands-Free toggle is present and off by default in configure screen.
+  testWidgets('Configure has Hands-Free toggle off by default', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CatClockConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.byKey(const Key('hands_free_toggle')),
+    );
+    expect(toggle.value, isFalse);
+  });
+
+  // 3. Configure saves changed speaking/regroup durations.
   testWidgets('Configure saves speaking and regroup durations', (tester) async {
     final services = AppServices.withInMemory(
       child: const MaterialApp(home: CatClockConfigureScreen()),
