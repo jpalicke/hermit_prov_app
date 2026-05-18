@@ -17,6 +17,19 @@ sealed class DrillSettings {
   /// (manual tap or explicit auto-advance session).
   bool get loopsUntilStopped;
 
+  /// Serializes this settings object to a JSON-compatible map.
+  Map<String, dynamic> toJson();
+
+  /// Deserializes a [DrillSettings] subclass from [json] for the given [drillId].
+  static DrillSettings fromJson(DrillId drillId, Map<String, dynamic> json) =>
+      switch (drillId) {
+        DrillId.catClock => CatClockSettings.fromJson(json),
+        DrillId.characterCreation => CharacterCreationSettings.fromJson(json),
+        DrillId.twoCharacterScenes => TwoCharacterScenesSettings.fromJson(json),
+        DrillId.atoC => AtoCSettings.fromJson(json),
+        DrillId.fiveLineGame => FiveLineGameSettings.fromJson(json),
+      };
+
   /// Returns the factory-default [DrillSettings] for [drillId].
   /// Repositories use this to return defaults before any settings are saved.
   static DrillSettings defaultsFor(DrillId drillId) => switch (drillId) {
@@ -48,6 +61,28 @@ final class CatClockSettings extends DrillSettings {
 
   @override
   bool get loopsUntilStopped => true;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'speakingDuration': speakingDuration.inMilliseconds,
+        'regroupDuration': regroupDuration.inMilliseconds,
+        'prompt1Categories': prompt1Categories.map((c) => c.name).toList(),
+        'prompt2Categories': prompt2Categories.map((c) => c.name).toList(),
+      };
+
+  factory CatClockSettings.fromJson(Map<String, dynamic> json) =>
+      CatClockSettings(
+        speakingDuration:
+            Duration(milliseconds: json['speakingDuration'] as int),
+        regroupDuration:
+            Duration(milliseconds: json['regroupDuration'] as int),
+        prompt1Categories: (json['prompt1Categories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        prompt2Categories: (json['prompt2Categories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,6 +112,23 @@ final class CharacterCreationSettings extends DrillSettings {
 
   /// Valid character counts. The drill supports 2–5 characters per session.
   static const List<int> allowedCharacterCounts = [2, 3, 4, 5];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'characterCount': characterCount,
+        'segmentDuration': segmentDuration.inMilliseconds,
+        'promptCategories': promptCategories.map((c) => c.name).toList(),
+      };
+
+  factory CharacterCreationSettings.fromJson(Map<String, dynamic> json) =>
+      CharacterCreationSettings(
+        characterCount: json['characterCount'] as int,
+        segmentDuration:
+            Duration(milliseconds: json['segmentDuration'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,6 +149,23 @@ final class TwoCharacterScenesSettings extends DrillSettings {
 
   @override
   bool get loopsUntilStopped => true;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sceneDuration': sceneDuration.inMilliseconds,
+        'regroupDuration': regroupDuration.inMilliseconds,
+        'promptCategories': promptCategories.map((c) => c.name).toList(),
+      };
+
+  factory TwoCharacterScenesSettings.fromJson(Map<String, dynamic> json) =>
+      TwoCharacterScenesSettings(
+        sceneDuration: Duration(milliseconds: json['sceneDuration'] as int),
+        regroupDuration:
+            Duration(milliseconds: json['regroupDuration'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -122,6 +191,19 @@ final class AtoCSettings extends DrillSettings {
     Duration(seconds: 45),
     Duration(seconds: 60),
   ];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'interval': interval.inMilliseconds,
+        'promptCategories': promptCategories.map((c) => c.name).toList(),
+      };
+
+  factory AtoCSettings.fromJson(Map<String, dynamic> json) => AtoCSettings(
+        interval: Duration(milliseconds: json['interval'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -152,4 +234,24 @@ final class FiveLineGameSettings extends DrillSettings {
     Duration(seconds: 60),
     Duration(seconds: 90),
   ];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'autoAdvance': autoAdvance,
+        'autoAdvanceInterval': autoAdvanceInterval?.inMilliseconds,
+        'promptCategories': promptCategories.map((c) => c.name).toList(),
+      };
+
+  factory FiveLineGameSettings.fromJson(Map<String, dynamic> json) =>
+      FiveLineGameSettings(
+        autoAdvance: json['autoAdvance'] as bool,
+        autoAdvanceInterval: json['autoAdvanceInterval'] == null
+            ? null
+            : Duration(
+                milliseconds: json['autoAdvanceInterval'] as int,
+              ),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+      );
 }

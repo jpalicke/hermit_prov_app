@@ -1,13 +1,14 @@
 // ABOUTME: Entry point for the Hermit-Prov app.
-// ABOUTME: Mounts AppServices with in-memory repositories, then runs HermitProvApp.
+// ABOUTME: Initializes local storage and mounts AppServices before running the app.
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/app.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    AppServices.withInMemory(
+    await AppServices.withLocalStorage(
       child: const HermitProvApp(),
     ),
   );
