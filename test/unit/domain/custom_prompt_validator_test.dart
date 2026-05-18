@@ -66,7 +66,7 @@ void main() {
       expect(validator.validate('nigga').isValid, isFalse);
     });
 
-    test('anti-Black slur "coon" is blocked', () {
+    test('anti-Black slur is blocked', () {
       expect(validator.validate('a coon').isValid, isFalse);
     });
 
@@ -78,23 +78,23 @@ void main() {
       expect(validator.validate('spic').isValid, isFalse);
     });
 
-    test('anti-Asian slur "chink" is blocked', () {
+    test('anti-Asian slur (1) is blocked', () {
       expect(validator.validate('chink').isValid, isFalse);
     });
 
-    test('anti-Asian slur "gook" is blocked', () {
+    test('anti-Asian slur (2) is blocked', () {
       expect(validator.validate('gook').isValid, isFalse);
     });
 
-    test('homophobic slur "faggot" is blocked', () {
+    test('homophobic slur (1) is blocked', () {
       expect(validator.validate('faggot').isValid, isFalse);
     });
 
-    test('homophobic slur "dyke" used as a slur context is blocked', () {
+    test('homophobic slur (2) is blocked', () {
       expect(validator.validate('dyke').isValid, isFalse);
     });
 
-    test('ableist slur "retard" is blocked', () {
+    test('ableist slur is blocked', () {
       expect(validator.validate('retard').isValid, isFalse);
     });
 
