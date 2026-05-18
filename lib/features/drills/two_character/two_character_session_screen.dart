@@ -105,6 +105,9 @@ class _TwoCharacterSessionScreenState
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      instructions:
+          'A prompt appears. Play both characters in a scene out loud until the timer ends. '
+          'A short regroup follows, then a new prompt appears automatically. Runs until you stop it.',
       contentBuilder: (context, state) {
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();

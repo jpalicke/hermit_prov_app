@@ -176,6 +176,9 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      instructions:
+          'A prompt appears. Perform a five-line scene out loud. When you are done, tap New Prompt '
+          'to go again. No timer by default. Turn on auto-advance in configure if you want one.',
       contentBuilder: (context, state) {
         // Detect loop boundary — load a new prompt when the loop counter advances.
         if (state.loops > (_lastLoopCount ?? -1)) {

@@ -19,7 +19,7 @@ class PromptGeneratorScreen extends StatefulWidget {
 }
 
 class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
-  // Category selection — all selected by default (Word Bucket).
+  // Category selection — all selected by default.
   late Set<PromptCategory> _selectedCategories;
 
   String? _currentPrompt;
@@ -28,10 +28,29 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   int _autoAdvanceInterval = 30; // seconds
   Timer? _autoAdvanceTimer;
 
+  // Custom prompt counts per category, loaded from the repository.
+  Map<PromptCategory, int> _customCounts = {};
+
   @override
   void initState() {
     super.initState();
     _selectedCategories = Set.of(PromptCategory.values);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadCustomCounts();
+  }
+
+  Future<void> _loadCustomCounts() async {
+    final repo = AppServices.of(context).promptRepository;
+    final counts = <PromptCategory, int>{};
+    for (final cat in PromptCategory.values) {
+      final customs = await repo.getCustomPrompts(category: cat);
+      counts[cat] = customs.length;
+    }
+    if (mounted) setState(() => _customCounts = counts);
   }
 
   @override
@@ -41,14 +60,11 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   }
 
   Future<void> _generatePrompt() async {
+    if (_selectedCategories.isEmpty) return;
     final repo = AppServices.of(context).promptRepository;
     final picker = PromptPicker(repo);
 
-    final categories = _selectedCategories.isEmpty
-        ? PromptCategory.values.toList()
-        : _selectedCategories.toList();
-
-    final prompt = await picker.pickFromCategories(categories);
+    final prompt = await picker.pickFromCategories(_selectedCategories.toList());
     if (mounted) {
       setState(() => _currentPrompt = prompt ?? '(no prompts in selection)');
     }
@@ -81,10 +97,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   bool get _allSelected =>
       _selectedCategories.length == PromptCategory.values.length;
 
-  void _toggleWordBucket() {
+  void _toggleAllCategories() {
     setState(() {
       if (_allSelected) {
-        _selectedCategories = {PromptCategory.values.first};
+        _selectedCategories = {};
       } else {
         _selectedCategories = Set.of(PromptCategory.values);
       }
@@ -93,10 +109,11 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
   void _toggleCategory(PromptCategory cat) {
     setState(() {
-      if (_selectedCategories.contains(cat)) {
-        if (_selectedCategories.length > 1) {
-          _selectedCategories = Set.of(_selectedCategories)..remove(cat);
-        }
+      if (_allSelected) {
+        // Isolate: selecting one chip when all are selected narrows to just that one.
+        _selectedCategories = {cat};
+      } else if (_selectedCategories.contains(cat)) {
+        _selectedCategories = Set.of(_selectedCategories)..remove(cat);
       } else {
         _selectedCategories = Set.of(_selectedCategories)..add(cat);
       }
@@ -110,7 +127,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Prompt Generator')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,7 +153,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
             // ── New Prompt button ────────────────────────────────────────
             FilledButton.icon(
-              onPressed: _generatePrompt,
+              onPressed: _selectedCategories.isEmpty ? null : _generatePrompt,
               icon: const Icon(Icons.shuffle),
               label: const Text('New Prompt'),
             ),
@@ -172,15 +189,19 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
             // ── Category chips ───────────────────────────────────────────
             Text('Categories', style: tt.titleSmall),
             const SizedBox(height: 8),
+            // Select All / Deselect All toggle button.
+            FilledButton.tonal(
+              key: const Key('select_all_categories_button'),
+              onPressed: _toggleAllCategories,
+              child: Text(
+                _allSelected ? 'Deselect All Categories' : 'Select All Categories',
+              ),
+            ),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 4,
               children: [
-                FilterChip(
-                  label: const Text('Word Bucket'),
-                  selected: _allSelected,
-                  onSelected: (_) => _toggleWordBucket(),
-                ),
                 ...PromptCategory.values.map(
                   (cat) => FilterChip(
                     label: Text(_categoryLabel(cat)),
@@ -196,16 +217,20 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
     );
   }
 
-  String _categoryLabel(PromptCategory cat) => switch (cat) {
-        PromptCategory.objects => 'Objects',
-        PromptCategory.locations => 'Locations',
-        PromptCategory.relationships => 'Relationships',
-        PromptCategory.occupations => 'Occupations',
-        PromptCategory.emotions => 'Emotions',
-        PromptCategory.activities => 'Activities',
-        PromptCategory.genre => 'Genre',
-        PromptCategory.events => 'Events',
-      };
+  String _categoryLabel(PromptCategory cat) {
+    final base = switch (cat) {
+      PromptCategory.objects => 'Objects',
+      PromptCategory.locations => 'Locations',
+      PromptCategory.relationships => 'Relationships',
+      PromptCategory.occupations => 'Occupations',
+      PromptCategory.emotions => 'Emotions',
+      PromptCategory.activities => 'Activities',
+      PromptCategory.genre => 'Genre',
+      PromptCategory.events => 'Events',
+    };
+    final count = _customCounts[cat] ?? 0;
+    return count > 0 ? '$base ($count)' : base;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

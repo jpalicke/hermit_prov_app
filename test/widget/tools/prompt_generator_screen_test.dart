@@ -68,7 +68,93 @@ void main() {
       // Deselect all except Objects — tap "Word Bucket" to deselect all, then
       // re-select Objects. The exact UI interaction depends on implementation.
       // This test verifies the chip/filter mechanism exists.
-      expect(find.text('Objects'), findsOneWidget);
+      // The custom prompt count is shown in parentheses when > 0.
+      expect(find.textContaining('Objects'), findsOneWidget);
+    });
+  });
+
+  // ── Test: Chip isolation when all are selected ──────────────────────────────
+  group('chip isolation', () {
+    testWidgets(
+        'tapping a chip when all categories are selected isolates that category',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // All categories start selected. Tap "Objects" chip to isolate it.
+      await tester.tap(find.text('Objects'));
+      await tester.pumpAndSettle();
+
+      // Only Objects should now be selected (chip is selected).
+      final objectsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Objects'),
+      );
+      expect(objectsChip.selected, isTrue);
+
+      // Other categories should be deselected.
+      final locationsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Locations'),
+      );
+      expect(locationsChip.selected, isFalse);
+    });
+
+    testWidgets(
+        'tapping a chip when not all are selected toggles normally',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // First isolate one category (tap when all are selected).
+      await tester.tap(find.text('Objects'));
+      await tester.pumpAndSettle();
+
+      // Now tap Locations — it should be added (not all selected, so normal toggle).
+      await tester.tap(find.text('Locations'));
+      await tester.pumpAndSettle();
+
+      final locationsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Locations'),
+      );
+      expect(locationsChip.selected, isTrue);
+
+      // Objects still selected.
+      final objectsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Objects'),
+      );
+      expect(objectsChip.selected, isTrue);
+    });
+  });
+
+  // ── Test: New Prompt disabled when nothing selected ───────────────────────
+  group('new prompt button state', () {
+    testWidgets(
+        'New Prompt button is disabled when no categories are selected',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // Tap "Deselect All Categories" to clear selection.
+      await tester.tap(find.byKey(const Key('select_all_categories_button')));
+      await tester.pumpAndSettle();
+
+      // New Prompt button should now be disabled (onPressed == null).
+      final button = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'New Prompt'),
+      );
+      expect(button.onPressed, isNull);
+    });
+
+    testWidgets(
+        'New Prompt button is enabled when at least one category is selected',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // By default all categories are selected — button should be enabled.
+      final button = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'New Prompt'),
+      );
+      expect(button.onPressed, isNotNull);
     });
   });
 
