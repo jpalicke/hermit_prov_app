@@ -32,8 +32,15 @@ void main() {
     await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+    // Session loads idle — Start button is shown first.
+    expect(find.byKey(const Key('start_button')), findsOneWidget);
     expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
+
+    // After tapping Start, Pause/Resume button appears.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
+
+    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
   });
 
   // 2. Configure saves interval/category settings.
@@ -62,6 +69,10 @@ void main() {
   testWidgets('Pause shows Resume and session is paused', (tester) async {
     await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    // Start the session first.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
 
     // Pause.
     await tester.tap(find.byKey(const Key('pause_resume_button')));

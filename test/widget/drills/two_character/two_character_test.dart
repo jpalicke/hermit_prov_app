@@ -32,8 +32,15 @@ void main() {
     await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+    // Session loads idle — Start button shown before clock begins.
+    expect(find.byKey(const Key('start_button')), findsOneWidget);
     expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
+
+    // After tapping Start, Pause/Resume button appears.
+    await tester.tap(find.byKey(const Key('start_button')));
+    await tester.pump();
+
+    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
   });
 
   // 2. No character speaker labels anywhere.
@@ -71,8 +78,8 @@ void main() {
     expect(saved.sceneDuration, const Duration(seconds: 120));
   });
 
-  // 4. Stop confirmation calls onSessionEnd.
-  testWidgets('Stop confirmation calls onSessionEnd', (tester) async {
+  // 4. Stop calls onSessionEnd immediately without a confirmation dialog.
+  testWidgets('Stop calls onSessionEnd immediately', (tester) async {
     var ended = false;
     await tester.pumpWidget(_wrapSession(onSessionEnd: () => ended = true));
     await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -80,9 +87,8 @@ void main() {
     await tester.tap(find.byKey(const Key('stop_end_button')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('stop_confirm_button')));
-    await tester.pumpAndSettle();
-
+    // No confirmation dialog — session ends immediately.
+    expect(find.byKey(const Key('stop_confirm_button')), findsNothing);
     expect(ended, isTrue);
   });
 }

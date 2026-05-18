@@ -60,9 +60,9 @@ class DrillSessionController {
     _state = _state.copyWith(status: DrillSessionStatus.running);
   }
 
-  /// Stops the session early.  Can be called from any active status.
+  /// Stops the session early.  Can be called from idle or any active status.
   void stop() {
-    if (!_state.isActive) return;
+    if (!_state.isIdle && !_state.isActive) return;
     _state = _state.copyWith(status: DrillSessionStatus.stopped);
   }
 

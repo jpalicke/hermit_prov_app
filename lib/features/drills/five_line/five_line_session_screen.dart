@@ -1,8 +1,6 @@
 // ABOUTME: Session screen for the Five Line Game drill — manual tap or auto-advance modes.
 // ABOUTME: No line/structure labels are shown; only the prompt and timer when auto-advance is on.
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
@@ -19,7 +17,7 @@ import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 ///
 /// Auto-advance mode (autoAdvance = true):
 ///   - Uses a DrillSessionController + DrillSessionShell for timed reps.
-///   - Pause/Resume work; Stop/End confirmation works.
+///   - DrillSessionShell manages Start/Pause/Resume/Stop; no confirmation dialog.
 class FiveLineSessionScreen extends StatefulWidget {
   const FiveLineSessionScreen({
     super.key,
@@ -48,7 +46,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
 
   // Auto-advance only:
   DrillSessionController? _controller;
-  Timer? _ticker;
+  int? _lastLoopCount;
 
   @override
   void didChangeDependencies() {
@@ -60,12 +58,6 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
         _initController();
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _ticker?.cancel();
-    super.dispose();
   }
 
   Future<void> _loadPrompt() async {
@@ -95,58 +87,11 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       loops: true,
       tickDuration: const Duration(seconds: 1),
     );
-    _controller!.start();
-    _startTicker();
+    // Controller stays idle — DrillSessionShell's Start button will call start().
   }
 
-  void _startTicker() {
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted || _controller == null) return;
-      setState(() => _controller!.tick());
-      // When the loop rolls over, load a new prompt.
-      if (_controller!.state.loops > (_lastLoopCount ?? -1)) {
-        _lastLoopCount = _controller!.state.loops;
-        _loadPrompt();
-      }
-    });
-  }
-
-  int? _lastLoopCount;
-
-  Future<void> _handleStop() async {
-    _ticker?.cancel();
-    _controller?.pause();
-    if (!mounted) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        key: const Key('stop_confirm_dialog'),
-        title: const Text('End session?'),
-        content: const Text('Are you sure you want to end this session?'),
-        actions: [
-          TextButton(
-            key: const Key('stop_cancel_button'),
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Keep going'),
-          ),
-          FilledButton(
-            key: const Key('stop_confirm_button'),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('End session'),
-          ),
-        ],
-      ),
-    );
-    if (!mounted) return;
-    if (confirmed == true) {
-      _controller?.stop();
-      widget.onSessionEnd();
-    } else {
-      // Resume.
-      _controller?.resume();
-      _startTicker();
-    }
+  void _handleStop() {
+    widget.onSessionEnd();
   }
 
   @override
@@ -207,7 +152,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
                 side: BorderSide(color: cs.error),
                 foregroundColor: cs.error,
               ),
-              child: const Text('Stop / End'),
+              child: const Text('Stop'),
             ),
           ],
         ),
@@ -232,6 +177,12 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
       contentBuilder: (context, state) {
+        // Detect loop boundary — load a new prompt when the loop counter advances.
+        if (state.loops > (_lastLoopCount ?? -1)) {
+          _lastLoopCount = state.loops;
+          // Schedule prompt load after the current build completes.
+          WidgetsBinding.instance.addPostFrameCallback((_) => _loadPrompt());
+        }
         if (_loading || _prompt == null) return const SizedBox.shrink();
         return Text(
           _prompt!,
