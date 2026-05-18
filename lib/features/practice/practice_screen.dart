@@ -46,7 +46,14 @@ class PracticeScreen extends StatelessWidget {
   void _openDrill(BuildContext context, DrillId drillId) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => DrillStartScreen(drillId: drillId),
+        builder: (_) => DrillStartScreen(
+          drillId: drillId,
+          subtitle: _drills
+              .firstWhere((d) => d.drillId == drillId)
+              .subtitle,
+          onStart: () {},
+          onConfigure: () {},
+        ),
       ),
     );
   }

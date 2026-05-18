@@ -1,13 +1,30 @@
-// ABOUTME: Placeholder Drill Start screen shown when a drill card is tapped.
-// ABOUTME: Shows drill name, Start, Configure, and info/help controls — wired up in Prompt 9.
+// ABOUTME: Reusable drill start screen with name, subtitle, Start, Configure, and Help buttons.
+// ABOUTME: Used by every drill as the entry point; navigates to session shell or config screen.
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 
+/// Reusable start screen for any drill.
+///
+/// [subtitle] — one-line description shown below the drill name.
+/// [onStart] — called when the user taps "Start".
+/// [onConfigure] — called when the user taps "Configure".
+/// [onHelp] — called when the user taps the info/help icon (optional).
 class DrillStartScreen extends StatelessWidget {
-  const DrillStartScreen({super.key, required this.drillId});
+  const DrillStartScreen({
+    super.key,
+    required this.drillId,
+    this.subtitle,
+    required this.onStart,
+    required this.onConfigure,
+    this.onHelp,
+  });
 
   final DrillId drillId;
+  final String? subtitle;
+  final VoidCallback onStart;
+  final VoidCallback onConfigure;
+  final VoidCallback? onHelp;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +38,8 @@ class DrillStartScreen extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () {},
+            key: const Key('drill_start_help_button'),
+            onPressed: onHelp ?? () => _showDefaultHelp(context),
             icon: const Icon(Icons.info_outline),
             tooltip: 'Help',
           ),
@@ -34,19 +52,37 @@ class DrillStartScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: Text(
-                  drillId.displayName,
-                  textAlign: TextAlign.center,
-                  style: tt.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: cs.onSurface,
-                    height: 1.1,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      drillId.displayName,
+                      textAlign: TextAlign.center,
+                      key: const Key('drill_start_name'),
+                      style: tt.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: cs.onSurface,
+                        height: 1.1,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        subtitle!,
+                        textAlign: TextAlign.center,
+                        key: const Key('drill_start_subtitle'),
+                        style: tt.bodyLarge?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),
             FilledButton(
-              onPressed: () {},
+              key: const Key('drill_start_start_button'),
+              onPressed: onStart,
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 textStyle: tt.titleMedium?.copyWith(
@@ -57,7 +93,8 @@ class DrillStartScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             OutlinedButton(
-              onPressed: () {},
+              key: const Key('drill_start_configure_button'),
+              onPressed: onConfigure,
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 textStyle: tt.titleMedium?.copyWith(
@@ -68,6 +105,23 @@ class DrillStartScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showDefaultHelp(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(drillId.displayName),
+        content:
+            Text(subtitle ?? 'No additional help available for this drill.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }

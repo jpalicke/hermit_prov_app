@@ -849,7 +849,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 9 — Reusable Drill Start, Configure, and Session Shell
+## Prompt 9 — Reusable Drill Start, Configure, and Session Shell [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
