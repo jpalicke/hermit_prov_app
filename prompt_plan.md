@@ -1092,7 +1092,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 14 — Character Creation Cycle Logic
+## Prompt 14 — Character Creation Cycle Logic [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
