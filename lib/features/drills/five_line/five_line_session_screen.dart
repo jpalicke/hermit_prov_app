@@ -3,9 +3,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
+import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
@@ -25,6 +27,7 @@ class FiveLineSessionScreen extends StatefulWidget {
     required this.onSessionEnd,
     this.promptRepository,
     this.onConfigure,
+    this.historyRepository,
   });
 
   final FiveLineGameSettings settings;
@@ -34,6 +37,7 @@ class FiveLineSessionScreen extends StatefulWidget {
   /// (must be called outside initState via didChangeDependencies).
   final PromptRepository? promptRepository;
   final VoidCallback? onConfigure;
+  final PracticeHistoryRepository? historyRepository;
 
   @override
   State<FiveLineSessionScreen> createState() => _FiveLineSessionScreenState();
@@ -176,6 +180,8 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      historyRepository: widget.historyRepository,
+      drillId: DrillId.fiveLineGame,
       instructions:
           'A prompt appears. Perform a five-line scene out loud. When you are done, tap New Prompt '
           'to go again. No timer by default. Turn on auto-advance in configure if you want one.',

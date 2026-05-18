@@ -1357,7 +1357,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 19 — Practice History Logging and Stats
+## Prompt 19 — Practice History Logging and Stats [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1414,7 +1414,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 20 — Practice Journal
+## Prompt 20 — Practice Journal [DONE]
 
 ```text
 Continue implementing Hermit-Prov.

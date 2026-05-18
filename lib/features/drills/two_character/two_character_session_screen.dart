@@ -2,11 +2,13 @@
 // ABOUTME: Shows one prompt during the scene; regroup shows no prompt. No character labels.
 
 import 'package:flutter/material.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
 import 'package:hermit_prov_app/domain/drills/two_character/two_character_sequence.dart';
+import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
@@ -18,12 +20,14 @@ class TwoCharacterSessionScreen extends StatefulWidget {
     required this.promptRepository,
     required this.onSessionEnd,
     this.onConfigure,
+    this.historyRepository,
   });
 
   final TwoCharacterScenesSettings settings;
   final PromptRepository promptRepository;
   final VoidCallback onSessionEnd;
   final VoidCallback? onConfigure;
+  final PracticeHistoryRepository? historyRepository;
 
   @override
   State<TwoCharacterSessionScreen> createState() =>
@@ -105,6 +109,8 @@ class _TwoCharacterSessionScreenState
       controller: ctrl,
       onSessionEnd: widget.onSessionEnd,
       onConfigure: widget.onConfigure,
+      historyRepository: widget.historyRepository,
+      drillId: DrillId.twoCharacterScenes,
       instructions:
           'A prompt appears. Play both characters in a scene out loud until the timer ends. '
           'A short regroup follows, then a new prompt appears automatically. Runs until you stop it.',
