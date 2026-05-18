@@ -800,7 +800,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 8 — Reusable Timer and Session Engine
+## Prompt 8 — Reusable Timer and Session Engine [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
