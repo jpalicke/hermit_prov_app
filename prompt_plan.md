@@ -1469,7 +1469,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 21 — Standalone Timer Tool
+## Prompt 21 — Standalone Timer Tool [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
