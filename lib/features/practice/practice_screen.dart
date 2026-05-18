@@ -4,7 +4,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
-import 'package:hermit_prov_app/features/practice/drill_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/atoc/atoc_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/character_creation/character_creation_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/five_line/five_line_start_screen.dart';
+import 'package:hermit_prov_app/features/drills/two_character/two_character_start_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
@@ -44,11 +48,20 @@ class PracticeScreen extends StatelessWidget {
   ];
 
   void _openDrill(BuildContext context, DrillId drillId) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => DrillStartScreen(drillId: drillId),
-      ),
-    );
+    Widget screen;
+    switch (drillId) {
+      case DrillId.catClock:
+        screen = const CatClockStartScreen();
+      case DrillId.twoCharacterScenes:
+        screen = const TwoCharacterStartScreen();
+      case DrillId.atoC:
+        screen = const AtoCStartScreen();
+      case DrillId.fiveLineGame:
+        screen = const FiveLineStartScreen();
+      case DrillId.characterCreation:
+        screen = const CharacterCreationStartScreen();
+    }
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
 
   void _openTools(BuildContext context) {

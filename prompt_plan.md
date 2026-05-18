@@ -800,7 +800,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 8 — Reusable Timer and Session Engine
+## Prompt 8 — Reusable Timer and Session Engine [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -849,7 +849,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 9 — Reusable Drill Start, Configure, and Session Shell
+## Prompt 9 — Reusable Drill Start, Configure, and Session Shell [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -898,7 +898,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 10 — Cat/Clock Drill
+## Prompt 10 — Cat/Clock Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -952,7 +952,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 11 — Two-Character Scenes Drill
+## Prompt 11 — Two-Character Scenes Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -999,7 +999,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 12 — A-to-C / Bad Idea / Initiation Drill
+## Prompt 12 — A-to-C / Bad Idea / Initiation Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1045,7 +1045,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 13 — Five Line Game Drill
+## Prompt 13 — Five Line Game Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1092,7 +1092,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 14 — Character Creation Cycle Logic
+## Prompt 14 — Character Creation Cycle Logic [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1150,7 +1150,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 15 — Character Creation UI and Normal-Mode Prompt Generation
+## Prompt 15 — Character Creation UI and Normal-Mode Prompt Generation [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
