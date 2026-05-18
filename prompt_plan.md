@@ -898,7 +898,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 10 — Cat/Clock Drill
+## Prompt 10 — Cat/Clock Drill [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
