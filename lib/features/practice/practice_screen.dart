@@ -54,6 +54,13 @@ class PracticeScreen extends StatelessWidget {
     ),
   ];
 
+  /// Pops the current session and relaunches it with fresh settings.
+  /// Called after returning from configure so the session picks up any changes.
+  void _restartWithFreshSettings(BuildContext context, DrillId drillId) {
+    Navigator.of(context).pop();
+    _startDrill(context, drillId);
+  }
+
   /// Navigates directly to the session screen for [drillId] using saved settings.
   Future<void> _startDrill(BuildContext context, DrillId drillId) async {
     final services = AppServices.of(context);
@@ -69,9 +76,11 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const CatClockConfigureScreen()),
-          ),
+          onConfigure: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const CatClockConfigureScreen()));
+            if (context.mounted) _restartWithFreshSettings(context, DrillId.catClock);
+          },
         );
       case DrillId.twoCharacterScenes:
         final s = settings as TwoCharacterScenesSettings;
@@ -79,10 +88,11 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () => Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (_) => const TwoCharacterConfigureScreen()),
-          ),
+          onConfigure: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const TwoCharacterConfigureScreen()));
+            if (context.mounted) _restartWithFreshSettings(context, DrillId.twoCharacterScenes);
+          },
         );
       case DrillId.atoC:
         final s = settings as AtoCSettings;
@@ -90,28 +100,33 @@ class PracticeScreen extends StatelessWidget {
           settings: s,
           promptRepository: services.promptRepository,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const AtoCConfigureScreen()),
-          ),
+          onConfigure: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const AtoCConfigureScreen()));
+            if (context.mounted) _restartWithFreshSettings(context, DrillId.atoC);
+          },
         );
       case DrillId.fiveLineGame:
         final s = settings as FiveLineGameSettings;
         screen = FiveLineSessionScreen(
           settings: s,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const FiveLineConfigureScreen()),
-          ),
+          onConfigure: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const FiveLineConfigureScreen()));
+            if (context.mounted) _restartWithFreshSettings(context, DrillId.fiveLineGame);
+          },
         );
       case DrillId.characterCreation:
         final s = settings as CharacterCreationSettings;
         screen = CharacterCreationSessionScreen(
           settings: s,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () => Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (_) => const CharacterCreationConfigureScreen()),
-          ),
+          onConfigure: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const CharacterCreationConfigureScreen()));
+            if (context.mounted) _restartWithFreshSettings(context, DrillId.characterCreation);
+          },
         );
     }
     if (!context.mounted) return;
