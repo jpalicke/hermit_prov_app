@@ -1,4 +1,4 @@
-// ABOUTME: Widget tests for the Prompt Generator screen.
+// ABOUTME: Widget tests for the Suggestion Generator screen.
 // ABOUTME: Covers prompt display, category selection, auto-advance toggle, and timer disposal.
 
 import 'package:flutter/material.dart';

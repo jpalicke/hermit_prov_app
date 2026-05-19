@@ -1,5 +1,5 @@
 // ABOUTME: Tools screen listing the utility tools available in the app.
-// ABOUTME: Links to Prompt Generator, Custom Prompts, Journal, Timer, and Emotion Wheel.
+// ABOUTME: Links to Suggestion Generator, Suggestion Bank, Journal, Timer, and Emotion Wheel.
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/features/journal/journal_screen.dart';
@@ -19,8 +19,8 @@ class ToolsScreen extends StatelessWidget {
         children: [
           _ToolTile(
             icon: Icons.shuffle,
-            title: 'Prompt Generator',
-            subtitle: 'Get a random prompt from any category mix.',
+            title: 'Suggestion Generator',
+            subtitle: 'get a suggestion from a number of categories',
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const PromptGeneratorScreen(),
@@ -29,8 +29,8 @@ class ToolsScreen extends StatelessWidget {
           ),
           _ToolTile(
             icon: Icons.edit_note,
-            title: 'Custom Prompts',
-            subtitle: 'Add, edit, and delete your own prompts.',
+            title: 'Add words to the suggestion bank',
+            subtitle: "pretty self-explanatory, actually",
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const CustomPromptsScreen(),
@@ -60,7 +60,7 @@ class ToolsScreen extends StatelessWidget {
           _ToolTile(
             icon: Icons.sentiment_satisfied_alt,
             title: 'Emotion Wheel',
-            subtitle: 'Browse the Trigg emotion wheel and pick a feeling.',
+            subtitle: 'browse the emotion wheel and search your feelings',
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const EmotionWheelScreen(),

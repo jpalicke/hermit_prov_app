@@ -1,4 +1,4 @@
-// ABOUTME: Widget tests for the Five Line Game drill.
+// ABOUTME: Widget tests for the Five Line Scenes drill.
 // ABOUTME: Tests manual and auto-advance modes, configure, and no line labels.
 
 import 'package:flutter/material.dart';

@@ -66,6 +66,11 @@ class DrillSessionController {
     _state = _state.copyWith(status: DrillSessionStatus.stopped);
   }
 
+  /// Resets the session to idle with the original segment list and zero elapsed time.
+  void reset() {
+    _state = DrillSessionState.initial(_baseSegments);
+  }
+
   /// Advances the session clock by [tickDuration].
   ///
   /// Only has effect when the session is [DrillSessionStatus.running].

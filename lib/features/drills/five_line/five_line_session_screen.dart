@@ -1,4 +1,4 @@
-// ABOUTME: Session screen for the Five Line Game drill — manual tap or auto-advance modes.
+// ABOUTME: Session screen for the Five Line Scenes drill — manual tap or auto-advance modes.
 // ABOUTME: No line/structure labels are shown; only the prompt and timer when auto-advance is on.
 
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ import 'package:hermit_prov_app/domain/tts/hands_free_announcement_policy.dart';
 import 'package:hermit_prov_app/domain/tts/tts_service.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
-/// Session screen for Five Line Game.
+/// Session screen for Five Line Scenes.
 ///
 /// Manual mode (autoAdvance = false):
 ///   - Shows prompt + "New Prompt" button; no timer.
@@ -175,7 +175,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       appBar: AppBar(
         backgroundColor: cs.surface,
         surfaceTintColor: Colors.transparent,
-        title: const Text('Five Line Game Drill'),
+        title: const Text('Five Line Scenes'),
         actions: [
           IconButton(
             key: const Key('session_info_button'),

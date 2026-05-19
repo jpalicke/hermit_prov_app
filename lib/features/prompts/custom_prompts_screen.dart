@@ -1,4 +1,4 @@
-// ABOUTME: Screen for managing user-created custom prompts, grouped by category.
+// ABOUTME: Suggestion bank screen — manage user-created prompts, grouped by category.
 // ABOUTME: Supports add, edit, and delete operations; built-in prompts are never shown here.
 
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Custom Prompts'),
+        title: const Text('Add words to the suggestion bank'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addPrompt,

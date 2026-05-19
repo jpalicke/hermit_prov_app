@@ -347,12 +347,12 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('Tools', () {
-    testWidgets('Prompt Generator screen is reachable and shows a prompt on tap',
+    testWidgets('Suggestion Generator screen is reachable and shows a prompt on tap',
         (tester) async {
       await tester.pumpWidget(_wrap(const ToolsScreen()));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Prompt Generator'));
+      await tester.tap(find.text('Suggestion Generator'));
       await tester.pumpAndSettle();
 
       expect(find.byType(PromptGeneratorScreen), findsOneWidget);

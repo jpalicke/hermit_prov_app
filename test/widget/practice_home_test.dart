@@ -45,7 +45,7 @@ void main() {
         'Character Creation',
         'Two-Character Scenes',
         'A-to-C / Bad Idea / Initiation',
-        'Five Line Game Drill',
+        'Five Line Scenes',
         'Tools',
       ]) {
         expect(find.text(name, skipOffstage: false), findsOneWidget,
@@ -98,10 +98,10 @@ void main() {
     });
 
     testWidgets(
-        'tapping Five Line Game Drill card navigates directly to session',
+        'tapping Five Line Scenes card navigates directly to session',
         (WidgetTester tester) async {
       await pumpPracticeHome(tester);
-      await tapCard(tester, 'Five Line Game Drill');
+      await tapCard(tester, 'Five Line Scenes');
       // Five Line defaults to manual mode (no shell), just verify it navigated.
       await tester.pumpAndSettle(const Duration(seconds: 2));
       // Manual mode shows the Stop / End button.
@@ -173,7 +173,7 @@ void main() {
       expect(find.byType(AtoCConfigureScreen), findsOneWidget);
     });
 
-    testWidgets('Five Line Game gear icon opens FiveLineConfigureScreen',
+    testWidgets('Five Line Scenes gear icon opens FiveLineConfigureScreen',
         (WidgetTester tester) async {
       await pumpPracticeHome(tester);
       await tester.ensureVisible(
