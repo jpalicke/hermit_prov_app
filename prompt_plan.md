@@ -1607,7 +1607,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 24 — JSON Export/Import With Schema Versioning, Merge, and Duplicate Skipping
+## Prompt 24 — JSON Export/Import With Schema Versioning, Merge, and Duplicate Skipping [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
@@ -1785,7 +1785,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 27 — Accessibility, Tablet Layout, Phone Portrait, Permissions Audit
+## Prompt 27 — Accessibility, Tablet Layout, Phone Portrait, Permissions Audit [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
