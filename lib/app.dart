@@ -1,4 +1,4 @@
-// ABOUTME: Root widget for the Hermit-Prov app.
+// ABOUTME: Root widget for the Hermit Prov app.
 // ABOUTME: Sets up MaterialApp with light/dark/system theme and bottom navigation shell.
 
 import 'package:flutter/material.dart';

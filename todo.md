@@ -1,8 +1,8 @@
-# Hermit-Prov TODO Checklist
+# Hermit Prov TODO Checklist
 
-This checklist is based on the **Hermit-Prov Developer Handoff Spec** and the implementation blueprint/codegen prompt sequence.
+This checklist is based on the **Hermit Prov Developer Handoff Spec** and the implementation blueprint/codegen prompt sequence.
 
-Use it as a living project tracker. The intent is to build Hermit-Prov incrementally, test-first, with every feature wired into the app as it is implemented.
+Use it as a living project tracker. The intent is to build Hermit Prov incrementally, test-first, with every feature wired into the app as it is implemented.
 
 ---
 
@@ -19,7 +19,7 @@ Use it as a living project tracker. The intent is to build Hermit-Prov increment
 
 Keep these constraints visible during the entire project.
 
-- [ ] App is named **Hermit-Prov**
+- [ ] App is named **Hermit Prov**
 - [ ] Flutter is preferred, but another cross-platform framework is acceptable if it preserves the spec
 - [ ] App supports iOS and Android
 - [ ] App supports phones and tablets
@@ -77,7 +77,7 @@ Keep these constraints visible during the entire project.
 - [ ] Confirm app runs on Android emulator
 - [ ] Confirm app runs in debug mode
 - [ ] Confirm app builds in release mode locally
-- [ ] Set app display name to **Hermit-Prov**
+- [ ] Set app display name to **Hermit Prov**
 - [ ] Configure package/application IDs
 - [ ] Add app versioning strategy
 - [ ] Add linting configuration
@@ -1359,7 +1359,7 @@ Keep these constraints visible during the entire project.
 
 ## 24.3 JSON Import
 
-- [ ] Accept Hermit-Prov JSON backup file
+- [ ] Accept Hermit Prov JSON backup file
 - [ ] Validate schema version
 - [ ] Reject unsupported future schema version
 - [ ] Show clear future-version error
@@ -1434,10 +1434,10 @@ Keep these constraints visible during the entire project.
 - [ ] Link to Will Hines solo improv practice article
 - [ ] Link to referenced prompt-generator inspiration sites
 - [ ] Link to referenced emotion-wheel inspiration article
-- [ ] Clearly state Hermit-Prov is unofficial
-- [ ] Clearly state Hermit-Prov is unaffiliated with Will Hines
-- [ ] Clearly state Hermit-Prov is unaffiliated with prompt-generator sites
-- [ ] Clearly state Hermit-Prov is unaffiliated with emotion-wheel inspiration sources
+- [ ] Clearly state Hermit Prov is unofficial
+- [ ] Clearly state Hermit Prov is unaffiliated with Will Hines
+- [ ] Clearly state Hermit Prov is unaffiliated with prompt-generator sites
+- [ ] Clearly state Hermit Prov is unaffiliated with emotion-wheel inspiration sources
 - [ ] Keep attribution out of individual drill screens
 
 ## 25.3 Content Licensing Notes
@@ -1876,7 +1876,7 @@ Use this before any test release.
 
 # Definition of Done
 
-Hermit-Prov v1 is done when:
+Hermit Prov v1 is done when:
 
 - [ ] All core v1 features are implemented
 - [ ] All no-goals are still absent

@@ -1,4 +1,4 @@
-// ABOUTME: Defines light and dark ThemeData for the Hermit-Prov app.
+// ABOUTME: Defines light and dark ThemeData for the Hermit Prov app.
 // ABOUTME: Uses bundled Indie Flower font throughout with a vivid violet M3 palette.
 
 import 'package:flutter/material.dart';

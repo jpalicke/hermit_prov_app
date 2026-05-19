@@ -1,4 +1,4 @@
-# CLAUDE.md — Hermit-Prov
+# CLAUDE.md — Hermit Prov
 
 ## Who We Are
 
@@ -7,7 +7,7 @@
 
 ---
 
-## Project: Hermit-Prov
+## Project: Hermit Prov
 
 A free, offline-first Flutter mobile app for solo long-form comedy improv practice.
 

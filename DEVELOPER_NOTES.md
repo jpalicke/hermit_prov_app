@@ -1,4 +1,4 @@
-# Hermit-Prov Developer Notes
+# Hermit Prov Developer Notes
 
 ## Architecture Overview
 

@@ -1,8 +1,8 @@
-# Hermit-Prov — Developer Handoff Specification
+# Hermit Prov — Developer Handoff Specification
 
 ## 1. Product Summary
 
-**Hermit-Prov** is a free, offline-first, cross-platform mobile app for solo long-form comedy improv practice. It provides guided practice drills inspired by solo improv exercises, plus standalone tools such as a prompt generator, timer, emotion wheel, and practice journal.
+**Hermit Prov** is a free, offline-first, cross-platform mobile app for solo long-form comedy improv practice. It provides guided practice drills inspired by solo improv exercises, plus standalone tools such as a prompt generator, timer, emotion wheel, and practice journal.
 
 The app is designed for:
 
@@ -10,11 +10,11 @@ The app is designed for:
 - Intermediate and advanced improvisers who want fast reps without handholding.
 - The creator as the first power user.
 
-Hermit-Prov should feel like a private, lightweight practice room: open the app, choose a drill, practice out loud, and leave. It should not feel like a social app, gamified habit app, AI coach, or content platform.
+Hermit Prov should feel like a private, lightweight practice room: open the app, choose a drill, practice out loud, and leave. It should not feel like a social app, gamified habit app, AI coach, or content platform.
 
 ## 2. Product Philosophy
 
-Hermit-Prov is:
+Hermit Prov is:
 
 - A private, self-directed practice tool.
 - Fully usable offline after installation.
@@ -23,7 +23,7 @@ Hermit-Prov is:
 - Playful, but not obnoxiously so.
 - Simple enough for beginners, configurable enough for experienced improvisers.
 
-Hermit-Prov is not:
+Hermit Prov is not:
 
 - An AI coach.
 - A performance evaluator.
@@ -34,7 +34,7 @@ Hermit-Prov is not:
 
 ### Permanent AI Constraint
 
-Hermit-Prov must **never** include AI-generated prompts or AI coaching in any version.
+Hermit Prov must **never** include AI-generated prompts or AI coaching in any version.
 
 Prompts must come only from:
 
@@ -184,7 +184,7 @@ Drill-specific instructions should be available through info/help buttons instea
 
 ## 8. Visual Design Direction
 
-Hermit-Prov should be:
+Hermit Prov should be:
 
 - Playful, but not obnoxious.
 - Clean and easy to use.
@@ -1021,7 +1021,7 @@ Also include similar language on the Privacy/About page.
 
 ## 35. JSON Export / Import
 
-Hermit-Prov should support both export and import of user data.
+Hermit Prov should support both export and import of user data.
 
 ### Export
 
@@ -1031,7 +1031,7 @@ JSON is preferred over CSV because it can preserve nested settings and multiple 
 
 ### Import
 
-Import should accept a Hermit-Prov JSON backup file.
+Import should accept a Hermit Prov JSON backup file.
 
 Import behavior:
 
@@ -1085,7 +1085,7 @@ Import behavior:
 
 Example future-version error:
 
-> This backup was created by a newer version of Hermit-Prov and can’t be imported by this app version.
+> This backup was created by a newer version of Hermit Prov and can’t be imported by this app version.
 
 The developer must document versioning and migration behavior so future versions can maintain compatibility.
 
@@ -1130,7 +1130,7 @@ It should explain:
 
 Privacy/About should include a visible assurance:
 
-> Hermit-Prov does not record audio and does not request microphone permission.
+> Hermit Prov does not record audio and does not request microphone permission.
 
 This assurance only needs to appear in Privacy/About, not on drill screens.
 
@@ -1142,7 +1142,7 @@ About/Credits should include links to:
 - Referenced prompt-generator inspiration sites.
 - Referenced emotion-wheel inspiration article.
 
-The page must clearly state that Hermit-Prov is unofficial and unaffiliated with:
+The page must clearly state that Hermit Prov is unofficial and unaffiliated with:
 
 - Will Hines.
 - Prompt-generator sites.
@@ -1159,7 +1159,7 @@ Do not copy protected text, prompt lists, images, or emotion-wheel assets from r
 
 ## 38. Optional Crash Reporting
 
-Hermit-Prov is local-only except for optional user-triggered crash reporting.
+Hermit Prov is local-only except for optional user-triggered crash reporting.
 
 Crash reports must not be automatic.
 

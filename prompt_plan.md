@@ -1,14 +1,14 @@
-# Hermit-Prov Implementation Blueprint and Codegen Prompts
+# Hermit Prov Implementation Blueprint and Codegen Prompts
 
-This document converts the **Hermit-Prov Developer Handoff Spec** into a step-by-step implementation blueprint and a sequence of prompts for a code-generation LLM.
+This document converts the **Hermit Prov Developer Handoff Spec** into a step-by-step implementation blueprint and a sequence of prompts for a code-generation LLM.
 
-The goal is to build Hermit-Prov incrementally, test-first, with each step producing integrated, shippable progress. No step should leave orphaned code that is not wired into the existing app.
+The goal is to build Hermit Prov incrementally, test-first, with each step producing integrated, shippable progress. No step should leave orphaned code that is not wired into the existing app.
 
 ---
 
 # Part 1 — Implementation Philosophy
 
-Hermit-Prov should be built in narrow vertical slices.
+Hermit Prov should be built in narrow vertical slices.
 
 Each implementation step should:
 
@@ -473,9 +473,9 @@ Each prompt is written for a code-generation LLM working inside the repository.
 ## Prompt 1 — Project Scaffold, Architecture, App Shell, Bottom Navigation [DONE]
 
 ```text
-You are implementing Hermit-Prov, a free offline-first Flutter mobile app for solo long-form comedy improv practice.
+You are implementing Hermit Prov, a free offline-first Flutter mobile app for solo long-form comedy improv practice.
 
-Refer to the Hermit-Prov Developer Handoff Spec as the source of truth.
+Refer to the Hermit Prov Developer Handoff Spec as the source of truth.
 
 Task:
 Set up the initial Flutter app architecture and a running app shell.
@@ -515,7 +515,7 @@ Acceptance criteria:
 ## Prompt 2 — Practice Home Cards and Placeholder Routing [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Flutter app shell exists.
@@ -563,7 +563,7 @@ Acceptance criteria:
 ## Prompt 3 — Domain Models, Defaults, and Repository Interfaces [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - App shell and Practice Home are working.
@@ -617,7 +617,7 @@ Acceptance criteria:
 ## Prompt 4 — In-Memory Repositories and Seed Prompt System [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Domain models and repository interfaces exist.
@@ -664,7 +664,7 @@ Acceptance criteria:
 ## Prompt 5 — Prompt Picker, Word Bucket, and Custom Prompt Validation [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - In-memory repositories exist.
@@ -710,7 +710,7 @@ Acceptance criteria:
 ## Prompt 6 — Custom Prompt CRUD and Management UI [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - PromptPicker exists.
@@ -753,7 +753,7 @@ Acceptance criteria:
 ## Prompt 7 — Standalone Prompt Generator Tool [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Tools screen exists as placeholder.
@@ -803,7 +803,7 @@ Acceptance criteria:
 ## Prompt 8 — Reusable Timer and Session Engine [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Prompt system and standalone Prompt Generator work.
@@ -852,7 +852,7 @@ Acceptance criteria:
 ## Prompt 9 — Reusable Drill Start, Configure, and Session Shell [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Timer/session engine exists and is tested.
@@ -901,7 +901,7 @@ Acceptance criteria:
 ## Prompt 10 — Cat/Clock Drill [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Reusable drill shell exists.
@@ -955,7 +955,7 @@ Acceptance criteria:
 ## Prompt 11 — Two-Character Scenes Drill [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Cat/Clock is implemented.
@@ -1002,7 +1002,7 @@ Acceptance criteria:
 ## Prompt 12 — A-to-C / Bad Idea / Initiation Drill [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Cat/Clock and Two-Character Scenes are implemented.
@@ -1048,7 +1048,7 @@ Acceptance criteria:
 ## Prompt 13 — Five Line Game Drill [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Cat/Clock, Two-Character Scenes, and A-to-C are implemented.
@@ -1095,7 +1095,7 @@ Acceptance criteria:
 ## Prompt 14 — Character Creation Cycle Logic [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Four drills are implemented.
@@ -1153,7 +1153,7 @@ Acceptance criteria:
 ## Prompt 15 — Character Creation UI and Normal-Mode Prompt Generation [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Character Creation cycle logic exists and is tested.
@@ -1202,7 +1202,7 @@ Acceptance criteria:
 ## Prompt 16 — Text-to-Speech Abstraction and Global TTS Settings [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - All five drills are visually implemented.
@@ -1247,7 +1247,7 @@ Acceptance criteria:
 ## Prompt 17 — Hands-Free Announcement Policy [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - TTS service abstraction exists.
@@ -1303,7 +1303,7 @@ Acceptance criteria:
 ## Prompt 18 — Wire Hands-Free Mode Into All Drills [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - TTS service exists.
@@ -1360,7 +1360,7 @@ Acceptance criteria:
 ## Prompt 19 — Practice History Logging and Stats [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - All drills and Hands-Free Mode are implemented.
@@ -1417,7 +1417,7 @@ Acceptance criteria:
 ## Prompt 20 — Practice Journal [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Practice History exists.
@@ -1472,7 +1472,7 @@ Acceptance criteria:
 ## Prompt 21 — Standalone Timer Tool [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Tools screen exists.
@@ -1515,7 +1515,7 @@ Acceptance criteria:
 ## Prompt 22 — Interactive Emotion Wheel Tool [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Tools section includes Prompt Generator, Timer, and Journal.
@@ -1552,7 +1552,7 @@ Acceptance criteria:
 ## Prompt 23 — Settings Sections, Appearance, Reset Drill Defaults, Reset All Data [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Main app features and tools are implemented.
@@ -1610,7 +1610,7 @@ Acceptance criteria:
 ## Prompt 24 — JSON Export/Import With Schema Versioning, Merge, and Duplicate Skipping [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Settings has Data Backup placeholder.
@@ -1643,7 +1643,7 @@ Requirements:
    - transient runtime data
    - blocked prompt attempts
 6. Import should:
-   - Accept a Hermit-Prov JSON file.
+   - Accept a Hermit Prov JSON file.
    - Merge imported data with existing local data.
    - Skip duplicates automatically.
    - Not show a review screen in v1.
@@ -1677,7 +1677,7 @@ Acceptance criteria:
 ## Prompt 25 — Privacy/About, Credits, Support Email, Ko-fi Link [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Settings sections exist.
@@ -1702,9 +1702,9 @@ Requirements:
    - Crash reports include technical crash details and app state, but exclude custom prompts and journal entries.
    - Data is local-only; users should export before deleting the app or switching devices.
 3. Include visible No Recording assurance:
-   - “Hermit-Prov does not record audio and does not request microphone permission.”
+   - “Hermit Prov does not record audio and does not request microphone permission.”
 4. Credits section should include links to inspiration sources specified in the handoff spec.
-5. Credits must explicitly state Hermit-Prov is unofficial and unaffiliated with all inspiration sources.
+5. Credits must explicitly state Hermit Prov is unofficial and unaffiliated with all inspiration sources.
 6. Support/Feedback link should open an email to the developer.
 7. Support email template should include:
    - App version
@@ -1737,7 +1737,7 @@ Acceptance criteria:
 ## Prompt 26 — Optional Crash-Report Prompt Shell and Privacy Exclusions [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - Privacy/About page exists.
@@ -1788,7 +1788,7 @@ Acceptance criteria:
 ## Prompt 27 — Accessibility, Tablet Layout, Phone Portrait, Permissions Audit [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - All main features are implemented.
@@ -1838,7 +1838,7 @@ Acceptance criteria:
 ## Prompt 28 — Final Integration, Acceptance Tests, and Cleanup [DONE]
 
 ```text
-Continue implementing Hermit-Prov.
+Continue implementing Hermit Prov.
 
 Previous state:
 - All major features are implemented.
@@ -1895,7 +1895,7 @@ Testing:
 3. Manual QA checklist included in docs for items hard to automate.
 
 Acceptance criteria:
-- Hermit-Prov v1 is internally coherent, wired together, and ready for QA/content/design finalization.
+- Hermit Prov v1 is internally coherent, wired together, and ready for QA/content/design finalization.
 - No hanging or orphaned code remains.
 - Tests pass.
 ```
@@ -1914,7 +1914,7 @@ The correct approach is:
 4. Commit or checkpoint.
 5. Move to the next prompt.
 
-When in doubt, preserve the core Hermit-Prov principles:
+When in doubt, preserve the core Hermit Prov principles:
 
 - Offline-first.
 - Local-only user data.

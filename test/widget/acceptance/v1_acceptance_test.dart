@@ -1,4 +1,4 @@
-// ABOUTME: Prompt-28 acceptance tests for Hermit-Prov v1.
+// ABOUTME: Prompt-28 acceptance tests for Hermit Prov v1.
 // ABOUTME: Exercises all major user flows end-to-end using AppServices.withInMemory().
 
 import 'dart:io';
