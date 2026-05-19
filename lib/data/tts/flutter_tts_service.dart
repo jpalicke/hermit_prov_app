@@ -25,7 +25,7 @@ class FlutterTtsService implements TtsService {
   Future<void> speak(String text) async {
     if (!_isEnabled) return;
     final prefs = await _preferencesRepository.getPreferences();
-    await _tts.setSpeechRate(prefs.ttsSpeakingRate);
+    await _tts.setSpeechRate(prefs.ttsSpeakingRate * 0.5);
     if (prefs.ttsVoice != null) {
       await _tts.setVoice(_parseVoiceEntry(prefs.ttsVoice!));
     }
@@ -57,7 +57,7 @@ class FlutterTtsService implements TtsService {
 
   @override
   Future<void> setSpeakingRate(double rate) async {
-    await _tts.setSpeechRate(rate);
+    await _tts.setSpeechRate(rate * 0.5);
   }
 
   @override
