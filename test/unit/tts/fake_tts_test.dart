@@ -36,10 +36,5 @@ void main() {
       final tts = FakeTtsService();
       expect(tts.isEnabled, isTrue);
     });
-
-    test('getAvailableVoices returns empty list', () async {
-      final tts = FakeTtsService();
-      expect(await tts.getAvailableVoices(), isEmpty);
-    });
   });
 }

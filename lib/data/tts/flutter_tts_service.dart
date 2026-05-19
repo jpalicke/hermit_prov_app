@@ -1,5 +1,5 @@
 // ABOUTME: Real TTS service backed by the flutter_tts package.
-// ABOUTME: Reads speaking rate from AppPreferences on each speak call.
+// ABOUTME: Reads speaking rate from AppPreferences on each speak call; uses system default voice.
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences_repository.dart';
@@ -25,10 +25,8 @@ class FlutterTtsService implements TtsService {
   Future<void> speak(String text) async {
     if (!_isEnabled) return;
     final prefs = await _preferencesRepository.getPreferences();
+    // flutter_tts maps 0.5 to the platform default rate; scale accordingly.
     await _tts.setSpeechRate(prefs.ttsSpeakingRate * 0.5);
-    if (prefs.ttsVoice != null) {
-      await _tts.setVoice(_parseVoiceEntry(prefs.ttsVoice!));
-    }
     await _tts.speak(text);
   }
 
@@ -38,43 +36,7 @@ class FlutterTtsService implements TtsService {
   }
 
   @override
-  Future<List<String>> getAvailableVoices() async {
-    final raw = await _tts.getVoices;
-    if (raw == null) return [];
-    final voices = <String>[];
-    for (final v in raw) {
-      if (v is Map) {
-        final name = v['name'];
-        final locale = v['locale'];
-        final quality = v['quality'];
-        // Only surface Enhanced voices — Default voices sound robotic.
-        // On iOS, Enhanced voices must be downloaded in
-        // Settings > Accessibility > Spoken Content > Voices.
-        if (name is String && quality == 'Enhanced') {
-          final entry = locale is String ? '$name|$locale' : name;
-          voices.add(entry);
-        }
-      }
-    }
-    return voices;
-  }
-
-  @override
   Future<void> setSpeakingRate(double rate) async {
     await _tts.setSpeechRate(rate * 0.5);
-  }
-
-  @override
-  Future<void> setVoice(String voice) async {
-    await _tts.setVoice(_parseVoiceEntry(voice));
-  }
-
-  // Parses a "name|locale" entry (from getAvailableVoices) into the map
-  // flutter_tts.setVoice expects. Falls back to 'en-US' for legacy name-only
-  // values that may be stored in older preferences.
-  Map<String, String> _parseVoiceEntry(String entry) {
-    final sep = entry.indexOf('|');
-    if (sep == -1) return {'name': entry, 'locale': 'en-US'};
-    return {'name': entry.substring(0, sep), 'locale': entry.substring(sep + 1)};
   }
 }

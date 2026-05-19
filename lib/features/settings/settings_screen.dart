@@ -46,7 +46,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final current = _prefs ?? AppPreferences.defaults;
     final updated = AppPreferences(
       themePreference: pref,
-      ttsVoice: current.ttsVoice,
       ttsSpeakingRate: current.ttsSpeakingRate,
     );
     await services.appPreferencesRepository.savePreferences(updated);

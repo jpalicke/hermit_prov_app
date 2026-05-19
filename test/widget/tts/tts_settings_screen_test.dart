@@ -1,5 +1,5 @@
-// ABOUTME: Widget tests for TtsSettingsScreen — verifies screen renders and slider is present.
-// ABOUTME: Uses FakeTtsService via AppServices.withInMemory.
+// ABOUTME: Widget tests for TtsSettingsScreen — verifies screen renders and rate slider is present.
+// ABOUTME: Uses in-memory AppServices; voice selection has been removed (system default used).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,12 +27,4 @@ void main() {
     expect(find.byKey(const Key('tts_rate_slider')), findsOneWidget);
   });
 
-  testWidgets('Shows default voice label when no voices available',
-      (tester) async {
-    await tester.pumpWidget(_wrap());
-    await tester.pumpAndSettle();
-
-    // FakeTtsService returns empty voices list, so should show default.
-    expect(find.byKey(const Key('tts_voice_default')), findsOneWidget);
-  });
 }

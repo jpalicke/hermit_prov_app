@@ -22,13 +22,7 @@ class FakeTtsService implements TtsService {
   }
 
   @override
-  Future<List<String>> getAvailableVoices() async => [];
-
-  @override
   Future<void> setSpeakingRate(double rate) async {}
-
-  @override
-  Future<void> setVoice(String voice) async {}
 
   @override
   bool get isEnabled => true;

@@ -177,7 +177,6 @@ class LocalBackupService implements BackupService {
 
   Map<String, dynamic> _prefsToJson(AppPreferences p) => {
         'themePreference': p.themePreference.name,
-        'ttsVoice': p.ttsVoice,
         'ttsSpeakingRate': p.ttsSpeakingRate,
       };
 
@@ -185,7 +184,6 @@ class LocalBackupService implements BackupService {
     return AppPreferences(
       themePreference: AppThemePreference.values
           .byName(json['themePreference'] as String),
-      ttsVoice: json['ttsVoice'] as String?,
       ttsSpeakingRate: (json['ttsSpeakingRate'] as num).toDouble(),
     );
   }

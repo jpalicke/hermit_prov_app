@@ -1,4 +1,4 @@
-// ABOUTME: Settings screen for configuring Text-to-Speech speaking rate and voice.
+// ABOUTME: Settings screen for configuring Text-to-Speech speaking rate.
 // ABOUTME: Changes auto-save on change; no explicit save button needed.
 
 import 'package:flutter/material.dart';
@@ -14,7 +14,6 @@ class TtsSettingsScreen extends StatefulWidget {
 
 class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
   AppPreferences? _prefs;
-  List<String> _voices = [];
 
   @override
   void didChangeDependencies() {
@@ -25,14 +24,9 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
   }
 
   Future<void> _load() async {
-    final services = AppServices.of(context);
-    final prefs = await services.appPreferencesRepository.getPreferences();
-    final voices = await services.ttsService.getAvailableVoices();
+    final prefs = await AppServices.of(context).appPreferencesRepository.getPreferences();
     if (mounted) {
-      setState(() {
-        _prefs = prefs;
-        _voices = voices;
-      });
+      setState(() => _prefs = prefs);
     }
   }
 
@@ -53,15 +47,13 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
       );
     }
 
-    final rateLabel =
-        '${prefs.ttsSpeakingRate.toStringAsFixed(1)}x';
+    final rateLabel = '${prefs.ttsSpeakingRate.toStringAsFixed(1)}x';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Text-to-Speech')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          // ── Speaking rate ──────────────────────────────────────────────────
           ListTile(
             title: const Text('Speaking Rate'),
             subtitle: Text(rateLabel),
@@ -74,49 +66,12 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
             divisions: 7,
             label: rateLabel,
             onChanged: (v) {
-              final updated = AppPreferences(
+              _savePrefs(AppPreferences(
                 themePreference: prefs.themePreference,
-                ttsVoice: prefs.ttsVoice,
                 ttsSpeakingRate: v,
-              );
-              _savePrefs(updated);
+              ));
             },
           ),
-          const Divider(),
-          // ── Voice selector ─────────────────────────────────────────────────
-          if (_voices.isEmpty)
-            const ListTile(
-              key: Key('tts_voice_default'),
-              title: Text('Voice'),
-              subtitle: Text(
-                'No enhanced voices found.\n'
-                'To get natural-sounding voices, go to:\n'
-                'Settings › Accessibility › Spoken Content › Voices',
-              ),
-            )
-          else
-            ListTile(
-              title: const Text('Voice'),
-              trailing: DropdownButton<String>(
-                key: const Key('tts_voice_dropdown'),
-                value: prefs.ttsVoice ?? _voices.first,
-                items: _voices
-                    .map((v) => DropdownMenuItem(
-                          value: v,
-                          child: Text(v.contains('|') ? v.substring(0, v.indexOf('|')) : v),
-                        ))
-                    .toList(),
-                onChanged: (selected) {
-                  if (selected == null) return;
-                  final updated = AppPreferences(
-                    themePreference: prefs.themePreference,
-                    ttsVoice: selected,
-                    ttsSpeakingRate: prefs.ttsSpeakingRate,
-                  );
-                  _savePrefs(updated);
-                },
-              ),
-            ),
         ],
       ),
     );
