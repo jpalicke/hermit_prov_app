@@ -1835,7 +1835,7 @@ Acceptance criteria:
 
 ---
 
-## Prompt 28 — Final Integration, Acceptance Tests, and Cleanup
+## Prompt 28 — Final Integration, Acceptance Tests, and Cleanup [DONE]
 
 ```text
 Continue implementing Hermit-Prov.
