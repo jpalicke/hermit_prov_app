@@ -47,7 +47,7 @@ class _HermitProvAppState extends State<HermitProvApp> {
   Widget build(BuildContext context) {
     final themeMode = _themeNotifier?.value ?? ThemeMode.system;
     return MaterialApp(
-      title: 'Hermit-Prov',
+      title: 'Hermit Prov',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,

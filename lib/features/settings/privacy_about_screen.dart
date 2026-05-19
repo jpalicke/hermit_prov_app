@@ -9,7 +9,7 @@ class PrivacyAboutScreen extends StatelessWidget {
 
   static const String _mailtoUrl =
       'mailto:soundonsound78@gmail.com'
-      '?subject=Hermit-Prov%20Feedback'
+      '?subject=Hermit Prov%20Feedback'
       '&body=App%20version%3A%20%5Bversion%5D%0ADevice%20OS%3A%20%5BOS%5D%0A%0ADescribe%20your%20issue%3A';
 
   static const String _kofiUrl = 'https://ko-fi.com';
@@ -41,9 +41,9 @@ class PrivacyAboutScreen extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              'Hermit-Prov does not collect, store, or transmit any personal data. '
+              'Hermit Prov does not collect, store, or transmit any personal data. '
               'All data — custom prompts, journal entries, and practice history — stays on your device.\n\n'
-              'Hermit-Prov does not record audio and does not request microphone permission.\n\n'
+              'Hermit Prov does not record audio and does not request microphone permission.\n\n'
               'No prompts, journal entries, or practice history are sent anywhere by default. '
               'Data is local-only. Export your data before deleting the app or switching devices.\n\n'
               'Optional crash reports are user-triggered only, and only after a crash. '
@@ -56,7 +56,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              'Hermit-Prov',
+              'Hermit Prov',
               style: textTheme.titleLarge,
             ),
           ),
@@ -72,7 +72,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              'Hermit-Prov is unofficial and unaffiliated with all inspiration sources.',
+              'Hermit Prov is unofficial and unaffiliated with all inspiration sources.',
             ),
           ),
           const ListTile(
@@ -118,7 +118,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
             child: Text(
-              'Hermit-Prov is not affiliated with, endorsed by, or officially connected to '
+              'Hermit Prov is not affiliated with, endorsed by, or officially connected to '
               'any of the inspiration sources listed above.',
               style: TextStyle(fontSize: 12),
             ),
