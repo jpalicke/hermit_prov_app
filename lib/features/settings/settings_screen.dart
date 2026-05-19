@@ -250,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _SectionHeader(title: 'Text-to-Speech'),
           ListTile(
             title: const Text('Text-to-Speech'),
-            subtitle: const Text('Voice and speaking rate'),
+            subtitle: const Text('change speaking rate'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.of(context).push(
@@ -279,8 +279,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(
-                  'Data stays on this device unless you export it. '
-                  'Uninstalling the app or switching devices may delete your local data.',
+                  'your privacy is important. this device keeps all of your data local to this device unless you export it yourself. '
+                  'Uninstalling the app or switching devices may lose your local data.',
                   style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ),
