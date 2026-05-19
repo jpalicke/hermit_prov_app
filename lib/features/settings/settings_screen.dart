@@ -1,12 +1,17 @@
 // ABOUTME: Settings screen with sections for appearance, TTS, drill defaults, and data management.
 // ABOUTME: Loads and persists preferences via AppServices repositories.
 
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:hermit_prov_app/data/backup/local_backup_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences.dart';
 import 'package:hermit_prov_app/domain/settings/app_theme_preference.dart';
 import 'package:hermit_prov_app/features/settings/tts_settings_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -86,6 +91,96 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  LocalBackupService _makeBackupService() {
+    final services = AppServices.of(context);
+    return LocalBackupService(
+      promptRepository: services.promptRepository,
+      journalRepository: services.journalRepository,
+      drillSettingsRepository: services.drillSettingsRepository,
+      appPreferencesRepository: services.appPreferencesRepository,
+    );
+  }
+
+  Future<void> _exportData() async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final svc = _makeBackupService();
+      final backup = await svc.buildBackup();
+      final json = await svc.exportToJson(backup);
+
+      final now = DateTime.now();
+      final datePart =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final fileName = 'hermit_prov_backup_$datePart.json';
+
+      final bytes = Uint8List.fromList(json.codeUnits);
+      final xFile = XFile.fromData(bytes, name: fileName, mimeType: 'application/json');
+      await Share.shareXFiles([xFile], fileNameOverrides: [fileName]);
+
+      if (mounted) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Backup exported.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Export failed: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _importData() async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+      if (result == null || result.files.isEmpty) return;
+
+      final file = result.files.first;
+      final String jsonString;
+      if (file.bytes != null) {
+        jsonString = String.fromCharCodes(file.bytes!);
+      } else if (file.path != null) {
+        // On desktop/mobile with path access, read via XFile.
+        final xFile = XFile(file.path!);
+        jsonString = await xFile.readAsString();
+      } else {
+        throw const FormatException('Could not read the selected file.');
+      }
+
+      final svc = _makeBackupService();
+      final backup = await svc.importFromJson(jsonString);
+      final mergeResult = await svc.mergeIntoApp(backup);
+
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Added ${mergeResult.promptsAdded} prompts, '
+              '${mergeResult.journalEntriesAdded} journal entries.',
+            ),
+          ),
+        );
+      }
+    } on FormatException {
+      if (mounted) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Import failed: invalid backup file.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Import failed: $e')),
+        );
+      }
+    }
+  }
+
   Future<void> _confirmResetAllData() async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -139,8 +234,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
-        children: [
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: ListView(
+            children: [
           // ── Appearance ────────────────────────────────────────────────────
           _SectionHeader(title: 'Appearance'),
           _ThemeSelector(
@@ -174,13 +272,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           // ── Data Backup ───────────────────────────────────────────────────
           _SectionHeader(title: 'Data Backup'),
-          const ListTile(
-            title: Text('Export Data'),
-            subtitle: Text('Coming soon.'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Card(
+              color: colorScheme.surfaceContainerLow,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  'Data stays on this device unless you export it. '
+                  'Uninstalling the app or switching devices may delete your local data.',
+                  style: TextStyle(color: colorScheme.onSurfaceVariant),
+                ),
+              ),
+            ),
           ),
-          const ListTile(
-            title: Text('Import Data'),
-            subtitle: Text('Coming soon.'),
+          ListTile(
+            title: const Text('Export Data'),
+            subtitle: const Text('Save a JSON backup of your prompts, journal, and settings'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _exportData,
+          ),
+          ListTile(
+            title: const Text('Import Data'),
+            subtitle: const Text('Restore from a JSON backup file'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _importData,
           ),
 
           // ── Privacy / About ───────────────────────────────────────────────
@@ -202,17 +318,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: 'Reset All Data',
             color: colorScheme.error,
           ),
-          ListTile(
-            key: const Key('reset_all_data_tile'),
-            title: Text(
-              'Reset All Data',
-              style: TextStyle(color: colorScheme.error),
+          Semantics(
+            button: true,
+            label: 'Reset All Data',
+            hint: 'Permanently deletes all custom prompts, journal entries, practice history, and resets settings. This action cannot be undone.',
+            child: ListTile(
+              key: const Key('reset_all_data_tile'),
+              title: Text(
+                'Reset All Data',
+                style: TextStyle(color: colorScheme.error),
+              ),
+              subtitle: const Text(
+                  'Permanently delete all data and reset preferences'),
+              onTap: _confirmResetAllData,
             ),
-            subtitle: const Text(
-                'Permanently delete all data and reset preferences'),
-            onTap: _confirmResetAllData,
           ),
         ],
+          ),
+        ),
       ),
     );
   }
@@ -230,13 +353,16 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(
-        title,
-        style: textTheme.labelMedium?.copyWith(
-          color: color ?? colorScheme.primary,
-          fontWeight: FontWeight.bold,
+    return Semantics(
+      header: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+        child: Text(
+          title,
+          style: textTheme.labelMedium?.copyWith(
+            color: color ?? colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
