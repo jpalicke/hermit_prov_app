@@ -98,9 +98,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
       });
       // Auto-end when a finite session completes.
       if (widget.controller.state.isCompleted) {
-        _ticker?.cancel();
-        _maybeLogSession();
-        widget.onSessionEnd();
+        _handleExit();
       }
     });
   }
@@ -123,10 +121,22 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     });
   }
 
-  void _handleStop() {
+  // Stops the timer and returns to idle — stays in the drill.
+  void _handleResetToIdle() {
     _ticker?.cancel();
-    widget.controller.stop();
+    _ticker = null;
     _maybeLogSession();
+    setState(() {
+      widget.controller.stop();
+    });
+    _startedAt = null;
+  }
+
+  // Exits the drill entirely — called by the Exit button and natural completion.
+  void _handleExit() {
+    _ticker?.cancel();
+    _maybeLogSession();
+    widget.controller.stop();
     widget.onSessionEnd();
   }
 
@@ -341,7 +351,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
               const SizedBox(height: 12),
               OutlinedButton(
                 key: const Key('stop_end_button'),
-                onPressed: _handleStop,
+                onPressed: isIdle ? _handleExit : _handleResetToIdle,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   textStyle: tt.titleMedium?.copyWith(
@@ -350,7 +360,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                   side: BorderSide(color: cs.error),
                   foregroundColor: cs.error,
                 ),
-                child: const Text('Stop'),
+                child: Text(isIdle ? 'Exit' : 'Stop'),
               ),
             ],
           ),

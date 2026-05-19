@@ -235,7 +235,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
                 side: BorderSide(color: cs.error),
                 foregroundColor: cs.error,
               ),
-              child: const Text('Stop'),
+              child: const Text('Exit'),
             ),
           ],
         ),
