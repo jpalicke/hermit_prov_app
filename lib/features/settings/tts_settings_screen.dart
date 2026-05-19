@@ -97,7 +97,10 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
                 key: const Key('tts_voice_dropdown'),
                 value: prefs.ttsVoice ?? _voices.first,
                 items: _voices
-                    .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                    .map((v) => DropdownMenuItem(
+                          value: v,
+                          child: Text(v.contains('|') ? v.substring(0, v.indexOf('|')) : v),
+                        ))
                     .toList(),
                 onChanged: (selected) {
                   if (selected == null) return;
