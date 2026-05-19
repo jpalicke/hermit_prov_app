@@ -179,8 +179,9 @@ void main() {
 
       await tester.scrollUntilVisible(
         find.byKey(const Key('reset_all_data_tile')),
-        200,
+        100,
       );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('reset_all_data_tile')));
       await tester.pumpAndSettle();
 
@@ -226,8 +227,9 @@ void main() {
 
       await tester.scrollUntilVisible(
         find.byKey(const Key('reset_all_data_tile')),
-        200,
+        100,
       );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('reset_all_data_tile')));
       await tester.pumpAndSettle();
 
@@ -264,8 +266,9 @@ void main() {
 
       await tester.scrollUntilVisible(
         find.byKey(const Key('reset_all_data_tile')),
-        200,
+        100,
       );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('reset_all_data_tile')));
       await tester.pumpAndSettle();
 

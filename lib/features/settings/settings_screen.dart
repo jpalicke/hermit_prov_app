@@ -10,6 +10,7 @@ import 'package:hermit_prov_app/data/backup/local_backup_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences.dart';
 import 'package:hermit_prov_app/domain/settings/app_theme_preference.dart';
+import 'package:hermit_prov_app/features/settings/privacy_about_screen.dart';
 import 'package:hermit_prov_app/features/settings/tts_settings_screen.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -301,16 +302,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           // ── Privacy / About ───────────────────────────────────────────────
           _SectionHeader(title: 'Privacy and About'),
-          const ListTile(
-            title: Text('Privacy and About'),
-            subtitle: Text('Coming soon.'),
-          ),
-
-          // ── Support ───────────────────────────────────────────────────────
-          _SectionHeader(title: 'Support'),
-          const ListTile(
-            title: Text('Support and Donate'),
-            subtitle: Text('Coming soon.'),
+          ListTile(
+            title: const Text('Privacy, About, and Support'),
+            subtitle: const Text('Data practices, credits, feedback, and donate'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const PrivacyAboutScreen(),
+                ),
+              );
+            },
           ),
 
           // ── Reset All Data (danger zone) ──────────────────────────────────
