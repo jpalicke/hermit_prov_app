@@ -80,8 +80,12 @@ class PrivacyAboutScreen extends StatelessWidget {
             subtitle: Text('Licensed CC BY 4.0. Used with attribution.'),
           ),
           const ListTile(
-            title: Text('Flaticon'),
-            subtitle: Text('Icons used under Flaticon license.'),
+            title: Text('Hermit crab icon'),
+            subtitle: Text('Designed by paulalee from Flaticon. Used under Flaticon license with attribution.'),
+          ),
+          const ListTile(
+            title: Text('Cat icon'),
+            subtitle: Text('Designed by Marz Gallery from Flaticon. Used under Flaticon license with attribution.'),
           ),
 
           // -- Support -------------------------------------------------------
