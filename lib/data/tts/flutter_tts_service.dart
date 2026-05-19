@@ -46,7 +46,11 @@ class FlutterTtsService implements TtsService {
       if (v is Map) {
         final name = v['name'];
         final locale = v['locale'];
-        if (name is String) {
+        final quality = v['quality'];
+        // Only surface Enhanced voices — Default voices sound robotic.
+        // On iOS, Enhanced voices must be downloaded in
+        // Settings > Accessibility > Spoken Content > Voices.
+        if (name is String && quality == 'Enhanced') {
           final entry = locale is String ? '$name|$locale' : name;
           voices.add(entry);
         }

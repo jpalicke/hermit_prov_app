@@ -88,7 +88,11 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
             const ListTile(
               key: Key('tts_voice_default'),
               title: Text('Voice'),
-              subtitle: Text('Default voice'),
+              subtitle: Text(
+                'No enhanced voices found.\n'
+                'To get natural-sounding voices, go to:\n'
+                'Settings › Accessibility › Spoken Content › Voices',
+              ),
             )
           else
             ListTile(
