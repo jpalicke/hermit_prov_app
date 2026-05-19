@@ -327,15 +327,22 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
                       minScale: 1.0,
                       maxScale: 5.0,
                       boundaryMargin: const EdgeInsets.all(double.infinity),
-                      child: GestureDetector(
-                        onTapUp: (d) => _onWheelTap(d.localPosition, center, outerRadius),
-                        child: CustomPaint(
-                          size: Size(side, side),
-                          painter: _WheelPainter(
-                            segments: _segments,
-                            selected: _selected,
-                            center: center,
-                            outerRadius: outerRadius,
+                      child: Semantics(
+                        button: true,
+                        label: _selected != null
+                            ? 'Emotion wheel. Selected: ${_selected!.word}. Tap to select a different emotion.'
+                            : 'Emotion wheel. Tap a segment to select an emotion.',
+                        onTap: () {},
+                        child: GestureDetector(
+                          onTapUp: (d) => _onWheelTap(d.localPosition, center, outerRadius),
+                          child: CustomPaint(
+                            size: Size(side, side),
+                            painter: _WheelPainter(
+                              segments: _segments,
+                              selected: _selected,
+                              center: center,
+                              outerRadius: outerRadius,
+                            ),
                           ),
                         ),
                       ),
@@ -347,66 +354,78 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
             // Selected emotion display card
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: _selected != null
-                      ? _selected!.color.withValues(alpha: 0.12)
-                      : cs.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
+              child: Semantics(
+                liveRegion: true,
+                label: _selected != null
+                    ? 'Selected emotion: ${_selected!.word}. ${_ringLabel(_selected!.ring)} in category ${_selected!.category}.'
+                    : 'No emotion selected.',
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
                     color: _selected != null
-                        ? _selected!.color.withValues(alpha: 0.4)
-                        : cs.outline,
+                        ? _selected!.color.withValues(alpha: 0.12)
+                        : cs.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: _selected != null
+                          ? _selected!.color.withValues(alpha: 0.4)
+                          : cs.outline,
+                    ),
                   ),
-                ),
-                child: _selected != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${_ringLabel(_selected!.ring)} · ${_selected!.category}'.toUpperCase(),
-                            style: TextStyle(
-                              color: _selected!.color,
-                              fontSize: 11,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            _selected!.word,
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                              color: cs.onSurface,
-                              fontWeight: FontWeight.w600,
-                              height: 1.1,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () => setState(() => _selected = null),
-                            child: Text(
-                              'Clear',
-                              style: TextStyle(
-                                color: cs.onSurface.withValues(alpha: 0.3),
-                                fontSize: 13,
+                  child: _selected != null
+                      ? ExcludeSemantics(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${_ringLabel(_selected!.ring)} · ${_selected!.category}'.toUpperCase(),
+                                style: TextStyle(
+                                  color: _selected!.color,
+                                  fontSize: 11,
+                                  letterSpacing: 2,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 6),
+                              Text(
+                                _selected!.word,
+                                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  color: cs.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.1,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Semantics(
+                                button: true,
+                                label: 'Clear selected emotion',
+                                child: GestureDetector(
+                                  onTap: () => setState(() => _selected = null),
+                                  child: Text(
+                                    'Clear',
+                                    style: TextStyle(
+                                      color: cs.onSurface.withValues(alpha: 0.3),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      )
-                    : Center(
-                        child: Text(
-                          'tap any segment to select an emotion',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: cs.onSurface.withValues(alpha: 0.4),
-                            fontSize: 14,
+                        )
+                      : Center(
+                          child: Text(
+                            'tap any segment to select an emotion',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: cs.onSurface.withValues(alpha: 0.4),
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -448,9 +467,12 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
-                      child: FilledButton(
-                        onPressed: _pickRandom,
-                        child: const Text('Pick random emotion'),
+                      child: Tooltip(
+                        message: 'Pick a random emotion from the selected ring filter',
+                        child: FilledButton(
+                          onPressed: _pickRandom,
+                          child: const Text('Pick random emotion'),
+                        ),
                       ),
                     ),
                   ],

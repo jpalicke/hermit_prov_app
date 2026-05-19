@@ -205,6 +205,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
                     IconButton(
                       key: const Key('session_info_button'),
                       icon: const Icon(Icons.info_outline),
+                      tooltip: 'View drill instructions',
                       onPressed: () => _showInstructions(context),
                     ),
                   ],
@@ -213,63 +214,73 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
               Expanded(
                 flex: 3,
                 child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 220,
-                        height: 220,
-                        child: CircularProgressIndicator(
-                          key: const Key('session_progress_ring'),
-                          value: state.segmentProgress,
-                          strokeWidth: 10,
-                          backgroundColor:
-                              cs.surfaceContainerHighest,
-                          color: cs.primary,
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (ringLabel != null)
-                            Text(
-                              ringLabel,
-                              key: const Key('session_ring_label'),
-                              textAlign: TextAlign.center,
-                              style: tt.labelLarge?.copyWith(
-                                color: cs.onSurfaceVariant,
-                              ),
-                            ),
-                          Text(
-                            timeText,
-                            key: const Key('session_countdown_text'),
-                            style: tt.displayMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: cs.onSurface,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures()
-                              ],
-                            ),
+                  child: Semantics(
+                    liveRegion: true,
+                    label: isIdle
+                        ? 'Timer ready. $timeText'
+                        : isPaused
+                            ? 'Timer paused at $timeText'
+                            : 'Timer running: $timeText remaining',
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 220,
+                          height: 220,
+                          child: CircularProgressIndicator(
+                            key: const Key('session_progress_ring'),
+                            value: state.segmentProgress,
+                            strokeWidth: 10,
+                            backgroundColor:
+                                cs.surfaceContainerHighest,
+                            color: cs.primary,
                           ),
-                          if (isPaused)
-                            Text(
-                              'PAUSED',
-                              style: tt.labelMedium?.copyWith(
-                                color: cs.outline,
-                                letterSpacing: 2,
+                        ),
+                        ExcludeSemantics(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (ringLabel != null)
+                                Text(
+                                  ringLabel,
+                                  key: const Key('session_ring_label'),
+                                  textAlign: TextAlign.center,
+                                  style: tt.labelLarge?.copyWith(
+                                    color: cs.onSurfaceVariant,
+                                  ),
+                                ),
+                              Text(
+                                timeText,
+                                key: const Key('session_countdown_text'),
+                                style: tt.displayMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: cs.onSurface,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures()
+                                  ],
+                                ),
                               ),
-                            ),
-                          if (isIdle)
-                            Text(
-                              'READY',
-                              style: tt.labelMedium?.copyWith(
-                                color: cs.outline,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
+                              if (isPaused)
+                                Text(
+                                  'PAUSED',
+                                  style: tt.labelMedium?.copyWith(
+                                    color: cs.outline,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
+                              if (isIdle)
+                                Text(
+                                  'READY',
+                                  style: tt.labelMedium?.copyWith(
+                                    color: cs.outline,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

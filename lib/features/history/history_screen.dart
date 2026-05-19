@@ -234,29 +234,34 @@ class _StatCard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    return Card(
-      color: cs.surfaceContainerLow,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              value,
-              style: tt.titleLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: cs.primary,
-              ),
+    return Semantics(
+      label: '$label: $value',
+      child: Card(
+        color: cs.surfaceContainerLow,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  value,
+                  style: tt.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: cs.primary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  style: tt.labelMedium?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: tt.labelMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -345,22 +350,27 @@ class _SessionTile extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
-      title: Text(
-        session.drillId.displayName,
-        style: tt.bodyMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: cs.onSurface,
+    return Semantics(
+      label: '${session.drillId.displayName}, ${_formatDate(session.loggedAt)}, duration: ${_formatSessionDuration(session.duration)}',
+      child: ExcludeSemantics(
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+          title: Text(
+            session.drillId.displayName,
+            style: tt.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: cs.onSurface,
+            ),
+          ),
+          subtitle: Text(
+            _formatDate(session.loggedAt),
+            style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+          ),
+          trailing: Text(
+            _formatSessionDuration(session.duration),
+            style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+          ),
         ),
-      ),
-      subtitle: Text(
-        _formatDate(session.loggedAt),
-        style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-      ),
-      trailing: Text(
-        _formatSessionDuration(session.duration),
-        style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
       ),
     );
   }
@@ -401,25 +411,29 @@ class _JournalCard extends StatelessWidget {
     return Card(
       color: cs.surfaceContainerLow,
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Icon(Icons.book_outlined, color: cs.primary),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  'Journal',
-                  style: tt.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: cs.onSurface,
+      child: Semantics(
+        button: true,
+        label: 'Open Journal',
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                ExcludeSemantics(child: Icon(Icons.book_outlined, color: cs.primary)),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'Journal',
+                    style: tt.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
                   ),
                 ),
-              ),
-              Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
-            ],
+                ExcludeSemantics(child: Icon(Icons.chevron_right, color: cs.onSurfaceVariant)),
+              ],
+            ),
           ),
         ),
       ),

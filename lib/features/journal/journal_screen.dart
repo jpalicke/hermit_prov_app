@@ -53,9 +53,12 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Journal')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openCreateScreen,
-        child: const Icon(Icons.add),
+      floatingActionButton: Tooltip(
+        message: 'New journal entry',
+        child: FloatingActionButton(
+          onPressed: _openCreateScreen,
+          child: const Icon(Icons.add),
+        ),
       ),
       body: _buildBody(),
     );
@@ -101,32 +104,39 @@ class _JournalEntryTile extends StatelessWidget {
         ? '${entry.body.substring(0, 100)}...'
         : entry.body;
 
-    return ListTile(
-      title: Text(_formatDate(entry.createdAt)),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (entry.drillId != null) ...[
-            const SizedBox(height: 2),
-            Chip(
-              label: Text(
-                entry.drillId!.displayName,
-                style: Theme.of(context).textTheme.bodySmall,
+    final drillLabel = entry.drillId != null ? ', drill: ${entry.drillId!.displayName}' : '';
+    return Semantics(
+      button: true,
+      label: 'Journal entry from ${_formatDate(entry.createdAt)}$drillLabel. $preview',
+      child: ExcludeSemantics(
+        child: ListTile(
+          title: Text(_formatDate(entry.createdAt)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (entry.drillId != null) ...[
+                const SizedBox(height: 2),
+                Chip(
+                  label: Text(
+                    entry.drillId!.displayName,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  padding: EdgeInsets.zero,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  backgroundColor: cs.secondaryContainer,
+                ),
+                const SizedBox(height: 2),
+              ],
+              Text(
+                preview,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              padding: EdgeInsets.zero,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              backgroundColor: cs.secondaryContainer,
-            ),
-            const SizedBox(height: 2),
-          ],
-          Text(
-            preview,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            ],
           ),
-        ],
+          onTap: onTap,
+        ),
       ),
-      onTap: onTap,
     );
   }
 

@@ -274,59 +274,69 @@ class _TimerScreenState extends State<TimerScreen> {
             Expanded(
               flex: 3,
               child: Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 220,
-                      height: 220,
-                      child: CircularProgressIndicator(
-                        value: isCompleted ? 1.0 : state.segmentProgress,
-                        strokeWidth: 10,
-                        backgroundColor: cs.surfaceContainerHighest,
-                        color: isCompleted ? cs.tertiary : cs.primary,
+                child: Semantics(
+                  liveRegion: true,
+                  label: isCompleted
+                      ? 'Timer done'
+                      : isPaused
+                          ? 'Timer paused at $timeText'
+                          : 'Timer running: $timeText remaining',
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 220,
+                        height: 220,
+                        child: CircularProgressIndicator(
+                          value: isCompleted ? 1.0 : state.segmentProgress,
+                          strokeWidth: 10,
+                          backgroundColor: cs.surfaceContainerHighest,
+                          color: isCompleted ? cs.tertiary : cs.primary,
+                        ),
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isCompleted)
-                          Text(
-                            'Done',
-                            style: tt.headlineMedium?.copyWith(
-                              color: cs.tertiary,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          )
-                        else
-                          Text(
-                            timeText,
-                            key: const Key('timer_countdown'),
-                            style: tt.displayMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: cs.onSurface,
-                              fontFeatures: const [FontFeature.tabularFigures()],
-                            ),
-                          ),
-                        if (isPaused)
-                          Text(
-                            'PAUSED',
-                            style: tt.labelMedium?.copyWith(
-                              color: cs.outline,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        if (state.isIdle)
-                          Text(
-                            'READY',
-                            style: tt.labelMedium?.copyWith(
-                              color: cs.outline,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
+                      ExcludeSemantics(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isCompleted)
+                              Text(
+                                'Done',
+                                style: tt.headlineMedium?.copyWith(
+                                  color: cs.tertiary,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              )
+                            else
+                              Text(
+                                timeText,
+                                key: const Key('timer_countdown'),
+                                style: tt.displayMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: cs.onSurface,
+                                  fontFeatures: const [FontFeature.tabularFigures()],
+                                ),
+                              ),
+                            if (isPaused)
+                              Text(
+                                'PAUSED',
+                                style: tt.labelMedium?.copyWith(
+                                  color: cs.outline,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                            if (state.isIdle)
+                              Text(
+                                'READY',
+                                style: tt.labelMedium?.copyWith(
+                                  color: cs.outline,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -415,24 +425,31 @@ class _DurationPicker extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove_circle_outline),
           color: cs.primary,
+          tooltip: 'Decrease $label by 1 minute',
           onPressed: minutes <= 1
               ? null
               : () => onChanged(minutes - 1),
         ),
-        SizedBox(
-          width: 72,
-          child: Text(
-            _formatMmSs(minutes),
-            textAlign: TextAlign.center,
-            style: tt.titleLarge?.copyWith(
-              fontFeatures: const [FontFeature.tabularFigures()],
-              fontWeight: FontWeight.w600,
+        Semantics(
+          label: '$label: $minutes minutes',
+          child: SizedBox(
+            width: 72,
+            child: ExcludeSemantics(
+              child: Text(
+                _formatMmSs(minutes),
+                textAlign: TextAlign.center,
+                style: tt.titleLarge?.copyWith(
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ),
         IconButton(
           icon: const Icon(Icons.add_circle_outline),
           color: cs.primary,
+          tooltip: 'Increase $label by 1 minute',
           onPressed: minutes >= 60
               ? null
               : () => onChanged(minutes + 1),
