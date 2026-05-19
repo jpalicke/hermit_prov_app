@@ -26,11 +26,17 @@ class DrillConfigureScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) onSave();
+      },
+      child: Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(
         backgroundColor: cs.surface,
         surfaceTintColor: Colors.transparent,
+        leading: BackButton(onPressed: onSave),
         title: Text(
           '${drillId.displayName} — Configure',
           style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w700),
@@ -60,6 +66,7 @@ class DrillConfigureScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

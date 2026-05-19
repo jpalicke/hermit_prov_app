@@ -155,6 +155,7 @@ class _TwoCharacterSessionScreenState
       onConfigure: widget.onConfigure,
       historyRepository: widget.historyRepository,
       drillId: DrillId.twoCharacterScenes,
+      autoStart: widget.settings.handsFreeModeEnabled,
       instructions:
           'A prompt appears. Play both characters in a scene out loud until the timer ends. '
           'A short regroup follows, then a new prompt appears automatically. Runs until you stop it.',

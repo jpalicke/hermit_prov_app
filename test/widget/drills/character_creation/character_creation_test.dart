@@ -100,15 +100,14 @@ void main() {
     expect(ended, isTrue);
   });
 
-  // 8. Session auto-starts — Pause/Resume button visible, not Start button.
-  testWidgets('Session auto-starts and shows Pause button instead of Start',
+  // 8. Session loads with Start button (auto-start only in hands-free mode).
+  testWidgets('Session shows Start button when hands-free is disabled',
       (tester) async {
     await tester.pumpWidget(_wrapSession());
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // autoStart: true means the controller starts on the first frame.
-    expect(find.byKey(const Key('start_button')), findsNothing);
-    expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+    expect(find.byKey(const Key('start_button')), findsOneWidget);
+    expect(find.byKey(const Key('pause_resume_button')), findsNothing);
   });
 
   // 9. Prompts are auto-generated for first-pass segments on init.

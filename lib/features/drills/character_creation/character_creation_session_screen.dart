@@ -123,18 +123,20 @@ class _CharacterCreationSessionScreenState
     final charNum = CharacterCreationCycleBuilder.characterNumberForId(seg.id);
 
     if (_lastAnnouncedSegmentId != seg.id) {
-      _lastAnnouncedSegmentId = seg.id;
-
       if (passType == CharacterCreationPassType.returnPass) {
-        // Return pass: speak "Character N".
+        _lastAnnouncedSegmentId = seg.id;
         policy.onSegmentStart(
           seg.copyWith(label: 'Return to Character $charNum'),
           paused: paused,
         );
       } else {
-        // First pass: try to announce with prompt if available.
+        // First pass: only mark as announced when the prompt is ready.
+        // If the prompt hasn't loaded yet, _maybeAnnounceFirstPassWithPrompt
+        // will fire once generation completes and _lastAnnouncedSegmentId is
+        // still unset, so it won't be skipped.
         final prompt = _prompts[seg.id];
         if (prompt != null) {
+          _lastAnnouncedSegmentId = seg.id;
           policy.onSegmentStart(
             seg.copyWith(
               promptPayload: prompt,
@@ -143,8 +145,6 @@ class _CharacterCreationSessionScreenState
             paused: paused,
           );
         }
-        // If prompt is not ready yet, _maybeAnnounceFirstPassWithPrompt
-        // will fire once the prompt generation completes.
       }
     }
 
@@ -169,7 +169,7 @@ class _CharacterCreationSessionScreenState
       onConfigure: widget.onConfigure,
       historyRepository: widget.historyRepository,
       drillId: DrillId.characterCreation,
-      autoStart: true,
+      autoStart: _handsFreeActive,
       instructions:
           'Each segment is one character. On the first pass, a prompt appears automatically. '
           'Tap New Prompt if you want a different one. On the return pass, return to that character. '

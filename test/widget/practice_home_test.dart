@@ -71,8 +71,8 @@ void main() {
       await pumpPracticeHome(tester);
       await tapCard(tester, 'Character Creation');
       await tester.pumpAndSettle(const Duration(seconds: 2));
-      // Character Creation auto-starts — Pause/Resume button is shown (not Start).
-      expect(find.byKey(const Key('pause_resume_button')), findsOneWidget);
+      // Character Creation shows Start button (auto-start only in hands-free mode).
+      expect(find.byKey(const Key('start_button')), findsOneWidget);
       expect(find.byKey(const Key('stop_end_button')), findsOneWidget);
     });
 

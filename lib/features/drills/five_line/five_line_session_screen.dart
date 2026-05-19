@@ -52,6 +52,9 @@ class FiveLineSessionScreen extends StatefulWidget {
 }
 
 class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
+  static const _instructions =
+      'A prompt appears. Perform a five-line scene out loud. When you are done, tap New Prompt '
+      'to go again. No timer by default. Turn on auto-advance in configure if you want one.';
   String? _prompt;
   bool _loading = false;
   bool _initialized = false;
@@ -138,6 +141,21 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
     widget.onSessionEnd();
   }
 
+  void _showInstructions(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) {
+        final tt = Theme.of(ctx).textTheme;
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Text(_instructions, style: tt.bodyMedium),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.settings.autoAdvance) {
@@ -158,6 +176,14 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
         backgroundColor: cs.surface,
         surfaceTintColor: Colors.transparent,
         title: const Text('Five Line Game Drill'),
+        actions: [
+          IconButton(
+            key: const Key('session_info_button'),
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'View drill instructions',
+            onPressed: () => _showInstructions(context),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -187,6 +213,19 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
               ),
               child: const Text('New Prompt'),
             ),
+            if (widget.onConfigure != null) ...[
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                key: const Key('session_configure_button'),
+                onPressed: widget.onConfigure,
+                icon: const Icon(Icons.settings),
+                label: const Text('Configure'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  textStyle: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
             const SizedBox(height: 12),
             OutlinedButton(
               key: const Key('stop_end_button'),
@@ -222,9 +261,8 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       onConfigure: widget.onConfigure,
       historyRepository: widget.historyRepository,
       drillId: DrillId.fiveLineGame,
-      instructions:
-          'A prompt appears. Perform a five-line scene out loud. When you are done, tap New Prompt '
-          'to go again. No timer by default. Turn on auto-advance in configure if you want one.',
+      autoStart: widget.settings.handsFreeModeEnabled,
+      instructions: _instructions,
       contentBuilder: (context, state) {
         // Detect loop boundary — load a new prompt when the loop counter advances.
         if (state.loops > (_lastLoopCount ?? -1)) {
