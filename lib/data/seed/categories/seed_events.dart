@@ -70,7 +70,6 @@ const List<BuiltInPrompt> seedEvents = [
   BuiltInPrompt(id: 'evt-052', text: 'a first date', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-053', text: 'a blind date', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-054', text: 'a potluck dinner', category: PromptCategory.events),
-  BuiltInPrompt(id: 'evt-055', text: 'a school reunion', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-056', text: 'a neighborhood barbecue', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-057', text: 'a book club meeting', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-058', text: 'a support group', category: PromptCategory.events),
