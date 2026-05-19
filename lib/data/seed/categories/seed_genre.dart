@@ -65,7 +65,7 @@ const List<BuiltInPrompt> seedGenre = [
   BuiltInPrompt(id: 'gen-051', text: 'romance novel', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-052', text: 'satire', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-053', text: 'urban fantasy', category: PromptCategory.genre),
-  BuiltInPrompt(id: 'gen-054', text: 'science fiction', category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-054', text: 'cyberpunk', category: PromptCategory.genre),
 
   // --- Tone / Style ---
   BuiltInPrompt(id: 'gen-055', text: 'slapstick', category: PromptCategory.genre),
@@ -75,7 +75,7 @@ const List<BuiltInPrompt> seedGenre = [
   BuiltInPrompt(id: 'gen-059', text: 'tragicomedy', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-060', text: 'camp', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-061', text: 'parody', category: PromptCategory.genre),
-  BuiltInPrompt(id: 'gen-062', text: 'satire', category: PromptCategory.genre),
+  BuiltInPrompt(id: 'gen-062', text: 'screwball comedy', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-063', text: 'deadpan', category: PromptCategory.genre),
   BuiltInPrompt(id: 'gen-064', text: 'over the top', category: PromptCategory.genre),
 ];
