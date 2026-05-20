@@ -130,7 +130,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
           child: Text(
-            _categoryLabel(entry.key),
+            entry.key.displayLabel,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w700,
@@ -153,16 +153,6 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
     );
   }
 
-  String _categoryLabel(PromptCategory category) => switch (category) {
-        PromptCategory.objects => 'Objects',
-        PromptCategory.locations => 'Locations',
-        PromptCategory.relationships => 'Relationships',
-        PromptCategory.occupations => 'Occupations',
-        PromptCategory.emotions => 'Emotions',
-        PromptCategory.activities => 'Activities',
-        PromptCategory.genre => 'Genre',
-        PromptCategory.events => 'Events',
-      };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

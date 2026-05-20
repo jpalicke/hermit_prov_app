@@ -185,7 +185,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
               children: [
                 ...PromptCategory.values.map(
                   (cat) => FilterChip(
-                    label: Text(_categoryLabel(cat)),
+                    label: Text(cat.displayLabel),
                     selected: _selectedCategories.contains(cat),
                     onSelected: (_) => _toggleCategory(cat),
                   ),
@@ -198,16 +198,6 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
     );
   }
 
-  String _categoryLabel(PromptCategory cat) => switch (cat) {
-    PromptCategory.objects => 'Objects',
-    PromptCategory.locations => 'Locations',
-    PromptCategory.relationships => 'Relationships',
-    PromptCategory.occupations => 'Occupations',
-    PromptCategory.emotions => 'Emotions',
-    PromptCategory.activities => 'Activities',
-    PromptCategory.genre => 'Genre',
-    PromptCategory.events => 'Events',
-  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -22,4 +22,16 @@ enum PromptCategory {
     genre,
     events,
   ];
+
+  /// Human-readable label suitable for chips and list headers.
+  String get displayLabel => switch (this) {
+    PromptCategory.objects => 'Objects',
+    PromptCategory.locations => 'Locations',
+    PromptCategory.relationships => 'Relationships',
+    PromptCategory.occupations => 'Occupations',
+    PromptCategory.emotions => 'Emotions',
+    PromptCategory.activities => 'Activities',
+    PromptCategory.genre => 'Genre',
+    PromptCategory.events => 'Events',
+  };
 }

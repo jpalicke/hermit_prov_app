@@ -138,6 +138,7 @@ void main() {
       of: prompt1Picker,
       matching: find.text('Locations'),
     );
+    await tester.ensureVisible(locationsChip);
     await tester.tap(locationsChip);
     await tester.pump();
 
@@ -151,7 +152,65 @@ void main() {
     expect(saved.prompt1Categories, contains(PromptCategory.locations));
   });
 
-  // 6. Stop calls onSessionEnd immediately without a confirmation dialog.
+  // 6. Empty-selection guard falls back to [objects] for prompt1.
+  testWidgets('Deselecting all prompt1 chips falls back to objects', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CatClockConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    // Default is Objects selected. Tap Objects chip to deselect it (leaving nothing).
+    final prompt1Picker = find.byKey(const Key('prompt1_category_picker'));
+    final objectsChip = find.descendant(
+      of: prompt1Picker,
+      matching: find.text('Objects'),
+    );
+    await tester.ensureVisible(objectsChip);
+    await tester.tap(objectsChip);
+    await tester.pump();
+
+    // Tap Save.
+    await tester.tap(find.byKey(const Key('drill_configure_save_button')));
+    await tester.pumpAndSettle();
+
+    final appServices = tester.element(find.byType(MaterialApp).first);
+    final repo = AppServices.of(appServices).drillSettingsRepository;
+    final saved = await repo.getSettings(DrillId.catClock) as CatClockSettings;
+    expect(saved.prompt1Categories, equals([PromptCategory.objects]));
+  });
+
+  // 7. prompt2Categories saves correctly.
+  testWidgets('Toggling category chip saves to prompt2 settings', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CatClockConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    // Tap Emotions chip inside prompt2 picker.
+    final prompt2Picker = find.byKey(const Key('prompt2_category_picker'));
+    final emotionsChip = find.descendant(
+      of: prompt2Picker,
+      matching: find.text('Emotions'),
+    );
+    await tester.ensureVisible(emotionsChip);
+    await tester.tap(emotionsChip);
+    await tester.pump();
+
+    // Tap Save.
+    await tester.tap(find.byKey(const Key('drill_configure_save_button')));
+    await tester.pumpAndSettle();
+
+    final appServices = tester.element(find.byType(MaterialApp).first);
+    final repo = AppServices.of(appServices).drillSettingsRepository;
+    final saved = await repo.getSettings(DrillId.catClock) as CatClockSettings;
+    expect(saved.prompt2Categories, contains(PromptCategory.emotions));
+  });
+
+  // 8. Stop calls onSessionEnd immediately without a confirmation dialog.
   testWidgets('Stop calls onSessionEnd immediately', (tester) async {
     var ended = false;
     await tester.pumpWidget(

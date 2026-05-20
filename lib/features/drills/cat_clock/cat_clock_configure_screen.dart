@@ -262,12 +262,17 @@ class _CategoryPicker extends StatelessWidget {
   final List<PromptCategory> selected;
   final void Function(List<PromptCategory>) onChanged;
 
+  bool get _allSelected => selected.length == PromptCategory.values.length;
+
   void _toggle(PromptCategory cat) {
     final next = selected.contains(cat)
         ? selected.where((c) => c != cat).toList()
         : [...selected, cat];
     onChanged(next);
   }
+
+  void _toggleAll() =>
+      onChanged(_allSelected ? [] : PromptCategory.values.toList());
 
   @override
   Widget build(BuildContext context) {
@@ -277,12 +282,19 @@ class _CategoryPicker extends StatelessWidget {
       children: [
         Text(title, style: tt.titleMedium),
         const SizedBox(height: 8),
+        FilledButton.tonal(
+          onPressed: _toggleAll,
+          child: Text(
+            _allSelected ? 'Deselect All Categories' : 'Select All Categories',
+          ),
+        ),
+        const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 4,
           children: PromptCategory.values
               .map((cat) => FilterChip(
-                    label: Text(_label(cat)),
+                    label: Text(cat.displayLabel),
                     selected: selected.contains(cat),
                     onSelected: (_) => _toggle(cat),
                   ))
@@ -291,15 +303,4 @@ class _CategoryPicker extends StatelessWidget {
       ],
     );
   }
-
-  String _label(PromptCategory cat) => switch (cat) {
-    PromptCategory.objects => 'Objects',
-    PromptCategory.locations => 'Locations',
-    PromptCategory.relationships => 'Relationships',
-    PromptCategory.occupations => 'Occupations',
-    PromptCategory.emotions => 'Emotions',
-    PromptCategory.activities => 'Activities',
-    PromptCategory.genre => 'Genre',
-    PromptCategory.events => 'Events',
-  };
 }
