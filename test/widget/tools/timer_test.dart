@@ -70,6 +70,47 @@ void main() {
       expect(find.byKey(const Key('timer_countdown')), findsOneWidget);
     });
 
+    testWidgets('duration label uses singular "minute" when value is 1',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const TimerScreen()));
+      await tester.pumpAndSettle();
+
+      // Default is 5 minutes — decrement to 1.
+      for (var i = 0; i < 4; i++) {
+        await tester.tap(find.byTooltip('Decrease Duration by 1 minute').first);
+        await tester.pump();
+      }
+
+      // The Semantics label for the value display should say "1 minute".
+      expect(
+        find.bySemanticsLabel(RegExp(r'^Duration: 1 minute$')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('duration label uses plural "minutes" when value is above 1',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const TimerScreen()));
+      await tester.pumpAndSettle();
+
+      // Default is 5 minutes — verify plural.
+      expect(
+        find.bySemanticsLabel(RegExp(r'^Duration: 5 minutes$')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('decrement button semantic label appears exactly once',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const TimerScreen()));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.bySemanticsLabel('Decrease Duration by 1 minute'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('stop button returns to config view',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const TimerScreen()));
