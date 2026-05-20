@@ -25,19 +25,6 @@ release {
 
 ---
 
-## Issue #3 — DEVELOPER_NOTES.md Stale Entries
-
-**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/3  
-**Priority:** Low (documentation only; doesn't affect the app)
-
-Three stale entries in `DEVELOPER_NOTES.md`:
-
-1. **`tts_voice` SharedPreferences key** — TTS voice selection was cut during development; only speaking rate remains. The `tts_voice` key reference should be removed.
-2. **Backup schema `ttsVoice?` field** — `AppPreferences` no longer has this field; the backup schema doc still lists it.
-3. **Manual QA checklist** — Contains "verify available system voices are listed" — that feature was removed.
-
----
-
 ## Issue #4 — todo.md Milestone Completion State
 
 **GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/4  
