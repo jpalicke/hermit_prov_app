@@ -1,5 +1,5 @@
 # ABOUTME: GitHub Actions workflow for building and signing a release IPA.
-# ABOUTME: Requires 6 secrets — see docs/KT_01_DEV_SETUP.md for setup instructions.
+# ABOUTME: Requires 6 secrets. See docs/KT_01_DEV_SETUP.md for setup instructions.
 
 name: iOS Release
 
