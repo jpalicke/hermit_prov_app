@@ -23,6 +23,8 @@ import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings_repository.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences_repository.dart';
 import 'package:hermit_prov_app/domain/tts/tts_service.dart';
+import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
+import 'package:hermit_prov_app/domain/crash/crash_report_service.dart';
 
 class AppServices extends InheritedWidget {
   AppServices({
@@ -33,6 +35,7 @@ class AppServices extends InheritedWidget {
     required this.journalRepository,
     required this.appPreferencesRepository,
     required this.ttsService,
+    required this.crashReportService,
     ValueNotifier<ThemeMode>? themeNotifier,
     required super.child,
   }) : themeNotifier = themeNotifier ?? ValueNotifier(ThemeMode.system);
@@ -47,6 +50,7 @@ class AppServices extends InheritedWidget {
       journalRepository: InMemoryJournalRepository(),
       appPreferencesRepository: InMemoryAppPreferencesRepository(),
       ttsService: FakeTtsService(),
+      crashReportService: const NoOpCrashReportService(),
       child: child,
     );
   }
@@ -71,6 +75,7 @@ class AppServices extends InheritedWidget {
         preferencesRepository: prefsRepo,
         enabled: true,
       ),
+      crashReportService: const NoOpCrashReportService(),
       child: child,
     );
   }
@@ -81,6 +86,7 @@ class AppServices extends InheritedWidget {
   final JournalRepository journalRepository;
   final AppPreferencesRepository appPreferencesRepository;
   final TtsService ttsService;
+  final CrashReportService crashReportService;
 
   /// Notifier for the current theme mode. Update this to trigger a live theme change.
   final ValueNotifier<ThemeMode> themeNotifier;

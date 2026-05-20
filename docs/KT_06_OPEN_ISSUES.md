@@ -4,22 +4,6 @@ These are the known gaps as of the v1 handoff. All items have GitHub issues on t
 
 ---
 
-## Issue #1 — Wire Up Crash Reporting
-
-**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/1  
-**Priority:** Medium (should be fixed before v1 launch)
-
-**What's there:** `lib/domain/crash/`, `lib/data/crash/no_op_crash_report_service.dart`, and `lib/features/crash/crash_report_dialog.dart` all exist and are correct.
-
-**What's missing:** The crash service is not in `AppServices` DI. `main.dart` has no `FlutterError.onError` or `runZonedGuarded`. The dialog will never fire.
-
-**How to fix:**
-1. In `lib/core/di/app_services.dart`: add `CrashReportService` property; wire `NoOpCrashReportService` in `withLocalStorage()` and `withInMemory()`
-2. In `lib/main.dart`: wrap `runApp` in `runZonedGuarded`; add `FlutterError.onError` that calls the service
-3. Tests: add a widget test that confirms the crash dialog appears when the error handler fires
-
----
-
 ## Issue #2 — Android Release Signing
 
 **GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/2  
@@ -46,12 +30,11 @@ release {
 **GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/3  
 **Priority:** Low (documentation only; doesn't affect the app)
 
-Four stale entries in `DEVELOPER_NOTES.md`:
+Three stale entries in `DEVELOPER_NOTES.md`:
 
 1. **`tts_voice` SharedPreferences key** — TTS voice selection was cut during development; only speaking rate remains. The `tts_voice` key reference should be removed.
 2. **Backup schema `ttsVoice?` field** — `AppPreferences` no longer has this field; the backup schema doc still lists it.
 3. **Manual QA checklist** — Contains "verify available system voices are listed" — that feature was removed.
-4. **Crash report description** — States crash dialog fires on fatal exceptions; it is not wired up (see issue #1).
 
 ---
 
