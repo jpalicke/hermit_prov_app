@@ -53,12 +53,10 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Journal')),
-      floatingActionButton: Tooltip(
-        message: 'New journal entry',
-        child: FloatingActionButton(
-          onPressed: _openCreateScreen,
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _openCreateScreen,
+        tooltip: 'New journal entry',
+        child: const Icon(Icons.add),
       ),
       body: _buildBody(),
     );
