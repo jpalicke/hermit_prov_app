@@ -65,4 +65,4 @@ See the [`docs/`](docs/) directory for the full knowledge-transfer suite:
 | [KT_05_TESTING_GUIDE.md](docs/KT_05_TESTING_GUIDE.md) | Test types, structure, how to write new tests |
 | [KT_06_OPEN_ISSUES.md](docs/KT_06_OPEN_ISSUES.md) | Known gaps and open GitHub issues |
 
-Also see [`DEVELOPER_NOTES.md`](DEVELOPER_NOTES.md) for implementation decisions and platform notes.
+Also see [`DEVELOPER_NOTES.md`](DEVELOPER_NOTES.md) for implementation decisions and platform notes, and [`docs/spec.md`](docs/spec.md) for the authoritative product specification.

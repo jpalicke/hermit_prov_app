@@ -12,14 +12,14 @@ Welcome to the project. Read these in order if you're new. Skip around if you kn
 | [KT_05_TESTING_GUIDE.md](KT_05_TESTING_GUIDE.md) | Test types, test structure, how to write new tests |
 | [KT_06_OPEN_ISSUES.md](KT_06_OPEN_ISSUES.md) | Known gaps, open GitHub issues, intentional non-issues |
 
-## Other key files in the project root
+## Other key files
 
 | File | Purpose |
 |------|---------|
-| `spec.md` | Authoritative product specification — when in doubt, the spec wins |
-| `DEVELOPER_NOTES.md` | Implementation decisions and platform-specific notes |
-| `prompt_plan.md` | The 28-step build plan; useful historical context for why things were built the way they were |
-| `todo.md` | Milestone checklist (note: not fully up to date — see issue #4) |
+| [spec.md](spec.md) | Authoritative product specification — when in doubt, the spec wins |
+| [prompt_plan.md](prompt_plan.md) | The 28-step build plan; useful historical context for why things were built the way they were |
+| [todo.md](todo.md) | Milestone checklist (note: not fully up to date — see issue #4) |
+| [`DEVELOPER_NOTES.md`](../DEVELOPER_NOTES.md) | Implementation decisions and platform-specific notes |
 
 ## Where to start
 
