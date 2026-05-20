@@ -83,7 +83,7 @@ class _CatClockConfigureScreenState extends State<CatClockConfigureScreen> {
       _settings = CatClockSettings(
         speakingDuration: _settings!.speakingDuration,
         regroupDuration: _settings!.regroupDuration,
-        prompt1Categories: categories.isEmpty ? [PromptCategory.objects] : categories,
+        prompt1Categories: categories,
         prompt2Categories: _settings!.prompt2Categories,
         handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
       );
@@ -96,7 +96,7 @@ class _CatClockConfigureScreenState extends State<CatClockConfigureScreen> {
         speakingDuration: _settings!.speakingDuration,
         regroupDuration: _settings!.regroupDuration,
         prompt1Categories: _settings!.prompt1Categories,
-        prompt2Categories: categories.isEmpty ? [PromptCategory.objects] : categories,
+        prompt2Categories: categories,
         handsFreeModeEnabled: _settings!.handsFreeModeEnabled,
       );
     });
@@ -268,11 +268,12 @@ class _CategoryPicker extends StatelessWidget {
     final next = selected.contains(cat)
         ? selected.where((c) => c != cat).toList()
         : [...selected, cat];
+    if (next.isEmpty) return;
     onChanged(next);
   }
 
   void _toggleAll() =>
-      onChanged(_allSelected ? [] : PromptCategory.values.toList());
+      onChanged(_allSelected ? [PromptCategory.objects] : PromptCategory.values.toList());
 
   @override
   Widget build(BuildContext context) {
