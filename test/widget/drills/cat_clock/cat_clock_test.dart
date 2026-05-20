@@ -1,11 +1,12 @@
 // ABOUTME: Widget tests for the Cat/Clock drill — session, configure, and stop.
-// ABOUTME: Tests use real in-memory repositories to verify settings persistence.
+// ABOUTME: Tests use real in-memory repositories to verify settings persistence and category pickers.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings.dart';
+import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
 import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_configure_screen.dart';
 import 'package:hermit_prov_app/features/drills/cat_clock/cat_clock_session_screen.dart';
 
@@ -107,7 +108,50 @@ void main() {
     expect(find.text('Pause'), findsOneWidget);
   });
 
-  // 4. Stop calls onSessionEnd immediately without a confirmation dialog.
+  // 4. Category pickers render for both prompts.
+  testWidgets('Configure shows prompt1 and prompt2 category pickers', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CatClockConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byKey(const Key('prompt1_category_picker')), findsOneWidget);
+    expect(find.byKey(const Key('prompt2_category_picker')), findsOneWidget);
+    expect(find.text('Prompt 1 categories'), findsOneWidget);
+    expect(find.text('Prompt 2 categories'), findsOneWidget);
+  });
+
+  // 5. Toggling a category chip saves the change.
+  testWidgets('Toggling category chip saves to settings', (tester) async {
+    await tester.pumpWidget(
+      AppServices.withInMemory(
+        child: const MaterialApp(home: CatClockConfigureScreen()),
+      ),
+    );
+    await tester.pump();
+
+    // Default is Objects selected. Tap Locations chip inside prompt1 picker.
+    final prompt1Picker = find.byKey(const Key('prompt1_category_picker'));
+    final locationsChip = find.descendant(
+      of: prompt1Picker,
+      matching: find.text('Locations'),
+    );
+    await tester.tap(locationsChip);
+    await tester.pump();
+
+    // Tap Save.
+    await tester.tap(find.byKey(const Key('drill_configure_save_button')));
+    await tester.pumpAndSettle();
+
+    final appServices = tester.element(find.byType(MaterialApp).first);
+    final repo = AppServices.of(appServices).drillSettingsRepository;
+    final saved = await repo.getSettings(DrillId.catClock) as CatClockSettings;
+    expect(saved.prompt1Categories, contains(PromptCategory.locations));
+  });
+
+  // 6. Stop calls onSessionEnd immediately without a confirmation dialog.
   testWidgets('Stop calls onSessionEnd immediately', (tester) async {
     var ended = false;
     await tester.pumpWidget(
