@@ -6,6 +6,10 @@ import 'package:hermit_prov_app/core/di/app_services.dart';
 import 'package:hermit_prov_app/core/theme/app_theme.dart';
 import 'package:hermit_prov_app/ui/navigation/bottom_nav_shell.dart';
 
+// Global key that lets the crash handler in main.dart reach a navigator
+// context when FlutterError.onError fires outside the widget lifecycle.
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
 class HermitProvApp extends StatefulWidget {
   const HermitProvApp({super.key});
 
@@ -47,6 +51,7 @@ class _HermitProvAppState extends State<HermitProvApp> {
   Widget build(BuildContext context) {
     final themeMode = _themeNotifier?.value ?? ThemeMode.system;
     return MaterialApp(
+      navigatorKey: appNavigatorKey,
       title: 'Hermit Prov',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

@@ -38,6 +38,7 @@ void main() {
       expect(captured!.practiceHistoryRepository, isNotNull);
       expect(captured!.journalRepository, isNotNull);
       expect(captured!.appPreferencesRepository, isNotNull);
+      expect(captured!.crashReportService, isNotNull);
     });
   });
 }
