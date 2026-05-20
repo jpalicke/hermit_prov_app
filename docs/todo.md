@@ -19,39 +19,39 @@ Use it as a living project tracker. The intent is to build Hermit Prov increment
 
 Keep these constraints visible during the entire project.
 
-- [ ] App is named **Hermit Prov**
-- [ ] Flutter is preferred, but another cross-platform framework is acceptable if it preserves the spec
-- [ ] App supports iOS and Android
-- [ ] App supports phones and tablets
-- [ ] Phones are portrait-only
-- [ ] Tablets use tablet-friendly layouts, not merely scaled phone layouts
-- [ ] App is English-only for v1
-- [ ] App opens directly to Practice / Choose Your Drill
-- [ ] No onboarding flow in v1
-- [ ] All user data stays local unless the user explicitly exports it or sends a crash report
-- [ ] App is fully usable offline after installation
-- [ ] No accounts
-- [ ] No login
-- [ ] No cloud sync
-- [ ] No audio recording
-- [ ] No microphone permission
-- [ ] No speech recognition
-- [ ] No push notifications
-- [ ] No local reminder notifications
-- [ ] No social features
-- [ ] No multiplayer
-- [ ] No ads
-- [ ] No subscriptions
-- [ ] No in-app purchases
-- [ ] Low-key external Ko-fi donation link only
-- [ ] No AI-generated prompts
-- [ ] No AI coaching
-- [ ] No AI feedback
-- [ ] No badges
-- [ ] No leaderboards
-- [ ] No public streaks
-- [ ] No nagging reminders
-- [ ] Streaks are quiet local personal stats only
+- [x] App is named **Hermit Prov**
+- [x] Flutter is preferred, but another cross-platform framework is acceptable if it preserves the spec
+- [x] App supports iOS and Android
+- [x] App supports phones and tablets
+- [x] Phones are portrait-only
+- [!] Tablets use tablet-friendly layouts, not merely scaled phone layouts — tablet-specific layouts deferred (see issue #5)
+- [x] App is English-only for v1
+- [x] App opens directly to Practice / Choose Your Drill
+- [x] No onboarding flow in v1
+- [x] All user data stays local unless the user explicitly exports it or sends a crash report
+- [x] App is fully usable offline after installation
+- [x] No accounts
+- [x] No login
+- [x] No cloud sync
+- [x] No audio recording
+- [x] No microphone permission
+- [x] No speech recognition
+- [x] No push notifications
+- [x] No local reminder notifications
+- [x] No social features
+- [x] No multiplayer
+- [x] No ads
+- [x] No subscriptions
+- [x] No in-app purchases
+- [x] Low-key external Ko-fi donation link only
+- [x] No AI-generated prompts
+- [x] No AI coaching
+- [x] No AI feedback
+- [x] No badges
+- [x] No leaderboards
+- [x] No public streaks
+- [x] No nagging reminders
+- [x] Streaks are quiet local personal stats only
 
 ---
 
@@ -59,51 +59,51 @@ Keep these constraints visible during the entire project.
 
 ## 0.1 Repository Setup
 
-- [ ] Create project repository
-- [ ] Add README.md
+- [x] Create project repository
+- [x] Add README.md
 - [ ] Add LICENSE file if applicable
-- [ ] Add `.gitignore`
-- [ ] Add basic project structure
+- [x] Add `.gitignore`
+- [x] Add basic project structure
 - [ ] Add issue templates if desired
 - [ ] Add pull request template if desired
 - [ ] Add contribution notes if this will be open source
-- [ ] Add initial manual QA checklist document
-- [ ] Add this `todo.md` checklist to the repo
+- [x] Add initial manual QA checklist document
+- [x] Add this `todo.md` checklist to the repo
 
 ## 0.2 Flutter Project Setup
 
 - [x] Create Flutter app
 - [ ] Confirm app runs on iOS simulator
-- [ ] Confirm app runs on Android emulator
-- [ ] Confirm app runs in debug mode
+- [x] Confirm app runs on Android emulator
+- [x] Confirm app runs in debug mode
 - [ ] Confirm app builds in release mode locally
-- [ ] Set app display name to **Hermit Prov**
-- [ ] Configure package/application IDs
-- [ ] Add app versioning strategy
-- [ ] Add linting configuration
-- [ ] Add formatting command/process
-- [ ] Add test command/process
+- [x] Set app display name to **Hermit Prov**
+- [x] Configure package/application IDs
+- [x] Add app versioning strategy
+- [x] Add linting configuration
+- [x] Add formatting command/process
+- [x] Add test command/process
 
 ## 0.3 Initial Dependency Decisions
 
-- [ ] Choose state management approach
-- [ ] Choose local persistence approach
-- [ ] Choose routing/navigation approach
-- [ ] Choose text-to-speech package
-- [ ] Choose share/file picker packages for export/import
-- [ ] Choose URL/email launcher package
-- [ ] Choose crash-report provider or decide on no-op shell for v1 development
+- [x] Choose state management approach — StatefulWidget + InheritedWidget (AppServices DI)
+- [x] Choose local persistence approach — Drift (SQLite)
+- [x] Choose routing/navigation approach — Navigator.push (no routing package)
+- [x] Choose text-to-speech package — flutter_tts
+- [x] Choose share/file picker packages for export/import — share_plus + file_picker
+- [x] Choose URL/email launcher package — url_launcher
+- [x] Choose crash-report provider or decide on no-op shell for v1 development — no-op shell with opt-in dialog
 - [ ] Document dependency choices in README or developer docs
 
 ## 0.4 Test Infrastructure
 
-- [ ] Confirm unit tests run
-- [ ] Confirm widget tests run
-- [ ] Add test helpers
-- [ ] Add fake clock or timer helper
-- [ ] Add fake repositories
-- [ ] Add fake TTS service
-- [ ] Add fake crash-report provider
+- [x] Confirm unit tests run
+- [x] Confirm widget tests run
+- [x] Add test helpers
+- [x] Add fake clock or timer helper — DrillSessionController.tick() for deterministic testing
+- [x] Add fake repositories — AppServices.withInMemory()
+- [x] Add fake TTS service
+- [x] Add fake crash-report provider
 - [ ] Add test data builders/factories
 - [ ] Add CI test command if using CI
 
@@ -211,6 +211,8 @@ Keep these constraints visible during the entire project.
 - [x] Add `PromptCategory.occupations`
 - [x] Add `PromptCategory.emotions`
 - [x] Add `PromptCategory.activities`
+- [x] Add `PromptCategory.genre`
+- [x] Add `PromptCategory.events`
 - [x] Add theme preference enum: system/light/dark
 - [x] Define word bucket as all prompt categories combined
 - [x] Confirm word bucket is not a separate persisted prompt category
@@ -300,7 +302,7 @@ Keep these constraints visible during the entire project.
 
 ## 3.8 Tests
 
-- [x] Unit test: word bucket expands to all six categories
+- [x] Unit test: word bucket expands to all eight categories
 - [x] Unit test: Cat/Clock defaults
 - [x] Unit test: Character Creation defaults
 - [x] Unit test: Two-Character Scenes defaults
@@ -370,48 +372,48 @@ Keep these constraints visible during the entire project.
 
 ## 5.1 Prompt Picker
 
-- [ ] Add PromptPicker service
-- [ ] Pick random prompt from one category
-- [ ] Pick random prompt from multiple categories
-- [ ] Pick random prompt from word bucket
-- [ ] Include built-in prompts automatically
-- [ ] Include custom prompts automatically
-- [ ] Mix built-in and custom prompts without extra user setting
-- [ ] Do not implement built-in-only/custom-only/both filters
-- [ ] Handle empty category gracefully
-- [ ] Handle empty prompt pool gracefully
+- [x] Add PromptPicker service
+- [x] Pick random prompt from one category
+- [x] Pick random prompt from multiple categories
+- [x] Pick random prompt from word bucket
+- [x] Include built-in prompts automatically
+- [x] Include custom prompts automatically
+- [x] Mix built-in and custom prompts without extra user setting
+- [x] Do not implement built-in-only/custom-only/both filters
+- [x] Handle empty category gracefully
+- [x] Handle empty prompt pool gracefully
 
 ## 5.2 Custom Prompt Validator
 
-- [ ] Add CustomPromptValidator
-- [ ] Validation happens entirely on-device
-- [ ] No network calls
-- [ ] Broadly block slurs
-- [ ] Narrowly block clearly explicit/graphic sexual content
-- [ ] Allow non-graphic adult-life prompts
-- [ ] Allow “bad date”
-- [ ] Allow “affair”
-- [ ] Allow “crush”
-- [ ] Allow “flirting”
-- [ ] Allow “awkward hookup”
-- [ ] Allow “divorce”
-- [ ] Return generic validation failure only
-- [ ] Do not expose specific blocked reason to user
-- [ ] Do not log blocked attempts
-- [ ] Do not save rejected prompts
+- [x] Add CustomPromptValidator
+- [x] Validation happens entirely on-device
+- [x] No network calls
+- [x] Broadly block slurs
+- [x] Narrowly block clearly explicit/graphic sexual content
+- [x] Allow non-graphic adult-life prompts
+- [x] Allow “bad date”
+- [x] Allow “affair”
+- [x] Allow “crush”
+- [x] Allow “flirting”
+- [x] Allow “awkward hookup”
+- [x] Allow “divorce”
+- [x] Return generic validation failure only
+- [x] Do not expose specific blocked reason to user
+- [x] Do not log blocked attempts
+- [x] Do not save rejected prompts
 
 ## 5.3 Tests
 
-- [ ] Unit test: pick from single category
-- [ ] Unit test: pick from multiple categories
-- [ ] Unit test: pick from word bucket
-- [ ] Unit test: built-in and custom prompts are both eligible
-- [ ] Unit test: empty category behavior
-- [ ] Unit test: slur blocking
-- [ ] Unit test: explicit/graphic sexual content blocking
-- [ ] Unit test: allowed adult-life prompts pass
-- [ ] Repository test: rejected prompt is not saved
-- [ ] Repository test: rejected prompt is not logged
+- [x] Unit test: pick from single category
+- [x] Unit test: pick from multiple categories
+- [x] Unit test: pick from word bucket
+- [x] Unit test: built-in and custom prompts are both eligible
+- [x] Unit test: empty category behavior
+- [x] Unit test: slur blocking
+- [x] Unit test: explicit/graphic sexual content blocking
+- [x] Unit test: allowed adult-life prompts pass
+- [x] Repository test: rejected prompt is not saved
+- [x] Repository test: rejected prompt is not logged
 
 ---
 
@@ -419,38 +421,38 @@ Keep these constraints visible during the entire project.
 
 ## 6.1 Custom Prompt Screen
 
-- [ ] Add Custom Prompts screen
-- [ ] Make screen reachable from Tools or Prompt Generator
-- [ ] Show custom prompts
-- [ ] Show prompt category for each custom prompt
-- [ ] Allow category selection when adding prompt
-- [ ] Allow category selection when editing prompt
-- [ ] Keep UI simple and accessible
+- [x] Add Custom Prompts screen
+- [x] Make screen reachable from Tools or Prompt Generator
+- [x] Show custom prompts
+- [x] Show prompt category for each custom prompt
+- [x] Allow category selection when adding prompt
+- [x] Allow category selection when editing prompt
+- [x] Keep UI simple and accessible
 
 ## 6.2 Custom Prompt CRUD
 
-- [ ] Add custom prompt
-- [ ] Edit custom prompt
-- [ ] Delete custom prompt
-- [ ] Confirm deletion if appropriate
-- [ ] Validate custom prompt before saving
-- [ ] Show simple generic error if blocked
-- [ ] Do not show reason for blocked prompt
-- [ ] Do not log blocked attempt
-- [ ] Built-in prompts are not editable
-- [ ] Built-in prompts are not deletable
-- [ ] Built-in prompts are not disableable
+- [x] Add custom prompt
+- [x] Edit custom prompt
+- [x] Delete custom prompt
+- [x] Confirm deletion if appropriate
+- [x] Validate custom prompt before saving
+- [x] Show simple generic error if blocked
+- [x] Do not show reason for blocked prompt
+- [x] Do not log blocked attempt
+- [x] Built-in prompts are not editable
+- [x] Built-in prompts are not deletable
+- [x] Built-in prompts are not disableable
 
 ## 6.3 Tests
 
-- [ ] Widget test: Custom Prompts screen is reachable
-- [ ] Widget test: valid custom prompt can be added
-- [ ] Widget test: custom prompt can be edited
-- [ ] Widget test: custom prompt can be deleted
-- [ ] Widget test: blocked prompt shows generic error
-- [ ] Widget test: blocked prompt is not listed afterward
-- [ ] Widget test: built-in prompts are not editable through this screen
-- [ ] Widget test: built-in prompts are not deletable through this screen
+- [x] Widget test: Custom Prompts screen is reachable
+- [x] Widget test: valid custom prompt can be added
+- [x] Widget test: custom prompt can be edited
+- [x] Widget test: custom prompt can be deleted
+- [x] Widget test: blocked prompt shows generic error
+- [x] Widget test: blocked prompt is not listed afterward
+- [x] Widget test: built-in prompts are not editable through this screen
+- [x] Widget test: built-in prompts are not deletable through this screen
 
 ---
 
@@ -458,49 +460,49 @@ Keep these constraints visible during the entire project.
 
 ## 7.1 Tools Screen
 
-- [ ] Replace Tools placeholder with real Tools screen
-- [ ] Add Prompt Generator item
-- [ ] Add Timer placeholder item
-- [ ] Add Emotion Wheel placeholder item
-- [ ] Add Practice Journal placeholder/link item
-- [ ] Tools remains reachable from Practice home card
-- [ ] Tools is not in bottom navigation
+- [x] Replace Tools placeholder with real Tools screen
+- [x] Add Prompt Generator item
+- [x] Add Timer placeholder item
+- [x] Add Emotion Wheel placeholder item
+- [x] Add Practice Journal placeholder/link item
+- [x] Tools remains reachable from Practice home card
+- [x] Tools is not in bottom navigation
 
 ## 7.2 Prompt Generator Tool
 
-- [ ] Add Prompt Generator screen
-- [ ] Allow selecting one prompt category
-- [ ] Allow selecting multiple prompt categories
-- [ ] Allow selecting word bucket
-- [ ] Default selection is word bucket
-- [ ] Add New Prompt button
-- [ ] Display generated prompt clearly
-- [ ] Use built-in and custom prompts automatically
-- [ ] Handle no prompt available gracefully
+- [x] Add Prompt Generator screen
+- [x] Allow selecting one prompt category
+- [x] Allow selecting multiple prompt categories
+- [x] Allow selecting word bucket
+- [x] Default selection is word bucket
+- [x] Add New Prompt button
+- [x] Display generated prompt clearly
+- [x] Use built-in and custom prompts automatically
+- [x] Handle no prompt available gracefully
 
 ## 7.3 Prompt Generator Auto-Advance
 
-- [ ] Add optional auto-advance toggle
-- [ ] Auto-advance default is off
-- [ ] Add 15-second interval option
-- [ ] Add 30-second interval option
-- [ ] Add 45-second interval option
-- [ ] Add 60-second interval option
-- [ ] Auto-advance refreshes prompt on selected interval
-- [ ] Auto-advance stops when leaving screen
-- [ ] Auto-advance pauses/disposes cleanly when widget is disposed
+- [x] Add optional auto-advance toggle
+- [x] Auto-advance default is off
+- [x] Add 15-second interval option
+- [x] Add 30-second interval option
+- [x] Add 45-second interval option
+- [x] Add 60-second interval option
+- [x] Auto-advance refreshes prompt on selected interval
+- [x] Auto-advance stops when leaving screen
+- [x] Auto-advance pauses/disposes cleanly when widget is disposed
 
 ## 7.4 Tests
 
-- [ ] Widget test: Tools screen shows Prompt Generator
-- [ ] Widget test: Tools screen shows Timer placeholder
-- [ ] Widget test: Tools screen shows Emotion Wheel placeholder
-- [ ] Widget test: Tools screen shows Practice Journal item
-- [ ] Widget test: Prompt Generator is reachable
-- [ ] Widget test: New Prompt displays prompt
-- [ ] Widget test: category selection changes eligible prompt pool
-- [ ] Widget/unit test: auto-advance changes prompt
-- [ ] Widget/unit test: auto-advance is cancelled when leaving screen
+- [x] Widget test: Tools screen shows Prompt Generator
+- [x] Widget test: Tools screen shows Timer placeholder
+- [x] Widget test: Tools screen shows Emotion Wheel placeholder
+- [x] Widget test: Tools screen shows Practice Journal item
+- [x] Widget test: Prompt Generator is reachable
+- [x] Widget test: New Prompt displays prompt
+- [x] Widget test: category selection changes eligible prompt pool
+- [x] Widget/unit test: auto-advance changes prompt
+- [x] Widget/unit test: auto-advance is cancelled when leaving screen
 
 ---
 
@@ -508,62 +510,62 @@ Keep these constraints visible during the entire project.
 
 ## 8.1 Timer Segment Model
 
-- [ ] Add timer segment model
-- [ ] Segment has ID/type
-- [ ] Segment has duration
-- [ ] Segment can have display label
-- [ ] Segment can have prompt payload
-- [ ] Segment can indicate regroup/rest/speaking/prompt interval/character pass
-- [ ] Segment model is independent of widgets
+- [x] Add timer segment model
+- [x] Segment has ID/type
+- [x] Segment has duration
+- [x] Segment can have display label
+- [x] Segment can have prompt payload
+- [x] Segment can indicate regroup/rest/speaking/prompt interval/character pass
+- [x] Segment model is independent of widgets
 
 ## 8.2 Drill Session Controller
 
-- [ ] Add DrillSessionController or equivalent state machine
-- [ ] Support start
-- [ ] Support manual/fake tick for tests
-- [ ] Support pause
-- [ ] Support resume
-- [ ] Support stop request
-- [ ] Support segment completion
-- [ ] Support finite session completion
-- [ ] Support looping session sequences
-- [ ] Track current segment
-- [ ] Track remaining segment time
-- [ ] Track elapsed session time
-- [ ] Track whether paused
-- [ ] Track whether complete
-- [ ] Track whether stopped
-- [ ] Avoid depending on real time for unit tests
+- [x] Add DrillSessionController or equivalent state machine
+- [x] Support start
+- [x] Support manual/fake tick for tests
+- [x] Support pause
+- [x] Support resume
+- [x] Support stop request
+- [x] Support segment completion
+- [x] Support finite session completion
+- [x] Support looping session sequences
+- [x] Track current segment
+- [x] Track remaining segment time
+- [x] Track elapsed session time
+- [x] Track whether paused
+- [x] Track whether complete
+- [x] Track whether stopped
+- [x] Avoid depending on real time for unit tests
 
 ## 8.3 Progress Calculation
 
-- [ ] Add current segment progress
-- [ ] Add current rep/cycle progress where appropriate
-- [ ] Progress works for finite cycles
-- [ ] Progress works for looping cycles
-- [ ] Progress resets per current rep/cycle for looping drills
-- [ ] Progress does not attempt unknown total session progress for indefinite loops
+- [x] Add current segment progress
+- [x] Add current rep/cycle progress where appropriate
+- [x] Progress works for finite cycles
+- [x] Progress works for looping cycles
+- [x] Progress resets per current rep/cycle for looping drills
+- [x] Progress does not attempt unknown total session progress for indefinite loops
 
 ## 8.4 Pause/Resume Behavior
 
-- [ ] Pause freezes remaining time
-- [ ] Pause freezes prompt/segment changes
-- [ ] Resume continues from same state
-- [ ] Pause does not complete segments
-- [ ] Resume does not restart current segment
+- [x] Pause freezes remaining time
+- [x] Pause freezes prompt/segment changes
+- [x] Resume continues from same state
+- [x] Pause does not complete segments
+- [x] Resume does not restart current segment
 
 ## 8.5 Tests
 
-- [ ] Unit test: countdown decreases with ticks
-- [ ] Unit test: segment completion advances to next segment
-- [ ] Unit test: looping sequence restarts after final segment
-- [ ] Unit test: finite sequence completes after final segment
-- [ ] Unit test: pause freezes time
-- [ ] Unit test: pause freezes segment changes
-- [ ] Unit test: resume continues correctly
-- [ ] Unit test: progress calculation for simple segment
-- [ ] Unit test: progress calculation for looping cycle
-- [ ] Unit test: progress calculation for finite cycle
+- [x] Unit test: countdown decreases with ticks
+- [x] Unit test: segment completion advances to next segment
+- [x] Unit test: looping sequence restarts after final segment
+- [x] Unit test: finite sequence completes after final segment
+- [x] Unit test: pause freezes time
+- [x] Unit test: pause freezes segment changes
+- [x] Unit test: resume continues correctly
+- [x] Unit test: progress calculation for simple segment
+- [x] Unit test: progress calculation for looping cycle
+- [x] Unit test: progress calculation for finite cycle
 
 ---
 
@@ -571,54 +573,54 @@ Keep these constraints visible during the entire project.
 
 ## 9.1 Drill Start Screen Pattern
 
-- [ ] Replace drill placeholders with reusable start screen
-- [ ] Show drill name
-- [ ] Show short description/subtitle
-- [ ] Show Start button
-- [ ] Show Configure button
-- [ ] Show info/help button
-- [ ] Start uses saved drill settings
-- [ ] Start uses defaults if no saved settings exist
+- [x] Replace drill placeholders with reusable start screen
+- [x] Show drill name
+- [x] Show short description/subtitle
+- [x] Show Start button
+- [x] Show Configure button
+- [x] Show info/help button
+- [x] Start uses saved drill settings
+- [x] Start uses defaults if no saved settings exist
 
 ## 9.2 Configure Screen Pattern
 
-- [ ] Add reusable configure screen structure
-- [ ] Allow drill-specific settings sections
-- [ ] Save settings when user starts from configuration
-- [ ] Persist changed settings locally
-- [ ] Return to start screen when appropriate
-- [ ] Keep configuration UI simple
+- [x] Add reusable configure screen structure
+- [x] Allow drill-specific settings sections
+- [x] Save settings when user starts from configuration
+- [x] Persist changed settings locally
+- [x] Return to start screen when appropriate
+- [x] Keep configuration UI simple
 
 ## 9.3 Active Drill Session Shell
 
-- [ ] Add reusable active drill session screen
-- [ ] Show large countdown timer when applicable
-- [ ] Show circular progress ring when applicable
-- [ ] Show prompt/label display area
-- [ ] Add Pause/Resume button
-- [ ] Add Stop/End button
-- [ ] Stop/End shows confirmation dialog
-- [ ] Confirming stop returns to drill start screen
-- [ ] Pause freezes session controller
-- [ ] Resume continues session controller
+- [x] Add reusable active drill session screen
+- [x] Show large countdown timer when applicable
+- [x] Show circular progress ring when applicable
+- [x] Show prompt/label display area
+- [x] Add Pause/Resume button
+- [x] Add Stop/End button
+- [x] Stop/End returns to idle; back gesture shows confirmation when session is active
+- [x] Confirming back/leave returns to drill start screen
+- [x] Pause freezes session controller
+- [x] Resume continues session controller
 
 ## 9.4 Temporary Fake Drill Integration
 
-- [ ] Wire one simple fake/test drill through shell
-- [ ] Confirm session shell works before building real drills
-- [ ] Remove fake drill once real drill is integrated
-- [ ] Ensure no orphan fake screen remains
+- [x] Wire one simple fake/test drill through shell
+- [x] Confirm session shell works before building real drills
+- [x] Remove fake drill once real drill is integrated
+- [x] Ensure no orphan fake screen remains
 
 ## 9.5 Tests
 
-- [ ] Widget test: drill start shows Start, Configure, info/help
-- [ ] Widget test: Configure can update simple saved setting
-- [ ] Widget test: Start launches session shell
-- [ ] Widget test: Pause changes to Resume
-- [ ] Widget/unit test: pause freezes displayed timer
-- [ ] Widget test: Stop/End shows confirmation
-- [ ] Widget test: confirming stop returns to start screen
-- [ ] Test no fake drill remains after real drills are wired
+- [x] Widget test: drill start shows Start, Configure, info/help
+- [x] Widget test: Configure can update simple saved setting
+- [x] Widget test: Start launches session shell
+- [x] Widget test: Pause changes to Resume
+- [x] Widget/unit test: pause freezes displayed timer
+- [x] Widget test: Stop resets to idle; back gesture shows leave confirmation
+- [x] Widget test: confirming leave returns to start screen
+- [x] Test no fake drill remains after real drills are wired
 
 ---
 
@@ -626,50 +628,50 @@ Keep these constraints visible during the entire project.
 
 ## 10.1 Cat/Clock Flow
 
-- [ ] Generate two prompts at start of each rep
-- [ ] Speaking segment defaults to 3 minutes
-- [ ] Regroup segment defaults to 30 seconds
-- [ ] Speaking segment shows both prompts
-- [ ] Regroup segment shows countdown
-- [ ] After regroup, generate new prompt pair
-- [ ] Continue until user manually stops
-- [ ] Pause/resume works
-- [ ] Stop confirmation works
+- [x] Generate two prompts at start of each rep
+- [x] Speaking segment defaults to 3 minutes
+- [x] Regroup segment defaults to 30 seconds
+- [x] Speaking segment shows both prompts
+- [x] Regroup segment shows countdown
+- [x] After regroup, generate new prompt pair
+- [x] Continue until user manually stops
+- [x] Pause/resume works
+- [x] Stop resets to idle; back gesture protected
 
 ## 10.2 Cat/Clock Configuration
 
-- [ ] Configure speaking duration
-- [ ] Configure regroup duration
-- [ ] Configure prompt 1 category source
-- [ ] Configure prompt 2 category source
-- [ ] Default prompt 1 source is word bucket
-- [ ] Default prompt 2 source is word bucket
-- [ ] Allow category combinations such as object + location
-- [ ] Save configuration locally
-- [ ] Start uses saved configuration
+- [x] Configure speaking duration
+- [x] Configure regroup duration
+- [x] Configure prompt 1 category source
+- [x] Configure prompt 2 category source
+- [x] Default prompt 1 source is objects (word bucket in session)
+- [x] Default prompt 2 source is objects (word bucket in session)
+- [x] Allow category combinations such as object + location
+- [x] Save configuration locally
+- [x] Start uses saved configuration
 
 ## 10.3 Cat/Clock UI
 
-- [ ] Start screen uses reusable drill start pattern
-- [ ] Configure screen uses reusable configure pattern
-- [ ] Session screen uses reusable session shell
-- [ ] Show both prompts prominently
-- [ ] Show countdown
-- [ ] Show circular progress for current rep/cycle
-- [ ] Keep UI uncluttered
-- [ ] Do not show excessive instructions during drill
+- [x] Start screen uses reusable drill start pattern
+- [x] Configure screen uses reusable configure pattern
+- [x] Session screen uses reusable session shell
+- [x] Show both prompts prominently
+- [x] Show countdown
+- [x] Show circular progress for current rep/cycle
+- [x] Keep UI uncluttered
+- [x] Do not show excessive instructions during drill
 
 ## 10.4 Tests
 
-- [ ] Unit test: Cat/Clock builds speaking + regroup sequence
-- [ ] Unit test: Cat/Clock sequence loops
-- [ ] Unit test: prompts regenerate each speaking rep
-- [ ] Widget test: Start launches with two prompts
-- [ ] Widget test: Configure saves speaking duration
-- [ ] Widget test: Configure saves regroup duration
-- [ ] Widget test: Configure saves prompt categories
-- [ ] Widget test: Pause/Resume works
-- [ ] Widget test: Stop confirmation works
+- [x] Unit test: Cat/Clock builds speaking + regroup sequence
+- [x] Unit test: Cat/Clock sequence loops
+- [x] Unit test: prompts regenerate each speaking rep
+- [x] Widget test: Start launches with two prompts
+- [x] Widget test: Configure saves speaking duration
+- [x] Widget test: Configure saves regroup duration
+- [x] Widget test: Configure saves prompt categories
+- [x] Widget test: Pause/Resume works
+- [x] Widget test: Stop resets to idle
 
 ---
 
@@ -677,43 +679,43 @@ Keep these constraints visible during the entire project.
 
 ## 11.1 Two-Character Scenes Flow
 
-- [ ] Generate one prompt
-- [ ] Scene timer defaults to 90 seconds
-- [ ] Regroup timer defaults to 30 seconds
-- [ ] After regroup, generate new prompt
-- [ ] Continue until user manually stops
-- [ ] Pause/resume works
-- [ ] Stop confirmation works
+- [x] Generate one prompt
+- [x] Scene timer defaults to 90 seconds
+- [x] Regroup timer defaults to 30 seconds
+- [x] After regroup, generate new prompt
+- [x] Continue until user manually stops
+- [x] Pause/resume works
+- [x] Stop resets to idle; back gesture protected
 
 ## 11.2 Two-Character Scenes Configuration
 
-- [ ] Configure scene duration
-- [ ] Configure regroup duration
-- [ ] Configure prompt category source
-- [ ] Default prompt source is word bucket
-- [ ] Save configuration locally
-- [ ] Start uses saved configuration
+- [x] Configure scene duration
+- [x] Configure regroup duration
+- [x] Configure prompt category source
+- [x] Default prompt source is word bucket
+- [x] Save configuration locally
+- [x] Start uses saved configuration
 
 ## 11.3 Two-Character Scenes UI
 
-- [ ] Show prompt
-- [ ] Show countdown
-- [ ] Show circular progress for current rep/cycle
-- [ ] Do not display which character is speaking
-- [ ] Do not include character-switching labels
-- [ ] Keep drill screen simple
+- [x] Show prompt
+- [x] Show countdown
+- [x] Show circular progress for current rep/cycle
+- [x] Do not display which character is speaking
+- [x] Do not include character-switching labels
+- [x] Keep drill screen simple
 
 ## 11.4 Tests
 
-- [ ] Unit test: sequence is prompt scene + regroup loop
-- [ ] Unit test: prompt regenerates after regroup
-- [ ] Widget test: Start launches with one prompt
-- [ ] Widget test: no character speaker labels appear
-- [ ] Widget test: Configure saves scene duration
-- [ ] Widget test: Configure saves regroup duration
-- [ ] Widget test: Configure saves category settings
-- [ ] Widget test: Pause/Resume works
-- [ ] Widget test: Stop confirmation works
+- [x] Unit test: sequence is prompt scene + regroup loop
+- [x] Unit test: prompt regenerates after regroup
+- [x] Widget test: Start launches with one prompt
+- [x] Widget test: no character speaker labels appear
+- [x] Widget test: Configure saves scene duration
+- [x] Widget test: Configure saves regroup duration
+- [x] Widget test: Configure saves category settings
+- [x] Widget test: Pause/Resume works
+- [x] Widget test: Stop resets to idle
 
 ---
 
@@ -721,46 +723,46 @@ Keep these constraints visible during the entire project.
 
 ## 12.1 A-to-C Flow
 
-- [ ] Treat as one drill with full name
-- [ ] Show one prompt
-- [ ] Default prompt interval is 30 seconds
-- [ ] Prompt changes automatically each interval
-- [ ] Repeat rapid-fire until user stops
-- [ ] No regroup segment
-- [ ] Pause/resume works
-- [ ] Stop confirmation works
+- [x] Treat as one drill with full name
+- [x] Show one prompt
+- [x] Default prompt interval is 30 seconds
+- [x] Prompt changes automatically each interval
+- [x] Repeat rapid-fire until user stops
+- [x] No regroup segment
+- [x] Pause/resume works
+- [x] Stop resets to idle; back gesture protected
 
 ## 12.2 A-to-C Configuration
 
-- [ ] Configure interval
-- [ ] Allow 15 seconds
-- [ ] Allow 30 seconds
-- [ ] Allow 45 seconds
-- [ ] Allow 60 seconds
-- [ ] Configure prompt category source
-- [ ] Default prompt source is word bucket
-- [ ] Save configuration locally
-- [ ] Start uses saved configuration
+- [x] Configure interval
+- [x] Allow 15 seconds
+- [x] Allow 30 seconds
+- [x] Allow 45 seconds
+- [x] Allow 60 seconds
+- [x] Configure prompt category source
+- [x] Default prompt source is word bucket
+- [x] Save configuration locally
+- [x] Start uses saved configuration
 
 ## 12.3 A-to-C UI
 
-- [ ] Show current prompt
-- [ ] Show countdown for current interval
-- [ ] Show circular progress for current interval/rep
-- [ ] Keep screen uncluttered
-- [ ] Do not split into separate A-to-C, Bad Idea, and Initiation drills
+- [x] Show current prompt
+- [x] Show countdown for current interval
+- [x] Show circular progress for current interval/rep
+- [x] Keep screen uncluttered
+- [x] Do not split into separate A-to-C, Bad Idea, and Initiation drills
 
 ## 12.4 Tests
 
-- [ ] Unit test: default interval is 30 seconds
-- [ ] Unit test: allowed intervals are 15/30/45/60
-- [ ] Unit test: prompt changes each interval
-- [ ] Unit test: flow loops until stopped
-- [ ] Widget test: Start launches with one prompt
-- [ ] Widget test: Configure saves interval
-- [ ] Widget test: Configure saves category settings
-- [ ] Widget test: Pause/Resume freezes prompt changes
-- [ ] Widget test: Stop confirmation works
+- [x] Unit test: default interval is 30 seconds
+- [x] Unit test: allowed intervals are 15/30/45/60
+- [x] Unit test: prompt changes each interval
+- [x] Unit test: flow loops until stopped
+- [x] Widget test: Start launches with one prompt
+- [x] Widget test: Configure saves interval
+- [x] Widget test: Configure saves category settings
+- [x] Widget test: Pause/Resume freezes prompt changes
+- [x] Widget test: Stop resets to idle
 
 ---
 
@@ -768,54 +770,54 @@ Keep these constraints visible during the entire project.
 
 ## 13.1 Five Line Game Default Flow
 
-- [ ] Show one prompt
-- [ ] No timer by default
-- [ ] Show New Prompt button
-- [ ] Tapping New Prompt generates another prompt
-- [ ] Prompt source defaults to word bucket
-- [ ] No line tracking
-- [ ] No speaking detection
+- [x] Show one prompt
+- [x] No timer by default
+- [x] Show New Prompt button
+- [x] Tapping New Prompt generates another prompt
+- [x] Prompt source defaults to word bucket
+- [x] No line tracking
+- [x] No speaking detection
 
 ## 13.2 Forbidden Five Line UI Elements
 
-- [ ] Do not show Line 1
-- [ ] Do not show Line 2
-- [ ] Do not show Line 3
-- [ ] Do not show Line 4
-- [ ] Do not show Line 5
-- [ ] Do not show initiation/response/heightening/turn/button labels
-- [ ] Do not attempt to know which line is being spoken
+- [x] Do not show Line 1
+- [x] Do not show Line 2
+- [x] Do not show Line 3
+- [x] Do not show Line 4
+- [x] Do not show Line 5
+- [x] Do not show initiation/response/heightening/turn/button labels
+- [x] Do not attempt to know which line is being spoken
 
 ## 13.3 Optional Auto-Advance
 
-- [ ] Auto-advance default is off
-- [ ] Allow 30-second interval
-- [ ] Allow 60-second interval
-- [ ] Allow 90-second interval
-- [ ] If enabled, show countdown/progress
-- [ ] If enabled, generate prompt at each interval
-- [ ] Pause/resume applies only when auto-advance is on
-- [ ] Save auto-advance settings locally
+- [x] Auto-advance default is off
+- [x] Allow 30-second interval
+- [x] Allow 60-second interval
+- [x] Allow 90-second interval
+- [x] If enabled, show countdown/progress
+- [x] If enabled, generate prompt at each interval
+- [x] Pause/resume applies only when auto-advance is on
+- [x] Save auto-advance settings locally
 
 ## 13.4 Configuration
 
-- [ ] Configure prompt category source
-- [ ] Configure auto-advance on/off
-- [ ] Configure auto-advance interval
-- [ ] Save configuration locally
-- [ ] Start uses saved configuration
+- [x] Configure prompt category source
+- [x] Configure auto-advance on/off
+- [x] Configure auto-advance interval
+- [x] Save configuration locally
+- [x] Start uses saved configuration
 
 ## 13.5 Tests
 
-- [ ] Widget test: default screen shows prompt and New Prompt
-- [ ] Widget test: default screen shows no timer
-- [ ] Widget test: New Prompt changes prompt
-- [ ] Widget test: no Line 1–5 labels appear
-- [ ] Widget test: no structural scene labels appear
-- [ ] Widget/unit test: auto-advance changes prompts
-- [ ] Widget test: Configure saves category settings
-- [ ] Widget test: Configure saves auto-advance settings
-- [ ] Widget test: Pause/Resume works when auto-advance is on
+- [x] Widget test: default screen shows prompt and New Prompt
+- [x] Widget test: default screen shows no timer
+- [x] Widget test: New Prompt changes prompt
+- [x] Widget test: no Line 1–5 labels appear
+- [x] Widget test: no structural scene labels appear
+- [x] Widget/unit test: auto-advance changes prompts
+- [x] Widget test: Configure saves category settings
+- [x] Widget test: Configure saves auto-advance settings
+- [x] Widget test: Pause/Resume works when auto-advance is on
 
 ---
 
@@ -823,38 +825,38 @@ Keep these constraints visible during the entire project.
 
 ## 14.1 Cycle Builder
 
-- [ ] Add CharacterCreationCycleBuilder
-- [ ] Default character count is 2
-- [ ] Maximum character count is 5
-- [ ] Allowed segment durations are 60/90/120 seconds
-- [ ] Each character has first pass
-- [ ] Each character has return pass
-- [ ] Cycle is finite
-- [ ] Cycle does not loop by default
-- [ ] Total duration scales with characters × 2 × segment duration
+- [x] Add CharacterCreationCycleBuilder
+- [x] Default character count is 2
+- [x] Maximum character count is 5
+- [x] Allowed segment durations are 60/90/120 seconds
+- [x] Each character has first pass
+- [x] Each character has return pass
+- [x] Cycle is finite
+- [x] Cycle does not loop by default
+- [x] Total duration scales with characters × 2 × segment duration
 
 ## 14.2 Cycle Ordering
 
-- [ ] 2-character cycle: Character 1
-- [ ] 2-character cycle: Character 2
-- [ ] 2-character cycle: Return to Character 1
-- [ ] 2-character cycle: Return to Character 2
-- [ ] 5-character cycle includes Character 1–5 first passes
-- [ ] 5-character cycle includes Return to Character 1–5
-- [ ] Segment metadata identifies first pass vs return pass
-- [ ] Segment metadata identifies character number
+- [x] 2-character cycle: Character 1
+- [x] 2-character cycle: Character 2
+- [x] 2-character cycle: Return to Character 1
+- [x] 2-character cycle: Return to Character 2
+- [x] 5-character cycle includes Character 1–5 first passes
+- [x] 5-character cycle includes Return to Character 1–5
+- [x] Segment metadata identifies first pass vs return pass
+- [x] Segment metadata identifies character number
 
 ## 14.3 Tests
 
-- [ ] Unit test: default 2-character cycle
-- [ ] Unit test: 5-character cycle
-- [ ] Unit test: total duration calculation
-- [ ] Unit test: allowed segment durations
-- [ ] Unit test: invalid segment duration behavior
-- [ ] Unit test: invalid character count behavior
-- [ ] Unit test: return-pass labels
-- [ ] Unit test: first-pass metadata
-- [ ] Unit test: return-pass metadata
+- [x] Unit test: default 2-character cycle
+- [x] Unit test: 5-character cycle
+- [x] Unit test: total duration calculation
+- [x] Unit test: allowed segment durations
+- [x] Unit test: invalid segment duration behavior
+- [x] Unit test: invalid character count behavior
+- [x] Unit test: return-pass labels
+- [x] Unit test: first-pass metadata
+- [x] Unit test: return-pass metadata
 
 ---
 
@@ -862,52 +864,52 @@ Keep these constraints visible during the entire project.
 
 ## 15.1 Character Creation Configuration
 
-- [ ] Configure number of characters
-- [ ] Default number of characters is 2
-- [ ] Max number of characters is 5
-- [ ] Configure segment duration
-- [ ] Segment duration options are 60/90/120 seconds
-- [ ] Configure prompt category source
-- [ ] Default prompt source is word bucket
-- [ ] Save settings locally
-- [ ] Start uses saved configuration
+- [x] Configure number of characters
+- [x] Default number of characters is 2
+- [x] Max number of characters is 5
+- [x] Configure segment duration
+- [x] Segment duration options are 60/90/120 seconds
+- [x] Configure prompt category source
+- [x] Default prompt source is word bucket
+- [x] Save settings locally
+- [x] Start uses saved configuration
 
 ## 15.2 Normal Mode Session
 
-- [ ] Show “Character N” during first pass
-- [ ] Show “Return to Character N” during return pass
-- [ ] Show countdown
-- [ ] Show circular progress for cycle
-- [ ] Show Pause/Resume
-- [ ] Show Stop/End with confirmation
-- [ ] Session ends after full cycle
-- [ ] Return to Start screen after cycle completes
+- [x] Show “Character N” during first pass
+- [x] Show “Return to Character N” during return pass
+- [x] Show countdown
+- [x] Show circular progress for cycle
+- [x] Show Pause/Resume
+- [x] Show Stop/End; back gesture protected while active
+- [x] Session ends after full cycle
+- [x] Return to Start screen after cycle completes
 
 ## 15.3 Normal Mode Prompt Generation
 
-- [ ] Prompt generation is manual and optional
-- [ ] Show Generate Prompt button only on first passes
-- [ ] Generate and display prompt if user taps button
-- [ ] Do not show Generate Prompt button on return passes
-- [ ] Do not show original prompt on return passes
-- [ ] Do not provide Character List
-- [ ] Do not provide review button
-- [ ] Remembering is part of the drill
+- [x] Prompt generation is manual and optional
+- [x] Show Generate Prompt button only on first passes
+- [x] Generate and display prompt if user taps button
+- [x] Do not show Generate Prompt button on return passes
+- [x] Do not show original prompt on return passes
+- [x] Do not provide Character List
+- [x] Do not provide review button
+- [x] Remembering is part of the drill
 
 ## 15.4 Tests
 
-- [ ] Widget test: default setup launches Character 1
-- [ ] Widget test: Generate Prompt appears on first pass
-- [ ] Widget test: Generate Prompt does not appear on return pass
-- [ ] Widget test: generated prompt appears during first pass
-- [ ] Widget test: return pass shows “Return to Character N”
-- [ ] Widget test: return pass does not show original prompt
-- [ ] Widget test: no Character List button exists
-- [ ] Widget test: no review button exists
-- [ ] Widget test: session completes after final return pass
-- [ ] Widget test: Configure saves character count
-- [ ] Widget test: Configure saves segment duration
-- [ ] Widget test: Configure saves prompt category source
+- [x] Widget test: default setup launches Character 1
+- [x] Widget test: Generate Prompt appears on first pass
+- [x] Widget test: Generate Prompt does not appear on return pass
+- [x] Widget test: generated prompt appears during first pass
+- [x] Widget test: return pass shows “Return to Character N”
+- [x] Widget test: return pass does not show original prompt
+- [x] Widget test: no Character List button exists
+- [x] Widget test: no review button exists
+- [x] Widget test: session completes after final return pass
+- [x] Widget test: Configure saves character count
+- [x] Widget test: Configure saves segment duration
+- [x] Widget test: Configure saves prompt category source
 
 ---
 
@@ -915,42 +917,38 @@ Keep these constraints visible during the entire project.
 
 ## 16.1 TTS Service
 
-- [ ] Add TtsService interface
-- [ ] Add speak method
-- [ ] Add stop method
-- [ ] Add voice selection support if available
-- [ ] Add speaking rate support
-- [ ] Add fake TTS service for tests
-- [ ] Add real TTS implementation
-- [ ] Ensure no microphone permission is added
-- [ ] Ensure no speech recognition permission is added
-- [ ] Ensure no recording permission is added
+- [x] Add TtsService interface
+- [x] Add speak method
+- [x] Add stop method
+- [x] Add speaking rate support
+- [x] Add fake TTS service for tests
+- [x] Add real TTS implementation (flutter_tts)
+- [x] Ensure no microphone permission is added
+- [x] Ensure no speech recognition permission is added
+- [x] Ensure no recording permission is added
 
 ## 16.2 Global TTS Preferences
 
-- [ ] Add TTS voice to AppPreferences
-- [ ] Add TTS speaking rate to AppPreferences
-- [ ] Persist TTS settings locally
-- [ ] TTS settings apply globally
-- [ ] Hands-Free Mode is not an app-wide default
-- [ ] Hands-Free Mode remains per drill/session configuration
+- [x] Add TTS speaking rate to AppPreferences
+- [x] Persist TTS settings locally
+- [x] TTS settings apply globally
+- [x] Hands-Free Mode is not an app-wide default
+- [x] Hands-Free Mode remains per drill/session configuration
 
 ## 16.3 Settings UI
 
-- [ ] Add Text-to-Speech section to Settings
-- [ ] Show voice setting if available
-- [ ] Show speaking rate setting
-- [ ] Allow changing speaking rate
-- [ ] Save TTS settings
-- [ ] Keep settings UI accessible
+- [x] Add Text-to-Speech section to Settings
+- [x] Show speaking rate setting
+- [x] Allow changing speaking rate
+- [x] Save TTS settings
+- [x] Keep settings UI accessible
 
 ## 16.4 Tests
 
-- [ ] Unit test: fake TTS captures spoken text
-- [ ] Repository test: TTS voice setting persists
-- [ ] Repository test: TTS rate setting persists
-- [ ] Widget test: TTS settings screen is reachable
-- [ ] Widget test: changing speaking rate saves preference
+- [x] Unit test: fake TTS captures spoken text
+- [x] Repository test: TTS rate setting persists
+- [x] Widget test: TTS settings screen is reachable
+- [x] Widget test: changing speaking rate saves preference
 - [ ] Static/manual check: no microphone permission
 - [ ] Static/manual check: no speech-recognition permission
 
@@ -960,44 +958,44 @@ Keep these constraints visible during the entire project.
 
 ## 17.1 General Policy
 
-- [ ] Add HandsFreeAnnouncementPolicy
-- [ ] For non-character prompt segments, read prompt aloud when it appears
-- [ ] Prompt reading replaces “begin”
-- [ ] Do not announce “begin” when prompt is read
-- [ ] Segments longer than 30 seconds get timer announcements
-- [ ] Announce “30 seconds” for segments longer than 30 seconds
-- [ ] Announce “10 seconds” for segments longer than 30 seconds
-- [ ] Announce “time” for segments longer than 30 seconds
-- [ ] Exactly 30-second segments get no timer announcements
-- [ ] If exactly 30-second segment has prompt, read only prompt
-- [ ] If exactly 30-second segment has no prompt, stay silent
-- [ ] Regroup segments stay silent
-- [ ] Paused state suppresses announcements
-- [ ] Resume continues policy from current state
+- [x] Add HandsFreeAnnouncementPolicy
+- [x] For non-character prompt segments, read prompt aloud when it appears
+- [x] Prompt reading replaces “begin”
+- [x] Do not announce “begin” when prompt is read
+- [x] Segments longer than 30 seconds get timer announcements
+- [x] Announce “30 seconds” for segments longer than 30 seconds
+- [x] Announce “10 seconds” for segments longer than 30 seconds
+- [x] Announce “time” for segments longer than 30 seconds
+- [x] Exactly 30-second segments get no timer announcements
+- [x] If exactly 30-second segment has prompt, read only prompt
+- [x] If exactly 30-second segment has no prompt, stay silent
+- [x] Regroup segments stay silent
+- [x] Paused state suppresses announcements
+- [x] Resume continues policy from current state
 
 ## 17.2 Character Creation Policy
 
-- [ ] In Hands-Free Mode, generate prompt automatically on first passes
-- [ ] First pass announcement is “Character N: prompt”
-- [ ] Return pass announcement is “Character N”
-- [ ] Do not say “Return to Character N” in TTS
-- [ ] Do not speak original prompt on return pass
-- [ ] Do not display original prompt on return pass
+- [x] In Hands-Free Mode, generate prompt automatically on first passes
+- [x] First pass announcement is “Character N: prompt”
+- [x] Return pass announcement is “Character N”
+- [x] Do not say “Return to Character N” in TTS
+- [x] Do not speak original prompt on return pass
+- [x] Do not display original prompt on return pass
 
 ## 17.3 Tests
 
-- [ ] Unit test: prompt reading replaces begin
-- [ ] Unit test: segment over 30 seconds announces 30 seconds
-- [ ] Unit test: segment over 30 seconds announces 10 seconds
-- [ ] Unit test: segment over 30 seconds announces time
-- [ ] Unit test: exactly 30-second segment has no timer announcements
-- [ ] Unit test: exactly 30-second prompt segment reads only prompt
-- [ ] Unit test: exactly 30-second no-prompt segment stays silent
-- [ ] Unit test: regroup is silent
-- [ ] Unit test: A-to-C default behavior
-- [ ] Unit test: Character Creation first-pass announcement
-- [ ] Unit test: Character Creation return-pass announcement
-- [ ] Unit test: paused state suppresses announcements
+- [x] Unit test: prompt reading replaces begin
+- [x] Unit test: segment over 30 seconds announces 30 seconds
+- [x] Unit test: segment over 30 seconds announces 10 seconds
+- [x] Unit test: segment over 30 seconds announces time
+- [x] Unit test: exactly 30-second segment has no timer announcements
+- [x] Unit test: exactly 30-second prompt segment reads only prompt
+- [x] Unit test: exactly 30-second no-prompt segment stays silent
+- [x] Unit test: regroup is silent
+- [x] Unit test: A-to-C default behavior
+- [x] Unit test: Character Creation first-pass announcement
+- [x] Unit test: Character Creation return-pass announcement
+- [x] Unit test: paused state suppresses announcements
 
 ---
 
@@ -1005,68 +1003,68 @@ Keep these constraints visible during the entire project.
 
 ## 18.1 Shared Hands-Free Wiring
 
-- [ ] Add Hands-Free Mode toggle to drill configuration where appropriate
-- [ ] Hands-Free Mode default is off
-- [ ] Use global TTS settings
-- [ ] Use fake TTS in tests
-- [ ] Stop button calls TTS stop
-- [ ] Pause suppresses announcements
-- [ ] Resume continues announcement behavior
+- [x] Add Hands-Free Mode toggle to drill configuration where appropriate
+- [x] Hands-Free Mode default is off
+- [x] Use global TTS settings
+- [x] Use fake TTS in tests
+- [x] Stop button calls TTS stop
+- [x] Pause suppresses announcements
+- [x] Resume continues announcement behavior
 
 ## 18.2 Cat/Clock Hands-Free
 
-- [ ] Read both prompts together at start of speaking rep
-- [ ] Example: “cat, clock”
-- [ ] Stay silent during regroup
-- [ ] For 3-minute speaking segment, announce 30 seconds
-- [ ] For 3-minute speaking segment, announce 10 seconds
-- [ ] For 3-minute speaking segment, announce time
+- [x] Read both prompts together at start of speaking rep
+- [x] Example: “cat, clock”
+- [x] Stay silent during regroup
+- [x] For 3-minute speaking segment, announce 30 seconds
+- [x] For 3-minute speaking segment, announce 10 seconds
+- [x] For 3-minute speaking segment, announce time
 
 ## 18.3 Two-Character Scenes Hands-Free
 
-- [ ] Read prompt when scene starts
-- [ ] Announce 30 seconds for 90-second scene
-- [ ] Announce 10 seconds for 90-second scene
-- [ ] Announce time for 90-second scene
-- [ ] Stay silent during regroup
+- [x] Read prompt when scene starts
+- [x] Announce 30 seconds for 90-second scene
+- [x] Announce 10 seconds for 90-second scene
+- [x] Announce time for 90-second scene
+- [x] Stay silent during regroup
 
 ## 18.4 A-to-C Hands-Free
 
-- [ ] Read each new prompt aloud
-- [ ] Default 30-second interval has no timer announcements
-- [ ] Longer intervals follow standard announcement policy
-- [ ] Pause freezes prompt changes and announcements
+- [x] Read each new prompt aloud
+- [x] Default 30-second interval has no timer announcements
+- [x] Longer intervals follow standard announcement policy
+- [x] Pause freezes prompt changes and announcements
 
 ## 18.5 Five Line Game Hands-Free
 
-- [ ] Read prompt when shown
-- [ ] If auto-advance is off, no timer announcements
-- [ ] If auto-advance is on, read each new prompt
-- [ ] If interval is 30 seconds, no timer announcements
-- [ ] If interval is longer than 30 seconds, use standard timer announcements
+- [x] Read prompt when shown
+- [x] If auto-advance is off, no timer announcements
+- [x] If auto-advance is on, read each new prompt
+- [x] If interval is 30 seconds, no timer announcements
+- [x] If interval is longer than 30 seconds, use standard timer announcements
 
 ## 18.6 Character Creation Hands-Free
 
-- [ ] Automatically generate prompts on first passes
-- [ ] Display generated prompt during first pass
-- [ ] Speak “Character N: prompt”
-- [ ] On return pass, speak only “Character N”
-- [ ] Do not display original prompt on return pass
-- [ ] Do not speak original prompt on return pass
+- [x] Automatically generate prompts on first passes
+- [x] Display generated prompt during first pass
+- [x] Speak “Character N: prompt”
+- [x] On return pass, speak only “Character N”
+- [x] Do not display original prompt on return pass
+- [x] Do not speak original prompt on return pass
 
 ## 18.7 Tests
 
-- [ ] Widget/unit test: Hands-Free default is off
-- [ ] Widget/unit test: Cat/Clock speaks prompt pair
-- [ ] Widget/unit test: Cat/Clock regroup is silent
-- [ ] Widget/unit test: Two-Character Scenes speaks prompt
-- [ ] Widget/unit test: A-to-C 30-second prompt has no timer announcement
-- [ ] Widget/unit test: Five Line Game speaks prompt
-- [ ] Widget/unit test: Character Creation auto-generates prompt in Hands-Free
-- [ ] Widget/unit test: Character Creation first pass speaks label and prompt
-- [ ] Widget/unit test: Character Creation return pass speaks only character label
-- [ ] Widget/unit test: pause suppresses announcements
-- [ ] Widget/unit test: stop calls TTS stop
+- [x] Widget/unit test: Hands-Free default is off
+- [x] Widget/unit test: Cat/Clock speaks prompt pair
+- [x] Widget/unit test: Cat/Clock regroup is silent
+- [x] Widget/unit test: Two-Character Scenes speaks prompt
+- [x] Widget/unit test: A-to-C 30-second prompt has no timer announcement
+- [x] Widget/unit test: Five Line Game speaks prompt
+- [x] Widget/unit test: Character Creation auto-generates prompt in Hands-Free
+- [x] Widget/unit test: Character Creation first pass speaks label and prompt
+- [x] Widget/unit test: Character Creation return pass speaks only character label
+- [x] Widget/unit test: pause suppresses announcements
+- [x] Widget/unit test: stop calls TTS stop
 
 ---
 
@@ -1074,72 +1072,72 @@ Keep these constraints visible during the entire project.
 
 ## 19.1 Session Logging
 
-- [ ] Add session logging service
-- [ ] Log drill session if duration is at least 30 seconds
-- [ ] Do not log sessions under 30 seconds
-- [ ] Log drill ID/name
-- [ ] Log date/time
-- [ ] Log duration
-- [ ] Do not log prompts used
-- [ ] Do not log settings used
-- [ ] Logging is silent
-- [ ] No “Session saved” toast/snackbar
-- [ ] No completion summary screen
+- [x] Add session logging service
+- [x] Log drill session if duration is at least 30 seconds
+- [x] Do not log sessions under 30 seconds
+- [x] Log drill ID/name
+- [x] Log date/time
+- [x] Log duration
+- [x] Do not log prompts used
+- [x] Do not log settings used
+- [x] Logging is silent
+- [x] No “Session saved” toast/snackbar
+- [x] No completion summary screen
 
 ## 19.2 Wire Logging Into Drills
 
-- [ ] Wire logging into Cat/Clock
-- [ ] Wire logging into Character Creation
-- [ ] Wire logging into Two-Character Scenes
-- [ ] Wire logging into A-to-C
-- [ ] Wire logging into Five Line Game
-- [ ] Do not log standalone Prompt Generator usage
-- [ ] Do not log standalone Timer usage
-- [ ] Do not log Emotion Wheel usage
-- [ ] Do not log Journal usage
+- [x] Wire logging into Cat/Clock
+- [x] Wire logging into Character Creation
+- [x] Wire logging into Two-Character Scenes
+- [x] Wire logging into A-to-C
+- [x] Wire logging into Five Line Game
+- [x] Do not log standalone Prompt Generator usage
+- [x] Do not log standalone Timer usage
+- [x] Do not log Emotion Wheel usage
+- [x] Do not log Journal usage
 
 ## 19.3 Stats Calculations
 
-- [ ] Calculate total practice time
-- [ ] Calculate sessions completed
-- [ ] Calculate current streak
-- [ ] Calculate longest streak
-- [ ] Calculate breakdown by drill
-- [ ] Practice day requires at least one qualifying drill session
-- [ ] Journal entries do not count toward streak
-- [ ] Standalone tools do not count toward streak
+- [x] Calculate total practice time
+- [x] Calculate sessions completed
+- [x] Calculate current streak
+- [x] Calculate longest streak
+- [x] Calculate breakdown by drill
+- [x] Practice day requires at least one qualifying drill session
+- [x] Journal entries do not count toward streak
+- [x] Standalone tools do not count toward streak
 
 ## 19.4 History UI
 
-- [ ] History tab shows summary first
-- [ ] Add Practice Stats section/button
-- [ ] Add Journal section/button placeholder if not already done
-- [ ] Show total practice time
-- [ ] Show sessions completed
-- [ ] Show current streak
-- [ ] Show longest streak
-- [ ] Show breakdown by drill
-- [ ] Show recent sessions
-- [ ] Recent list shows most recent 20 sessions
-- [ ] No date filters in v1
-- [ ] No drill filters in v1
-- [ ] No individual session deletion in v1
+- [x] History tab shows summary first
+- [x] Add Practice Stats section/button
+- [x] Add Journal section/button
+- [x] Show total practice time
+- [x] Show sessions completed
+- [x] Show current streak
+- [x] Show longest streak
+- [x] Show breakdown by drill
+- [x] Show recent sessions
+- [x] Recent list shows most recent 20 sessions
+- [x] No date filters in v1
+- [x] No drill filters in v1
+- [x] No individual session deletion in v1
 
 ## 19.5 Tests
 
-- [ ] Unit test: under 30 seconds does not log
-- [ ] Unit test: exactly 30 seconds logs
-- [ ] Unit test: over 30 seconds logs
-- [ ] Unit test: total practice time
-- [ ] Unit test: sessions completed
-- [ ] Unit test: current streak
-- [ ] Unit test: longest streak
-- [ ] Unit test: breakdown by drill
-- [ ] Unit test: standalone tools do not affect streaks
-- [ ] Unit test: journal entries do not affect streaks
-- [ ] Widget test: History shows Practice Stats section/button
-- [ ] Widget test: recent list shows most recent 20 sessions
-- [ ] Widget test: no individual delete control is present
+- [x] Unit test: under 30 seconds does not log
+- [x] Unit test: exactly 30 seconds logs
+- [x] Unit test: over 30 seconds logs
+- [x] Unit test: total practice time
+- [x] Unit test: sessions completed
+- [x] Unit test: current streak
+- [x] Unit test: longest streak
+- [x] Unit test: breakdown by drill
+- [x] Unit test: standalone tools do not affect streaks
+- [x] Unit test: journal entries do not affect streaks
+- [x] Widget test: History shows Practice Stats section/button
+- [x] Widget test: recent list shows most recent 20 sessions
+- [x] Widget test: no individual delete control is present
 
 ---
 
@@ -1147,41 +1145,41 @@ Keep these constraints visible during the entire project.
 
 ## 20.1 Journal Access
 
-- [ ] Journal is accessible from History tab
-- [ ] Journal is accessible from Tools section
-- [ ] History tab has separate Practice Stats and Journal subsections/buttons
-- [ ] Journal does not require a completed practice session
-- [ ] Journal is optional
+- [x] Journal is accessible from History tab
+- [x] Journal is accessible from Tools section
+- [x] History tab has separate Practice Stats and Journal subsections/buttons
+- [x] Journal does not require a completed practice session
+- [x] Journal is optional
 
 ## 20.2 Journal CRUD
 
-- [ ] Create journal entry
-- [ ] Edit journal entry
-- [ ] Delete journal entry
-- [ ] Store created date
-- [ ] Store updated date
-- [ ] Store optional drill tag
-- [ ] Store body text
-- [ ] Do not require link to specific session
+- [x] Create journal entry
+- [x] Edit journal entry
+- [x] Delete journal entry
+- [x] Store created date
+- [x] Store updated date
+- [x] Store optional drill tag
+- [x] Store body text
+- [x] Do not require link to specific session
 
 ## 20.3 Journal List
 
-- [ ] Show entries newest-first
-- [ ] Show date
-- [ ] Show optional drill tag
-- [ ] Show short preview
-- [ ] No search in v1
-- [ ] No filters in v1
+- [x] Show entries newest-first
+- [x] Show date
+- [x] Show optional drill tag
+- [x] Show short preview
+- [x] No search in v1
+- [x] No filters in v1
 
 ## 20.4 Tests
 
-- [ ] Widget test: Journal reachable from History
-- [ ] Widget test: Journal reachable from Tools
-- [ ] Widget test: create entry
-- [ ] Widget test: edit entry
-- [ ] Widget test: delete entry
-- [ ] Unit/widget test: entries sort newest-first
-- [ ] Unit test: journal entries do not affect streaks
+- [x] Widget test: Journal reachable from History
+- [x] Widget test: Journal reachable from Tools
+- [x] Widget test: create entry
+- [x] Widget test: edit entry
+- [x] Widget test: delete entry
+- [x] Unit/widget test: entries sort newest-first
+- [x] Unit test: journal entries do not affect streaks
 
 ---
 
@@ -1189,39 +1187,39 @@ Keep these constraints visible during the entire project.
 
 ## 21.1 Timer Tool Access
 
-- [ ] Timer tool is reachable from Tools
-- [ ] Timer tool does not appear as bottom nav item
-- [ ] Timer tool is clearly separate from drill timers
-- [ ] Timer tool usage does not count toward history/streaks
+- [x] Timer tool is reachable from Tools
+- [x] Timer tool does not appear as bottom nav item
+- [x] Timer tool is clearly separate from drill timers
+- [x] Timer tool usage does not count toward history/streaks
 
 ## 21.2 Simple Countdown Mode
 
-- [ ] User can configure countdown duration
-- [ ] User can start countdown
-- [ ] User can pause countdown
-- [ ] User can resume countdown
-- [ ] User can stop/reset countdown
-- [ ] Show large timer
-- [ ] Show progress indicator if appropriate
+- [x] User can configure countdown duration
+- [x] User can start countdown
+- [x] User can pause countdown
+- [x] User can resume countdown
+- [x] User can stop/reset countdown
+- [x] Show large timer
+- [x] Show progress indicator if appropriate
 
 ## 21.3 Interval Cycle Mode
 
-- [ ] User can configure work time
-- [ ] User can configure regroup/rest time
-- [ ] Timer alternates work/rest
-- [ ] Timer repeats cycle until stopped
-- [ ] Pause/resume works
-- [ ] Stop/reset works
-- [ ] Keep UI simple
+- [x] User can configure work time
+- [x] User can configure regroup/rest time
+- [x] Timer alternates work/rest
+- [x] Timer repeats cycle until stopped
+- [x] Pause/resume works
+- [x] Stop/reset works
+- [x] Keep UI simple
 
 ## 21.4 Tests
 
-- [ ] Widget test: Timer tool reachable
-- [ ] Unit/widget test: simple countdown completes
-- [ ] Unit/widget test: interval alternates work/rest
-- [ ] Widget test: pause/resume
-- [ ] Widget test: stop/reset
-- [ ] Unit test: Timer tool does not create practice history records
+- [x] Widget test: Timer tool reachable
+- [x] Unit/widget test: simple countdown completes
+- [x] Unit/widget test: interval alternates work/rest
+- [x] Widget test: pause/resume
+- [x] Widget test: stop/reset
+- [x] Unit test: Timer tool does not create practice history records
 
 ---
 
@@ -1229,36 +1227,36 @@ Keep these constraints visible during the entire project.
 
 ## 22.1 Emotion Wheel Access
 
-- [ ] Emotion Wheel reachable from Tools
-- [ ] Emotion Wheel does not appear in bottom nav
-- [ ] Emotion Wheel is self-contained
+- [x] Emotion Wheel reachable from Tools
+- [x] Emotion Wheel does not appear in bottom nav
+- [x] Emotion Wheel is self-contained
 
 ## 22.2 Emotion Wheel Interaction
 
-- [ ] Show broad emotion categories
-- [ ] Allow tapping broad emotion category
-- [ ] Reveal more specific emotions
-- [ ] Allow selecting specific emotion
-- [ ] Display selected emotion as prompt within tool
-- [ ] Do not send selected emotion into drills in v1
-- [ ] Keep UI interactive, not static image
-- [ ] Keep UI accessible
+- [x] Show broad emotion categories
+- [x] Allow tapping broad emotion category
+- [x] Reveal more specific emotions
+- [x] Allow selecting specific emotion
+- [x] Display selected emotion as prompt within tool
+- [x] Do not send selected emotion into drills in v1
+- [x] Keep UI interactive, not static image
+- [x] Keep UI accessible
 
 ## 22.3 Content Safety
 
-- [ ] Use original placeholder taxonomy for now
-- [ ] Do not copy protected emotion wheel images
-- [ ] Do not copy protected article text
+- [x] Use original placeholder taxonomy for now
+- [x] Do not copy protected emotion wheel images
+- [x] Do not copy protected article text
 - [ ] Document final taxonomy as separate content/design task
 
 ## 22.4 Tests
 
-- [ ] Widget test: Emotion Wheel reachable from Tools
-- [ ] Widget test: broad categories appear
-- [ ] Widget test: tapping category reveals specific emotions
-- [ ] Widget test: selecting emotion displays selected emotion
-- [ ] Widget test: no “send to drill” action exists
-- [ ] Accessibility/widget test: emotion controls have labels
+- [x] Widget test: Emotion Wheel reachable from Tools
+- [x] Widget test: broad categories appear
+- [x] Widget test: tapping category reveals specific emotions
+- [x] Widget test: selecting emotion displays selected emotion
+- [x] Widget test: no “send to drill” action exists
+- [x] Accessibility/widget test: emotion controls have labels
 
 ---
 
@@ -1266,62 +1264,61 @@ Keep these constraints visible during the entire project.
 
 ## 23.1 Settings Sections
 
-- [ ] Add Appearance section
-- [ ] Add Text-to-Speech section
-- [ ] Add Drill Defaults section
-- [ ] Add Data Backup section placeholder
-- [ ] Add Privacy/About section placeholder
-- [ ] Add Support/Donate section placeholder
+- [x] Add Appearance section
+- [x] Add Text-to-Speech section
+- [x] Add Data Backup section
+- [x] Add Privacy/About section
+- [x] Add Support/Donate section
 
 ## 23.2 Appearance Settings
 
-- [ ] Add System theme option
-- [ ] Add Light theme option
-- [ ] Add Dark theme option
-- [ ] Default is System
-- [ ] Theme preference persists locally
-- [ ] App applies selected theme
-- [ ] Theme changes do not require restart if practical
+- [x] Add System theme option
+- [x] Add Light theme option
+- [x] Add Dark theme option
+- [x] Default is System
+- [x] Theme preference persists locally
+- [x] App applies selected theme
+- [x] Theme changes do not require restart if practical
 
 ## 23.3 Reset Drill Defaults
 
-- [ ] Add Reset Drill Defaults action
-- [ ] Show standard confirmation dialog
-- [ ] Restore all drill timings to defaults
-- [ ] Restore all prompt category selections to defaults
-- [ ] Restore all drill-specific options to defaults
-- [ ] Do not delete custom prompts
-- [ ] Do not delete journal entries
-- [ ] Do not delete practice history
-- [ ] Do not reset app theme
-- [ ] Do not reset TTS settings unless specifically part of drill defaults
+- [x] Add Reset Drill Defaults action
+- [x] Show standard confirmation dialog
+- [x] Restore all drill timings to defaults
+- [x] Restore all prompt category selections to defaults
+- [x] Restore all drill-specific options to defaults
+- [x] Do not delete custom prompts
+- [x] Do not delete journal entries
+- [x] Do not delete practice history
+- [x] Do not reset app theme
+- [x] Do not reset TTS settings unless specifically part of drill defaults
 
 ## 23.4 Reset All Data
 
-- [ ] Add Reset All Data action
-- [ ] Show standard confirmation dialog
-- [ ] Delete custom prompts
-- [ ] Delete journal entries
-- [ ] Delete practice history
-- [ ] Reset saved drill settings
-- [ ] Reset theme preference
-- [ ] Reset TTS settings
-- [ ] Reset other local preferences
-- [ ] No need to type RESET
-- [ ] Built-in prompts remain available after reset
+- [x] Add Reset All Data action
+- [x] Show standard confirmation dialog
+- [x] Delete custom prompts
+- [x] Delete journal entries
+- [x] Delete practice history
+- [x] Reset saved drill settings
+- [x] Reset theme preference
+- [x] Reset TTS settings
+- [x] Reset other local preferences
+- [x] No need to type RESET
+- [x] Built-in prompts remain available after reset
 
 ## 23.5 Tests
 
-- [ ] Widget test: Settings sections appear
-- [ ] Widget test: theme preference can be changed
-- [ ] Repository/widget test: theme preference persists
-- [ ] Unit/widget test: Reset Drill Defaults restores drill defaults
-- [ ] Unit/widget test: Reset Drill Defaults preserves custom prompts
-- [ ] Unit/widget test: Reset Drill Defaults preserves journal entries
-- [ ] Unit/widget test: Reset Drill Defaults preserves practice history
-- [ ] Unit/widget test: Reset All Data clears expected local data
-- [ ] Unit/widget test: Reset All Data preserves built-in prompts
-- [ ] Widget test: reset actions show confirmation dialogs
+- [x] Widget test: Settings sections appear
+- [x] Widget test: theme preference can be changed
+- [x] Repository/widget test: theme preference persists
+- [x] Unit/widget test: Reset Drill Defaults restores drill defaults
+- [x] Unit/widget test: Reset Drill Defaults preserves custom prompts
+- [x] Unit/widget test: Reset Drill Defaults preserves journal entries
+- [x] Unit/widget test: Reset Drill Defaults preserves practice history
+- [x] Unit/widget test: Reset All Data clears expected local data
+- [x] Unit/widget test: Reset All Data preserves built-in prompts
+- [x] Widget test: reset actions show confirmation dialogs
 
 ---
 
@@ -1329,49 +1326,49 @@ Keep these constraints visible during the entire project.
 
 ## 24.1 Data Backup UI
 
-- [ ] Add Export Data button
-- [ ] Add Import Data button
-- [ ] Data Backup appears only in Settings
-- [ ] Export/import does not appear on History screen
-- [ ] Export/import does not appear on Journal screen
-- [ ] Show local-only backup warning near Export/Import
-- [ ] Warning says data stays on this device unless exported
-- [ ] Warning says uninstalling or switching devices may delete local data
+- [x] Add Export Data button
+- [x] Add Import Data button
+- [x] Data Backup appears only in Settings
+- [x] Export/import does not appear on History screen
+- [x] Export/import does not appear on Journal screen
+- [x] Show local-only backup warning near Export/Import
+- [x] Warning says data stays on this device unless exported
+- [x] Warning says uninstalling or switching devices may delete local data
 
 ## 24.2 JSON Export
 
-- [ ] Generate one JSON backup file
-- [ ] Use native share/save flow where available
-- [ ] Include schema version
-- [ ] Include app/export version metadata
-- [ ] Include custom prompts
-- [ ] Include journal entries
-- [ ] Include practice history
-- [ ] Include saved drill settings
-- [ ] Include theme preference
-- [ ] Include TTS settings
-- [ ] Include other safe app preferences
-- [ ] Exclude current app state
-- [ ] Exclude pending crash-report state
-- [ ] Exclude transient runtime data
-- [ ] Exclude blocked prompt attempts
-- [ ] Exclude any audio/microphone data because none should exist
+- [x] Generate one JSON backup file
+- [x] Use native share/save flow where available
+- [x] Include schema version
+- [x] Include app/export version metadata
+- [x] Include custom prompts
+- [x] Include journal entries
+- [x] Include practice history
+- [x] Include saved drill settings
+- [x] Include theme preference
+- [x] Include TTS settings
+- [x] Include other safe app preferences
+- [x] Exclude current app state
+- [x] Exclude pending crash-report state
+- [x] Exclude transient runtime data
+- [x] Exclude blocked prompt attempts
+- [x] Exclude any audio/microphone data because none should exist
 
 ## 24.3 JSON Import
 
-- [ ] Accept Hermit Prov JSON backup file
-- [ ] Validate schema version
-- [ ] Reject unsupported future schema version
-- [ ] Show clear future-version error
-- [ ] Migrate older supported schema versions
-- [ ] Import current schema version normally
-- [ ] Merge imported data with existing local data
-- [ ] Skip duplicate custom prompts
-- [ ] Skip duplicate journal entries
-- [ ] Skip duplicate practice sessions
-- [ ] Skip duplicate/equivalent settings where appropriate
-- [ ] Do not show review screen in v1
-- [ ] Do not overwrite everything by default
+- [x] Accept Hermit Prov JSON backup file
+- [x] Validate schema version
+- [x] Reject unsupported future schema version
+- [x] Show clear future-version error
+- [x] Migrate older supported schema versions
+- [x] Import current schema version normally
+- [x] Merge imported data with existing local data
+- [x] Skip duplicate custom prompts
+- [x] Skip duplicate journal entries
+- [x] Skip duplicate practice sessions
+- [x] Skip duplicate/equivalent settings where appropriate
+- [x] Do not show review screen in v1
+- [x] Do not overwrite everything by default
 
 ## 24.4 Schema Documentation
 
@@ -1388,19 +1385,19 @@ Keep these constraints visible during the entire project.
 
 ## 24.5 Tests
 
-- [ ] Unit test: export includes expected data
-- [ ] Unit test: export excludes current app state
-- [ ] Unit test: export excludes transient data
-- [ ] Unit test: export excludes blocked prompt attempts
-- [ ] Unit test: import merges data
-- [ ] Unit test: import skips duplicate custom prompts
-- [ ] Unit test: import skips duplicate journal entries
-- [ ] Unit test: import skips duplicate practice sessions
-- [ ] Unit test: unsupported future schema version is rejected
-- [ ] Unit test: future-version error message is clear
-- [ ] Unit test: older supported schema migrates
-- [ ] Widget test: Export and Import controls visible only in Settings
-- [ ] Widget test: backup warning appears
+- [x] Unit test: export includes expected data
+- [x] Unit test: export excludes current app state
+- [x] Unit test: export excludes transient data
+- [x] Unit test: export excludes blocked prompt attempts
+- [x] Unit test: import merges data
+- [x] Unit test: import skips duplicate custom prompts
+- [x] Unit test: import skips duplicate journal entries
+- [x] Unit test: import skips duplicate practice sessions
+- [x] Unit test: unsupported future schema version is rejected
+- [x] Unit test: future-version error message is clear
+- [x] Unit test: older supported schema migrates
+- [x] Widget test: Export and Import controls visible only in Settings
+- [x] Widget test: backup warning appears
 
 ---
 
@@ -1408,79 +1405,79 @@ Keep these constraints visible during the entire project.
 
 ## 25.1 Privacy/About Page
 
-- [ ] Add Privacy/About page
-- [ ] Page reachable from Settings
-- [ ] State no account
-- [ ] State no login
-- [ ] State no cloud sync
-- [ ] State fully usable offline after installation
-- [ ] State user data stays on-device
-- [ ] State no audio recording
-- [ ] State no microphone permission
-- [ ] State no speech recognition
-- [ ] State prompts are not sent anywhere by default
-- [ ] State journal entries are not sent anywhere by default
-- [ ] State practice history is not sent anywhere by default
-- [ ] State optional crash reports are user-triggered only after a crash
-- [ ] State crash reports include technical details and app state
-- [ ] State crash reports exclude custom prompts and journal entries
-- [ ] State data is local-only
-- [ ] Warn users to export before deleting app or switching devices
-- [ ] Include visible No Recording assurance
+- [x] Add Privacy/About page
+- [x] Page reachable from Settings
+- [x] State no account
+- [x] State no login
+- [x] State no cloud sync
+- [x] State fully usable offline after installation
+- [x] State user data stays on-device
+- [x] State no audio recording
+- [x] State no microphone permission
+- [x] State no speech recognition
+- [x] State prompts are not sent anywhere by default
+- [x] State journal entries are not sent anywhere by default
+- [x] State practice history is not sent anywhere by default
+- [x] State optional crash reports are user-triggered only after a crash
+- [x] State crash reports include technical details and app state
+- [x] State crash reports exclude custom prompts and journal entries
+- [x] State data is local-only
+- [x] Warn users to export before deleting app or switching devices
+- [x] Include visible No Recording assurance
 
 ## 25.2 Credits and Attribution
 
-- [ ] Add Credits section
-- [ ] Link to Will Hines solo improv practice article
-- [ ] Link to referenced prompt-generator inspiration sites
-- [ ] Link to referenced emotion-wheel inspiration article
-- [ ] Clearly state Hermit Prov is unofficial
-- [ ] Clearly state Hermit Prov is unaffiliated with Will Hines
-- [ ] Clearly state Hermit Prov is unaffiliated with prompt-generator sites
-- [ ] Clearly state Hermit Prov is unaffiliated with emotion-wheel inspiration sources
-- [ ] Keep attribution out of individual drill screens
+- [x] Add Credits section
+- [x] Link to Will Hines solo improv practice article
+- [x] Link to referenced prompt-generator inspiration sites
+- [x] Link to referenced emotion-wheel inspiration article
+- [x] Clearly state Hermit Prov is unofficial
+- [x] Clearly state Hermit Prov is unaffiliated with Will Hines
+- [x] Clearly state Hermit Prov is unaffiliated with prompt-generator sites
+- [x] Clearly state Hermit Prov is unaffiliated with emotion-wheel inspiration sources
+- [x] Keep attribution out of individual drill screens
 
 ## 25.3 Content Licensing Notes
 
-- [ ] Document that built-in exercise descriptions must be original wording
-- [ ] Document that prompt lists must be original/properly licensed/public-domain/safe-to-use
-- [ ] Document that emotion-wheel labels/taxonomy must be original/properly licensed/safe-to-use
-- [ ] Do not copy article text verbatim except exercise names
-- [ ] Do not copy protected prompt lists
-- [ ] Do not copy protected emotion wheel images/assets
+- [x] Document that built-in exercise descriptions must be original wording
+- [x] Document that prompt lists must be original/properly licensed/public-domain/safe-to-use
+- [x] Document that emotion-wheel labels/taxonomy must be original/properly licensed/safe-to-use
+- [x] Do not copy article text verbatim except exercise names
+- [x] Do not copy protected prompt lists
+- [x] Do not copy protected emotion wheel images/assets
 
 ## 25.4 Support Email
 
-- [ ] Add Support / Feedback link
-- [ ] Support link opens email to developer
-- [ ] Email template includes app version
-- [ ] Email template includes device OS
-- [ ] Email template includes short issue prompt
-- [ ] User can edit everything before sending
-- [ ] Email does not automatically include custom prompts
-- [ ] Email does not automatically include journal entries
-- [ ] Email does not automatically include practice history
+- [x] Add Support / Feedback link
+- [x] Support link opens email to developer
+- [x] Email template includes app version
+- [x] Email template includes device OS
+- [x] Email template includes short issue prompt
+- [x] User can edit everything before sending
+- [x] Email does not automatically include custom prompts
+- [x] Email does not automatically include journal entries
+- [x] Email does not automatically include practice history
 
 ## 25.5 Donate Link
 
-- [ ] Add low-key Ko-fi link
-- [ ] Link opens external Ko-fi page
-- [ ] Donate link appears only in Settings/About area
-- [ ] No donation prompt after practice sessions
-- [ ] No in-app purchase
-- [ ] No subscription
-- [ ] No pressure messaging
+- [x] Add low-key Ko-fi link
+- [x] Link opens external Ko-fi page
+- [x] Donate link appears only in Settings/About area
+- [x] No donation prompt after practice sessions
+- [x] No in-app purchase
+- [x] No subscription
+- [x] No pressure messaging
 
 ## 25.6 Tests
 
-- [ ] Widget test: Privacy/About reachable
-- [ ] Widget test: No Recording assurance appears
-- [ ] Widget test: local-only warning appears
-- [ ] Widget test: unaffiliated disclaimer appears
-- [ ] Widget test: support link exists
-- [ ] Unit/widget test: support email excludes user-created local data
-- [ ] Widget test: Ko-fi link exists only in Settings/About area
-- [ ] Widget test: no donation prompt after completing a drill session
+- [x] Widget test: Privacy/About reachable
+- [x] Widget test: No Recording assurance appears
+- [x] Widget test: local-only warning appears
+- [x] Widget test: unaffiliated disclaimer appears
+- [x] Widget test: support link exists
+- [x] Unit/widget test: support email excludes user-created local data
+- [x] Widget test: Ko-fi link exists only in Settings/About area
+- [x] Widget test: no donation prompt after completing a drill session
 
 ---
 
@@ -1488,51 +1485,51 @@ Keep these constraints visible during the entire project.
 
 ## 26.1 Crash Report Architecture
 
-- [ ] Add CrashReportProvider interface
-- [ ] Add fake/no-op crash-report provider
-- [ ] Add crash payload model
-- [ ] Add crash payload sanitizer
-- [ ] Do not send crash reports automatically
-- [ ] Do not persist crash-report opt-in preference
-- [ ] Crash prompt appears only after crash condition
-- [ ] Real provider integration can be configured later if desired
+- [x] Add CrashReportProvider interface
+- [x] Add fake/no-op crash-report provider
+- [x] Add crash payload model
+- [x] Add crash payload sanitizer
+- [x] Do not send crash reports automatically
+- [x] Do not persist crash-report opt-in preference
+- [x] Crash prompt appears only after crash condition
+- [x] Real provider integration can be configured later if desired
 
 ## 26.2 Crash Prompt
 
-- [ ] Prompt offers Send Report
-- [ ] Prompt offers Don’t Send
-- [ ] Prompt includes privacy note
-- [ ] Privacy note says report includes technical details and app state
-- [ ] Privacy note says report excludes custom prompts and journal entries
-- [ ] Link Privacy/About from crash prompt if practical
+- [x] Prompt offers Send Report
+- [x] Prompt offers Don’t Send
+- [x] Prompt includes privacy note
+- [x] Privacy note says report includes technical details and app state
+- [x] Privacy note says report excludes custom prompts and journal entries
+- [x] Link Privacy/About from crash prompt if practical
 
 ## 26.3 Crash Payload Rules
 
-- [ ] Payload may include technical crash details
-- [ ] Payload may include device OS/version
-- [ ] Payload may include app version
-- [ ] Payload may include screen name
-- [ ] Payload may include active drill
-- [ ] Payload may include timer value
-- [ ] Payload may include safe settings/app state
-- [ ] Payload must exclude custom prompts
-- [ ] Payload must exclude journal entries
-- [ ] Payload must exclude audio data
-- [ ] Payload must exclude microphone data
-- [ ] Payload must exclude user-created content
+- [x] Payload may include technical crash details
+- [x] Payload may include device OS/version
+- [x] Payload may include app version
+- [x] Payload may include screen name
+- [x] Payload may include active drill
+- [x] Payload may include timer value
+- [x] Payload may include safe settings/app state
+- [x] Payload must exclude custom prompts
+- [x] Payload must exclude journal entries
+- [x] Payload must exclude audio data
+- [x] Payload must exclude microphone data
+- [x] Payload must exclude user-created content
 
 ## 26.4 Tests
 
-- [ ] Unit test: sanitizer excludes custom prompts
-- [ ] Unit test: sanitizer excludes journal entries
-- [ ] Unit test: sanitizer excludes user-created content
-- [ ] Unit test: sanitizer includes allowed app state
-- [ ] Widget test: crash prompt shows Send Report
-- [ ] Widget test: crash prompt shows Don’t Send
-- [ ] Widget test: crash prompt shows privacy note
-- [ ] Widget test: Don’t Send does not call provider
-- [ ] Widget test: Send Report calls provider with sanitized payload
-- [ ] Unit test: no persistent crash-report preference exists
+- [x] Unit test: sanitizer excludes custom prompts
+- [x] Unit test: sanitizer excludes journal entries
+- [x] Unit test: sanitizer excludes user-created content
+- [x] Unit test: sanitizer includes allowed app state
+- [x] Widget test: crash prompt shows Send Report
+- [x] Widget test: crash prompt shows Don’t Send
+- [x] Widget test: crash prompt shows privacy note
+- [x] Widget test: Don’t Send does not call provider
+- [x] Widget test: Send Report calls provider with sanitized payload
+- [x] Unit test: no persistent crash-report preference exists
 
 ---
 
