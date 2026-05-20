@@ -319,20 +319,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: 'Reset All Data',
             color: colorScheme.error,
           ),
-          Semantics(
-            button: true,
-            label: 'Reset All Data',
-            hint: 'Permanently deletes all custom prompts, journal entries, practice history, and resets settings. This action cannot be undone.',
-            child: ListTile(
-              key: const Key('reset_all_data_tile'),
-              title: Text(
-                'Reset All Data',
-                style: TextStyle(color: colorScheme.error),
-              ),
-              subtitle: const Text(
-                  'Permanently delete all data and reset preferences'),
-              onTap: _confirmResetAllData,
+          ListTile(
+            key: const Key('reset_all_data_tile'),
+            title: Text(
+              'Reset All Data',
+              style: TextStyle(color: colorScheme.error),
             ),
+            subtitle: const Text(
+                'Permanently delete all data and reset preferences'),
+            onTap: _confirmResetAllData,
           ),
         ],
           ),

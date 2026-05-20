@@ -280,5 +280,20 @@ void main() {
       expect(prefs.themePreference, AppPreferences.defaults.themePreference);
       expect(services.themeNotifier.value, ThemeMode.system);
     });
+
+    testWidgets('Reset All Data tile is tappable without duplicate a11y nodes',
+        (tester) async {
+      await tester.pumpWidget(_wrap(const SettingsScreen()));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('reset_all_data_tile')),
+        100,
+      );
+      await tester.pumpAndSettle();
+
+      // Only the ListTile itself should be a button node — no outer wrapper.
+      expect(find.bySemanticsLabel('Reset All Data'), findsOneWidget);
+    });
   });
 }

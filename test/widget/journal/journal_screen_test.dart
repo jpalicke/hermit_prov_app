@@ -209,4 +209,13 @@ void main() {
       expect(secondTileTitle.data, contains('January'));
     });
   });
+
+  group('accessibility', () {
+    testWidgets('FAB has an accessible tooltip label', (tester) async {
+      await tester.pumpWidget(_wrapWithServices(const JournalScreen()));
+      await tester.pumpAndSettle();
+
+      expect(find.byTooltip('New journal entry'), findsOneWidget);
+    });
+  });
 }
