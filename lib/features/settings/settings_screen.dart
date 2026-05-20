@@ -133,6 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _importData() async {
     final messenger = ScaffoldMessenger.of(context);
+    final services = AppServices.of(context);
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -156,12 +157,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final backup = await svc.importFromJson(jsonString);
       final mergeResult = await svc.mergeIntoApp(backup);
 
+      // Apply restored preferences to the live UI immediately.
+      if (mergeResult.settingsUpdated > 0 && mounted) {
+        final restoredPrefs =
+            await services.appPreferencesRepository.getPreferences();
+        if (mounted) {
+          services.themeNotifier.value =
+              restoredPrefs.themePreference.toThemeMode();
+          setState(() => _prefs = restoredPrefs);
+        }
+      }
+
       if (mounted) {
+        final parts = [
+          if (mergeResult.promptsAdded > 0)
+            '${mergeResult.promptsAdded} prompts',
+          if (mergeResult.journalEntriesAdded > 0)
+            '${mergeResult.journalEntriesAdded} journal entries',
+          if (mergeResult.settingsUpdated > 0) 'preferences',
+        ];
         messenger.showSnackBar(
           SnackBar(
             content: Text(
-              'Added ${mergeResult.promptsAdded} prompts, '
-              '${mergeResult.journalEntriesAdded} journal entries.',
+              parts.isEmpty
+                  ? 'Nothing new to import.'
+                  : 'Restored: ${parts.join(', ')}.',
             ),
           ),
         );

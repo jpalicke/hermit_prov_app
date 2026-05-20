@@ -223,6 +223,21 @@ void main() {
     });
   });
 
+  group('mergeIntoApp() preferences', () {
+    test('restores theme preference and reports settingsUpdated > 0', () async {
+      const json = '{"schemaVersion":1,"exportedAt":"2024-01-01T00:00:00.000Z",'
+          '"customPrompts":[],"journalEntries":[],"drillSettings":{},'
+          '"preferences":{"themePreference":"dark","ttsSpeakingRate":0.5}}';
+
+      final backup = await backupService.importFromJson(json);
+      final result = await backupService.mergeIntoApp(backup);
+
+      expect(result.settingsUpdated, greaterThan(0));
+      final prefs = await services.appPreferencesRepository.getPreferences();
+      expect(prefs.themePreference.name, equals('dark'));
+    });
+  });
+
   group('importFromJson() validation', () {
     test('throws FormatException for wrong schemaVersion', () async {
       const badJson =
