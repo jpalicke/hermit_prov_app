@@ -12,7 +12,7 @@ class PrivacyAboutScreen extends StatelessWidget {
       '?subject=Hermit Prov%20Feedback'
       '&body=App%20version%3A%20%5Bversion%5D%0ADevice%20OS%3A%20%5BOS%5D%0A%0ADescribe%20your%20issue%3A';
 
-  static const String _kofiUrl = 'https://ko-fi.com';
+  static const String _kofiUrl = 'https://ko-fi.com/joepalicke';
 
   Future<void> _launchUrl(BuildContext context, String url, String errorMessage) async {
     try {

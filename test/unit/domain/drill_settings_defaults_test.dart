@@ -143,9 +143,9 @@ void main() {
       });
     });
 
-    // ── Five Line Game Drill ─────────────────────────────────────────────────
+    // ── Five Line Scenes ─────────────────────────────────────────────────────
 
-    group('Five Line Game Drill', () {
+    group('Five Line Scenes', () {
       test('drillId is DrillId.fiveLineGame', () {
         expect(const FiveLineGameSettings().drillId, DrillId.fiveLineGame);
       });

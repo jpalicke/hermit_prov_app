@@ -16,6 +16,6 @@ extension DrillIdDisplayName on DrillId {
         DrillId.characterCreation => 'Character Creation',
         DrillId.twoCharacterScenes => 'Two-Character Scenes',
         DrillId.atoC => 'A-to-C / Bad Idea / Initiation',
-        DrillId.fiveLineGame => 'Five Line Game Drill',
+        DrillId.fiveLineGame => 'Five Line Scenes',
       };
 }

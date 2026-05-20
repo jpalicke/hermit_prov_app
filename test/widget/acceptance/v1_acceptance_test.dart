@@ -12,6 +12,7 @@ import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repos
 import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
+import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/history/practice_session.dart';
@@ -318,6 +319,7 @@ void main() {
           journalRepository: journalRepo,
           appPreferencesRepository: InMemoryAppPreferencesRepository(),
           ttsService: FakeTtsService(),
+          crashReportService: const NoOpCrashReportService(),
           child: const MaterialApp(home: JournalScreen()),
         ),
       );
@@ -347,12 +349,12 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('Tools', () {
-    testWidgets('Prompt Generator screen is reachable and shows a prompt on tap',
+    testWidgets('Suggestion Generator screen is reachable and shows a prompt on tap',
         (tester) async {
       await tester.pumpWidget(_wrap(const ToolsScreen()));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Prompt Generator'));
+      await tester.tap(find.text('Suggestion Generator'));
       await tester.pumpAndSettle();
 
       expect(find.byType(PromptGeneratorScreen), findsOneWidget);

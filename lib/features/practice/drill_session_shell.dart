@@ -127,7 +127,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     _ticker = null;
     _maybeLogSession();
     setState(() {
-      widget.controller.stop();
+      widget.controller.reset();
     });
     _startedAt = null;
   }

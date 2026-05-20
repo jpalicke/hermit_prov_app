@@ -24,31 +24,31 @@ class PracticeScreen extends StatelessWidget {
   static final List<({DrillId drillId, String subtitle, Widget icon, Color color})> _drills = [
     (
       drillId: DrillId.catClock,
-      subtitle: 'Connect two prompts through association.',
+      subtitle: 'connect two words through free association',
       icon: Image.asset('assets/icons/kitty.png', width: 28, height: 28),
       color: const Color(0xFF0EA5E9), // sky blue
     ),
     (
       drillId: DrillId.characterCreation,
-      subtitle: 'Cycle through solo character reps.',
+      subtitle: 'create and return to a series of characters',
       icon: const Icon(Icons.person, color: Colors.white, size: 24),
       color: const Color(0xFFF97316), // vivid orange
     ),
     (
       drillId: DrillId.twoCharacterScenes,
-      subtitle: 'Prompt + timed two-character scene.',
+      subtitle: 'timed two character scenes, with suggestion',
       icon: const Icon(Icons.people, color: Colors.white, size: 24),
       color: const Color(0xFF22C55E), // vivid green
     ),
     (
       drillId: DrillId.atoC,
-      subtitle: 'Rapid-fire prompt reps.',
+      subtitle: 'rapid fire initiation practice',
       icon: const Icon(Icons.flash_on, color: Colors.white, size: 24),
       color: const Color(0xFFEF4444), // vivid red
     ),
     (
       drillId: DrillId.fiveLineGame,
-      subtitle: 'One prompt, fast five-line scenes.',
+      subtitle: 'that scene only had five lines',
       icon: const FaIcon(FontAwesomeIcons.film, color: Colors.white, size: 20),
       color: const Color(0xFF7C3AED), // violet (matches brand seed)
     ),
@@ -341,7 +341,7 @@ class _ToolsCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Prompt generator, timer, emotion wheel, journal.',
+                      'Suggestion generator, timer, emotion wheel, journal.',
                       style: tt.bodyMedium?.copyWith(
                         color: cs.onSecondaryContainer.withValues(alpha: 0.7),
                       ),

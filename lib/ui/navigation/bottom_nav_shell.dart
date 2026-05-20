@@ -15,23 +15,29 @@ class BottomNavShell extends StatefulWidget {
 
 class _BottomNavShellState extends State<BottomNavShell> {
   int _currentIndex = 0;
+  int _historyVersion = 0;
 
-  static const List<Widget> _screens = [
-    PracticeScreen(),
-    HistoryScreen(),
-    SettingsScreen(),
-  ];
+  void _onTabTap(int index) {
+    if (index == 1 && _currentIndex != 1) {
+      _historyVersion++;
+    }
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: [
+          const PracticeScreen(),
+          HistoryScreen(key: ValueKey(_historyVersion)),
+          const SettingsScreen(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: _onTabTap,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.self_improvement),

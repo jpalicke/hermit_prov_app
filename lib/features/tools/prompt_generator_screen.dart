@@ -1,4 +1,4 @@
-// ABOUTME: Standalone Prompt Generator tool screen.
+// ABOUTME: Suggestion Generator tool screen — picks a random prompt from selected categories.
 // ABOUTME: Lets the user pick categories, generate a random prompt, and optionally auto-advance on a timer.
 
 import 'dart:async';
@@ -107,7 +107,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
     final tt = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Prompt Generator')),
+      appBar: AppBar(title: const Text('Suggestion Generator')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

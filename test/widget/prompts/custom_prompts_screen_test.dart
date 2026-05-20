@@ -1,4 +1,4 @@
-// ABOUTME: Widget tests for the Custom Prompts screen (CRUD management UI).
+// ABOUTME: Widget tests for the Suggestion Bank screen (CRUD management UI).
 // ABOUTME: Covers add, edit, delete, validation blocking, and built-in exclusion.
 
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.da
 import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
 import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
+import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/features/prompts/custom_prompts_screen.dart';
 import 'package:hermit_prov_app/features/tools/tools_screen.dart';
@@ -25,6 +26,7 @@ Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
     journalRepository: InMemoryJournalRepository(),
     appPreferencesRepository: InMemoryAppPreferencesRepository(),
     ttsService: FakeTtsService(),
+    crashReportService: const NoOpCrashReportService(),
     child: MaterialApp(home: child),
   );
 }
@@ -32,16 +34,16 @@ Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
-  // ── Test 1: Custom Prompts screen reachable from Tools screen ───────────────
+  // ── Test 1: Suggestion bank screen reachable from Tools screen ──────────────
   group('navigation', () {
-    testWidgets('Custom Prompts screen is reachable from Tools screen',
+    testWidgets('Suggestion bank screen is reachable from Tools screen',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const ToolsScreen()));
       await tester.pumpAndSettle();
 
-      // Tools screen must have a Custom Prompts entry
-      expect(find.text('Custom Prompts'), findsOneWidget);
-      await tester.tap(find.text('Custom Prompts'));
+      // Tools screen must have an entry for adding words to the suggestion bank
+      expect(find.text('Add words to the suggestion bank'), findsOneWidget);
+      await tester.tap(find.text('Add words to the suggestion bank'));
       await tester.pumpAndSettle();
 
       expect(find.byType(CustomPromptsScreen), findsOneWidget);
