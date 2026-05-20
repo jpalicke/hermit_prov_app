@@ -54,3 +54,6 @@ app.*.map.json
 .claude/
 transcript_extract.txt
 trigg_wheel*
+
+# Local UAT / manual testing screenshots
+uat_screenshots/
