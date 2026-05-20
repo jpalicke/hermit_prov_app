@@ -422,16 +422,22 @@ class _DurationPicker extends StatelessWidget {
             style: tt.titleMedium,
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.remove_circle_outline),
-          color: cs.primary,
-          tooltip: 'Decrease $label by 1 minute',
-          onPressed: minutes <= 1
-              ? null
-              : () => onChanged(minutes - 1),
+        Semantics(
+          label: 'Decrease $label by 1 minute',
+          button: true,
+          child: ExcludeSemantics(
+            child: IconButton(
+              icon: const Icon(Icons.remove_circle_outline),
+              color: cs.primary,
+              tooltip: 'Decrease $label by 1 minute',
+              onPressed: minutes <= 1
+                  ? null
+                  : () => onChanged(minutes - 1),
+            ),
+          ),
         ),
         Semantics(
-          label: '$label: $minutes minutes',
+          label: '$label: $minutes ${minutes == 1 ? 'minute' : 'minutes'}',
           child: SizedBox(
             width: 72,
             child: ExcludeSemantics(
@@ -446,13 +452,19 @@ class _DurationPicker extends StatelessWidget {
             ),
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.add_circle_outline),
-          color: cs.primary,
-          tooltip: 'Increase $label by 1 minute',
-          onPressed: minutes >= 60
-              ? null
-              : () => onChanged(minutes + 1),
+        Semantics(
+          label: 'Increase $label by 1 minute',
+          button: true,
+          child: ExcludeSemantics(
+            child: IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              color: cs.primary,
+              tooltip: 'Increase $label by 1 minute',
+              onPressed: minutes >= 60
+                  ? null
+                  : () => onChanged(minutes + 1),
+            ),
+          ),
         ),
       ],
     );
