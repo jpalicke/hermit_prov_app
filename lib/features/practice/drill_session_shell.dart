@@ -164,6 +164,37 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
     repo.addSession(session);
   }
 
+  Future<void> _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) return;
+    final state = widget.controller.state;
+    if (!state.isRunning && !state.isPaused) {
+      _handleExit();
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Leave drill?'),
+        content: const Text(
+          'Your session is still in progress. Leave anyway?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Stay'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Leave'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      _handleExit();
+    }
+  }
+
   void _showInstructions(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
@@ -199,7 +230,10 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
 
     final ringLabel = widget.ringLabelBuilder?.call(state);
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: _onPopInvoked,
+      child: Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
         child: Padding(
@@ -365,6 +399,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
