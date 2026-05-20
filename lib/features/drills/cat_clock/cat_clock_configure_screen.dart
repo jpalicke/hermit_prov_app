@@ -282,6 +282,11 @@ class _CategoryPicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: tt.titleMedium),
+        const SizedBox(height: 2),
+        Text(
+          'At least one category must remain selected.',
+          style: tt.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
         const SizedBox(height: 8),
         FilledButton.tonal(
           onPressed: _toggleAll,

@@ -52,7 +52,7 @@ void main() {
         child: const MaterialApp(home: CatClockConfigureScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final toggle = tester.widget<SwitchListTile>(
       find.byKey(const Key('hands_free_toggle')),
@@ -68,7 +68,7 @@ void main() {
 
     // Extract the AppServices so we can read back settings.
     await tester.pumpWidget(services);
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Increment speaking minutes once (default 3 → 4).
     await tester.tap(find.byKey(const Key('minutes_increment')));
@@ -115,7 +115,7 @@ void main() {
         child: const MaterialApp(home: CatClockConfigureScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('prompt1_category_picker')), findsOneWidget);
     expect(find.byKey(const Key('prompt2_category_picker')), findsOneWidget);
@@ -130,7 +130,7 @@ void main() {
         child: const MaterialApp(home: CatClockConfigureScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Default is Objects selected. Tap Locations chip inside prompt1 picker.
     final prompt1Picker = find.byKey(const Key('prompt1_category_picker'));
@@ -141,6 +141,12 @@ void main() {
     await tester.ensureVisible(locationsChip);
     await tester.tap(locationsChip);
     await tester.pump();
+
+    // Verify the chip is visually selected before saving.
+    final locationsChipWidget = tester.widget<FilterChip>(
+      find.ancestor(of: locationsChip, matching: find.byType(FilterChip)),
+    );
+    expect(locationsChipWidget.selected, isTrue);
 
     // Tap Save.
     await tester.tap(find.byKey(const Key('drill_configure_save_button')));
@@ -160,7 +166,7 @@ void main() {
         child: const MaterialApp(home: CatClockConfigureScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Tap "Select All Categories" to ensure all are selected, then "Deselect All"
     // to trigger the _toggleAll fallback path. This is non-vacuous: it verifies
@@ -200,7 +206,7 @@ void main() {
         child: const MaterialApp(home: CatClockConfigureScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Tap Emotions chip inside prompt2 picker.
     final prompt2Picker = find.byKey(const Key('prompt2_category_picker'));
@@ -220,6 +226,7 @@ void main() {
     final repo = AppServices.of(appServices).drillSettingsRepository;
     final saved = await repo.getSettings(DrillId.catClock) as CatClockSettings;
     expect(saved.prompt2Categories, contains(PromptCategory.emotions));
+    expect(saved.prompt2Categories, contains(PromptCategory.objects));
     expect(saved.prompt1Categories, equals([PromptCategory.objects]));
   });
 

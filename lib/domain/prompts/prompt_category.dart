@@ -12,6 +12,8 @@ enum PromptCategory {
   events;
 
   /// All eight categories combined. Used as the default prompt source for every drill.
+  /// Must list every enum value explicitly because const lists cannot use `values`.
+  /// The word_bucket_test.dart unit test guards against divergence when values are added.
   static const List<PromptCategory> wordBucket = [
     objects,
     locations,
