@@ -120,6 +120,28 @@ void main() {
       expect(find.text('Total Time'), findsOneWidget);
     });
 
+    testWidgets('shows Total Time in seconds when total is under one minute',
+        (WidgetTester tester) async {
+      await _setTallViewport(tester);
+      final repo = InMemoryPracticeHistoryRepository();
+      await repo.addSession(
+        _session(
+          id: '1',
+          drillId: DrillId.catClock,
+          duration: const Duration(seconds: 36),
+        ),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _wrap(child: const HistoryScreen(), historyRepo: repo),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Total Time: 36s'), findsOneWidget);
+    });
+
     testWidgets('shows Recent Sessions section header when sessions exist',
         (WidgetTester tester) async {
       await _setTallViewport(tester);
