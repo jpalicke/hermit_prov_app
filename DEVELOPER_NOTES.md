@@ -30,7 +30,6 @@ Navigation is handled imperatively via `Navigator.push`. `BottomNavShell` wraps 
 | Key | Type | Purpose |
 |---|---|---|
 | `app_theme_preference` | String | `AppThemePreference.name` (system / light / dark) |
-| `tts_voice` | String (nullable) | Selected TTS voice identifier |
 | `tts_speaking_rate` | Double | TTS speaking rate (0.0–1.0) |
 
 ## Export/Import Schema Versioning
@@ -44,7 +43,7 @@ exportedAt: ISO-8601 UTC string
 customPrompts: [ { id, promptText, category, createdAtMs, updatedAtMs }, ... ]
 journalEntries: [ { id, body, drillTag?, createdAtMs, updatedAtMs }, ... ]
 drillSettings: { drillId: { ...settingsJson } }
-preferences: { themePreference, ttsVoice?, ttsSpeakingRate }
+preferences: { themePreference, ttsSpeakingRate }
 ```
 
 Note: practice history is intentionally excluded from backups. History is considered device-local telemetry; users carry their creative work (prompts, journal) across devices, not their statistics.
@@ -114,7 +113,6 @@ Items that cannot be driven by automated widget tests:
 
 - [ ] **Export backup:** tap Settings > Export Data, verify the file is shared to Files, email, or another app successfully.
 - [ ] **Import backup:** export first, uninstall, reinstall, tap Import Data, select the file — verify all custom prompts, journal entries, and preferences are restored.
-- [ ] **TTS voices:** open Settings > Text-to-Speech, verify available system voices are listed, select a voice, run a drill in hands-free mode and confirm the correct voice speaks.
 - [ ] **Portrait lock:** rotate the device to landscape — verify the app stays in portrait orientation on both iOS and Android.
 - [ ] **Tablet layout:** run on an iPad or large Android tablet — verify the Settings list is constrained in width, the Emotion Wheel fills a square, and nothing is stretched or clipped.
 - [ ] **Dark mode:** switch to Dark in Settings > Appearance, navigate all screens and verify legibility throughout.
