@@ -11,7 +11,7 @@ Use it as a living project tracker. The intent is to build Hermit Prov increment
 - `[ ]` Not started
 - `[~]` In progress
 - `[x]` Done
-- `[!]` Blocked / needs decision
+- `[!]` Deferred by choice, not forgotten (see linked issue)
 
 ---
 
@@ -24,7 +24,7 @@ Keep these constraints visible during the entire project.
 - [x] App supports iOS and Android
 - [x] App supports phones and tablets
 - [x] Phones are portrait-only
-- [!] Tablets use tablet-friendly layouts, not merely scaled phone layouts — tablet-specific layouts deferred (see issue #5)
+- [!] Tablets use tablet-friendly layouts, not merely scaled phone layouts (tablet-specific layouts deferred, see issue #5)
 - [x] App is English-only for v1
 - [x] App opens directly to Practice / Choose Your Drill
 - [x] No onboarding flow in v1
@@ -55,7 +55,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 0 — Repository and Project Setup
+# Milestone 0: Repository and Project Setup
 
 ## 0.1 Repository Setup
 
@@ -86,13 +86,13 @@ Keep these constraints visible during the entire project.
 
 ## 0.3 Initial Dependency Decisions
 
-- [x] Choose state management approach — StatefulWidget + InheritedWidget (AppServices DI)
-- [x] Choose local persistence approach — Drift (SQLite)
-- [x] Choose routing/navigation approach — Navigator.push (no routing package)
-- [x] Choose text-to-speech package — flutter_tts
-- [x] Choose share/file picker packages for export/import — share_plus + file_picker
-- [x] Choose URL/email launcher package — url_launcher
-- [x] Choose crash-report provider or decide on no-op shell for v1 development — no-op shell with opt-in dialog
+- [x] Choose state management approach: StatefulWidget + InheritedWidget (AppServices DI)
+- [x] Choose local persistence approach: Drift (SQLite)
+- [x] Choose routing/navigation approach: Navigator.push (no routing package)
+- [x] Choose text-to-speech package: flutter_tts
+- [x] Choose share/file picker packages for export/import: share_plus + file_picker
+- [x] Choose URL/email launcher package: url_launcher
+- [x] Choose crash-report provider or decide on no-op shell for v1 development: no-op shell with opt-in dialog
 - [ ] Document dependency choices in README or developer docs
 
 ## 0.4 Test Infrastructure
@@ -100,8 +100,8 @@ Keep these constraints visible during the entire project.
 - [x] Confirm unit tests run
 - [x] Confirm widget tests run
 - [x] Add test helpers
-- [x] Add fake clock or timer helper — DrillSessionController.tick() for deterministic testing
-- [x] Add fake repositories — AppServices.withInMemory()
+- [x] Add fake clock or timer helper: DrillSessionController.tick() for deterministic testing
+- [x] Add fake repositories: AppServices.withInMemory()
 - [x] Add fake TTS service
 - [x] Add fake crash-report provider
 - [ ] Add test data builders/factories
@@ -109,7 +109,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 1 — App Shell and Navigation
+# Milestone 1: App Shell and Navigation
 
 ## 1.1 App Entry Point
 
@@ -156,7 +156,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 2 — Practice Home / Choose Your Drill
+# Milestone 2: Practice Home / Choose Your Drill
 
 ## 2.1 Practice Home Layout
 
@@ -196,7 +196,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 3 — Domain Models and Defaults
+# Milestone 3: Domain Models and Defaults
 
 ## 3.1 Core Enums and IDs
 
@@ -316,7 +316,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 4 — In-Memory Repositories and Seed Prompts
+# Milestone 4: In-Memory Repositories and Seed Prompts
 
 ## 4.1 In-Memory Repositories
 
@@ -368,7 +368,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 5 — Prompt Picker and Custom Prompt Validation
+# Milestone 5: Prompt Picker and Custom Prompt Validation
 
 ## 5.1 Prompt Picker
 
@@ -417,7 +417,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 6 — Custom Prompt Management UI
+# Milestone 6: Custom Prompt Management UI
 
 ## 6.1 Custom Prompt Screen
 
@@ -456,7 +456,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 7 — Tools: Standalone Prompt Generator
+# Milestone 7: Tools: Standalone Prompt Generator
 
 ## 7.1 Tools Screen
 
@@ -506,7 +506,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 8 — Reusable Timer and Session Engine
+# Milestone 8: Reusable Timer and Session Engine
 
 ## 8.1 Timer Segment Model
 
@@ -569,7 +569,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 9 — Reusable Drill UI Shell
+# Milestone 9: Reusable Drill UI Shell
 
 ## 9.1 Drill Start Screen Pattern
 
@@ -624,7 +624,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 10 — Drill: Cat/Clock
+# Milestone 10: Drill: Cat/Clock
 
 ## 10.1 Cat/Clock Flow
 
@@ -644,8 +644,8 @@ Keep these constraints visible during the entire project.
 - [x] Configure regroup duration
 - [x] Configure prompt 1 category source
 - [x] Configure prompt 2 category source
-- [x] Default prompt 1 source is objects (word bucket in session)
-- [x] Default prompt 2 source is objects (word bucket in session)
+- [x] Default prompt 1 source is [objects] (matches CatClockSettings.prompt1Categories default)
+- [x] Default prompt 2 source is [objects] (matches CatClockSettings.prompt2Categories default)
 - [x] Allow category combinations such as object + location
 - [x] Save configuration locally
 - [x] Start uses saved configuration
@@ -675,7 +675,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 11 — Drill: Two-Character Scenes
+# Milestone 11: Drill: Two-Character Scenes
 
 ## 11.1 Two-Character Scenes Flow
 
@@ -719,7 +719,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 12 — Drill: A-to-C / Bad Idea / Initiation
+# Milestone 12: Drill: A-to-C / Bad Idea / Initiation
 
 ## 12.1 A-to-C Flow
 
@@ -766,7 +766,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 13 — Drill: Five Line Game
+# Milestone 13: Drill: Five Line Game
 
 ## 13.1 Five Line Game Default Flow
 
@@ -821,7 +821,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 14 — Character Creation Cycle Logic
+# Milestone 14: Character Creation Cycle Logic
 
 ## 14.1 Cycle Builder
 
@@ -860,7 +860,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 15 — Character Creation UI
+# Milestone 15: Character Creation UI
 
 ## 15.1 Character Creation Configuration
 
@@ -913,7 +913,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 16 — Text-to-Speech Service and Global Settings
+# Milestone 16: Text-to-Speech Service and Global Settings
 
 ## 16.1 TTS Service
 
@@ -954,7 +954,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 17 — Hands-Free Announcement Policy
+# Milestone 17: Hands-Free Announcement Policy
 
 ## 17.1 General Policy
 
@@ -999,7 +999,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 18 — Wire Hands-Free Mode Into Drills
+# Milestone 18: Wire Hands-Free Mode Into Drills
 
 ## 18.1 Shared Hands-Free Wiring
 
@@ -1068,7 +1068,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 19 — Practice History
+# Milestone 19: Practice History
 
 ## 19.1 Session Logging
 
@@ -1141,7 +1141,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 20 — Practice Journal
+# Milestone 20: Practice Journal
 
 ## 20.1 Journal Access
 
@@ -1183,7 +1183,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 21 — Standalone Timer Tool
+# Milestone 21: Standalone Timer Tool
 
 ## 21.1 Timer Tool Access
 
@@ -1223,7 +1223,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 22 — Interactive Emotion Wheel
+# Milestone 22: Interactive Emotion Wheel
 
 ## 22.1 Emotion Wheel Access
 
@@ -1260,7 +1260,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 23 — Settings
+# Milestone 23: Settings
 
 ## 23.1 Settings Sections
 
@@ -1322,7 +1322,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 24 — JSON Export / Import Backup
+# Milestone 24: JSON Export / Import Backup
 
 ## 24.1 Data Backup UI
 
@@ -1401,7 +1401,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 25 — Privacy, About, Credits, Support, Donate
+# Milestone 25: Privacy, About, Credits, Support, Donate
 
 ## 25.1 Privacy/About Page
 
@@ -1481,7 +1481,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 26 — Optional Crash Report Prompt
+# Milestone 26: Optional Crash Report Prompt
 
 ## 26.1 Crash Report Architecture
 
@@ -1533,7 +1533,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 27 — Accessibility, Tablet Layout, Orientation, Permissions
+# Milestone 27: Accessibility, Tablet Layout, Orientation, Permissions
 
 ## 27.1 Accessibility
 
@@ -1598,7 +1598,7 @@ Keep these constraints visible during the entire project.
 
 ---
 
-# Milestone 28 — Final Integration and Acceptance Testing
+# Milestone 28: Final Integration and Acceptance Testing
 
 ## 28.1 End-to-End Product Flow
 
