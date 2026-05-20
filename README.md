@@ -2,8 +2,6 @@
 
 A free, offline-first Flutter app for solo long-form comedy improv practice.
 
-No accounts. No cloud. No ads. No AI. Just you and the drills.
-
 ---
 
 ## What it does
