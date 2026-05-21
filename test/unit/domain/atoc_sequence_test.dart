@@ -39,7 +39,7 @@ void main() {
 
   // 3. Prompt changes each interval (distinct segment ids).
   test('different rep indices produce distinct segment ids', () {
-    final rep0 = sequence.buildRep(settings: const AtoCSettings(), repIndex: 0);
+    final rep0 = sequence.buildRep(settings: const AtoCSettings());
     final rep1 = sequence.buildRep(settings: const AtoCSettings(), repIndex: 1);
     expect(rep0.first.id, isNot(rep1.first.id));
   });
@@ -56,16 +56,15 @@ void main() {
     final segs = sequence.buildRep(
       settings: const AtoCSettings(interval: Duration(seconds: 15)),
     );
+    // 2 ticks = 2 loops.
     final ctrl = DrillSessionController(
       segments: segs,
       loops: true,
       tickDuration: const Duration(seconds: 15),
-    );
-    ctrl.start();
-
-    // 2 ticks = 2 loops.
-    ctrl.tick();
-    ctrl.tick();
+    )
+      ..start()
+      ..tick()
+      ..tick();
 
     expect(ctrl.state.loops, 2);
     expect(ctrl.state.status, DrillSessionStatus.running);

@@ -10,7 +10,7 @@ void main() {
 
   // ── 1. Default 2-character cycle has correct segment order ─────────────────
   test('2-character cycle has correct segment order', () {
-    const settings = CharacterCreationSettings(characterCount: 2);
+    const settings = CharacterCreationSettings();
     final segs = builder.buildCycle(settings);
 
     expect(segs.length, 4);
@@ -61,7 +61,6 @@ void main() {
     expect(
       () => builder.buildCycle(
         const CharacterCreationSettings(
-          characterCount: 2,
           segmentDuration: Duration(seconds: 45),
         ),
       ),
@@ -102,7 +101,7 @@ void main() {
 
   // ── 6. Return-pass segments are correctly labelled ────────────────────────
   test('first-pass segments have firstPass type', () {
-    const settings = CharacterCreationSettings(characterCount: 2);
+    const settings = CharacterCreationSettings();
     final segs = builder.buildCycle(settings);
 
     for (final seg in segs.take(2)) {
@@ -114,7 +113,7 @@ void main() {
   });
 
   test('return-pass segments have returnPass type', () {
-    const settings = CharacterCreationSettings(characterCount: 2);
+    const settings = CharacterCreationSettings();
     final segs = builder.buildCycle(settings);
 
     for (final seg in segs.skip(2)) {
@@ -126,7 +125,7 @@ void main() {
   });
 
   test('return-pass label contains "Return to Character N"', () {
-    const settings = CharacterCreationSettings(characterCount: 2);
+    const settings = CharacterCreationSettings();
     final segs = builder.buildCycle(settings);
 
     expect(segs[2].label, contains('Return to Character 1'));
@@ -134,7 +133,7 @@ void main() {
   });
 
   test('first-pass label is "Character N"', () {
-    const settings = CharacterCreationSettings(characterCount: 2);
+    const settings = CharacterCreationSettings();
     final segs = builder.buildCycle(settings);
 
     expect(segs[0].label, 'Character 1');

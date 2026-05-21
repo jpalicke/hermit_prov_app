@@ -28,10 +28,9 @@ void main() {
     // 1. Countdown decreases with ticks
     test('countdown decreases with ticks', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
 
       _tick(ctrl, 3);
 
@@ -43,9 +42,7 @@ void main() {
     test('segment completion advances to next segment', () {
       final ctrl = DrillSessionController(
         segments: [_seg('s0', seconds: 5), _seg('s1', seconds: 8)],
-        loops: false,
-      );
-      ctrl.start();
+      )..start();
 
       // Tick past the end of segment 0.
       _tick(ctrl, 5);
@@ -61,8 +58,7 @@ void main() {
       final ctrl = DrillSessionController(
         segments: [_seg('s0', seconds: 3), _seg('s1', seconds: 3)],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
 
       // Tick through both segments (6 ticks).
       _tick(ctrl, 6);
@@ -76,9 +72,7 @@ void main() {
     test('finite sequence completes after final segment', () {
       final ctrl = DrillSessionController(
         segments: [_seg('s0', seconds: 3), _seg('s1', seconds: 3)],
-        loops: false,
-      );
-      ctrl.start();
+      )..start();
 
       _tick(ctrl, 6);
 
@@ -89,10 +83,9 @@ void main() {
     // 5. Pause freezes time and segment changes
     test('pause freezes time and segment changes', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 4);
       ctrl.pause();
 
@@ -106,13 +99,13 @@ void main() {
     // 6. Resume continues correctly after pause
     test('resume continues from where it paused', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 4);
-      ctrl.pause();
-      ctrl.resume();
+      ctrl
+        ..pause()
+        ..resume();
       _tick(ctrl, 2);
 
       expect(ctrl.state.segmentElapsed, const Duration(seconds: 6));
@@ -122,10 +115,9 @@ void main() {
     // 7. Progress calculation is correct
     test('progress calculation is correct', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 5);
 
       // 5 seconds elapsed out of 10 → 0.5
@@ -135,10 +127,9 @@ void main() {
     // Extras: stop and idle state
     test('stop ends the session early', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 3);
       ctrl.stop();
 
@@ -150,10 +141,9 @@ void main() {
 
     test('start is a no-op if not idle', () {
       final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
+        segments: [_seg('s0')],
         loops: true,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 2);
       ctrl.start(); // Should be ignored.
 
@@ -163,9 +153,7 @@ void main() {
     test('session elapsed increases across segment boundaries', () {
       final ctrl = DrillSessionController(
         segments: [_seg('s0', seconds: 3), _seg('s1', seconds: 3)],
-        loops: false,
-      );
-      ctrl.start();
+      )..start();
       _tick(ctrl, 5);
 
       expect(ctrl.state.sessionElapsed, const Duration(seconds: 5));
@@ -181,11 +169,10 @@ void main() {
     });
 
     test('stop from idle transitions to stopped', () {
-      final ctrl = DrillSessionController(
-        segments: [_seg('s0', seconds: 10)],
-      );
       // Session never started — stop should still transition to stopped.
-      ctrl.stop();
+      final ctrl = DrillSessionController(
+        segments: [_seg('s0')],
+      )..stop();
 
       expect(ctrl.state.status, DrillSessionStatus.stopped);
     });

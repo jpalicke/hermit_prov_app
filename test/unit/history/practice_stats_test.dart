@@ -24,7 +24,7 @@ PracticeSession _session({
 }
 
 DateTime _day(int year, int month, int day) =>
-    DateTime(year, month, day, 12, 0);
+    DateTime(year, month, day, 12);
 
 /// Returns a DateTime [offset] days before today at noon.
 DateTime _daysAgo(DateTime today, int offset) => DateTime(
@@ -32,7 +32,6 @@ DateTime _daysAgo(DateTime today, int offset) => DateTime(
       today.month,
       today.day - offset,
       12,
-      0,
     );
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -96,7 +95,6 @@ void main() {
         yesterday.month,
         yesterday.day,
         12,
-        0,
       );
       final sessions = [
         _session(id: '1', drillId: DrillId.catClock, loggedAt: d),
@@ -112,7 +110,6 @@ void main() {
         twoDaysAgo.month,
         twoDaysAgo.day,
         12,
-        0,
       );
       final sessions = [
         _session(id: '1', drillId: DrillId.catClock, loggedAt: d),
@@ -180,8 +177,8 @@ void main() {
 
     test('multiple sessions on same day count as one practice day for streaks', () {
       final today = DateTime.now();
-      final todayNoon = DateTime(today.year, today.month, today.day, 12, 0);
-      final todayEvening = DateTime(today.year, today.month, today.day, 18, 0);
+      final todayNoon = DateTime(today.year, today.month, today.day, 12);
+      final todayEvening = DateTime(today.year, today.month, today.day, 18);
 
       final sessions = [
         _session(id: '1', drillId: DrillId.catClock, loggedAt: todayNoon),

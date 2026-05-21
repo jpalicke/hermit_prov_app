@@ -11,7 +11,7 @@ import 'package:hermit_prov_app/domain/prompts/prompt_picker.dart';
 void main() {
   late InMemoryPromptRepository repo;
   late PromptPicker picker;
-  final now = DateTime(2026, 1, 1);
+  final now = DateTime(2026);
 
   setUp(() {
     repo = InMemoryPromptRepository();

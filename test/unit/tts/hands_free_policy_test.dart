@@ -116,7 +116,7 @@ void main() {
 
     test('announces at 30 s, 10 s, 0 s for segments longer than 30 s',
         () async {
-      final seg = _seg(duration: const Duration(seconds: 60));
+      final seg = _seg();
       await policy.onTick(seg, const Duration(seconds: 30));
       await policy.onTick(seg, const Duration(seconds: 10));
       await policy.onTick(seg, Duration.zero);
@@ -124,7 +124,7 @@ void main() {
     });
 
     test('does not fire at other tick values', () async {
-      final seg = _seg(duration: const Duration(seconds: 60));
+      final seg = _seg();
       await policy.onTick(seg, const Duration(seconds: 45));
       await policy.onTick(seg, const Duration(seconds: 20));
       expect(tts.spoken, isEmpty);
@@ -133,14 +133,13 @@ void main() {
     test('regroup is silent for timer ticks even on long segments', () async {
       final seg = _seg(
         type: DrillSegmentType.regroup,
-        duration: const Duration(seconds: 60),
       );
       await policy.onTick(seg, const Duration(seconds: 30));
       expect(tts.spoken, isEmpty);
     });
 
     test('paused suppresses timer announcements', () async {
-      final seg = _seg(duration: const Duration(seconds: 60));
+      final seg = _seg();
       await policy.onTick(seg, const Duration(seconds: 30), paused: true);
       expect(tts.spoken, isEmpty);
     });
