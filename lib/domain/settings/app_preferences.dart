@@ -6,7 +6,7 @@ import 'package:hermit_prov_app/domain/settings/app_theme_preference.dart';
 class AppPreferences {
   const AppPreferences({
     this.themePreference = AppThemePreference.system,
-    this.ttsSpeakingRate = 1.0,
+    this.ttsSpeakingRate = 1,
   });
 
   final AppThemePreference themePreference;

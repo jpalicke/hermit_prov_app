@@ -24,8 +24,10 @@ class CatClockSequence {
   }) {
     // Build payload by filtering out null prompts before joining.
     final parts = <String>[
-      if (prompt1 != null) prompt1, // ignore: use_null_aware_elements
-      if (prompt2 != null) prompt2, // ignore: use_null_aware_elements
+      // ignore: use_null_aware_elements, Dart SDK version constraint prevents use of null-aware elements (?x syntax requires Dart 3.8+).
+      if (prompt1 != null) prompt1,
+      // ignore: use_null_aware_elements, Dart SDK version constraint prevents use of null-aware elements (?x syntax requires Dart 3.8+).
+      if (prompt2 != null) prompt2,
     ];
     final promptPayload = parts.join('\n');
 

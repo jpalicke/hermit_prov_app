@@ -11,6 +11,20 @@ class AppBackup {
     required this.preferences,
   });
 
+  factory AppBackup.fromJson(Map<String, dynamic> json) {
+    return AppBackup(
+      schemaVersion: json['schemaVersion'] as int,
+      exportedAt: DateTime.parse(json['exportedAt'] as String),
+      customPrompts: (json['customPrompts'] as List)
+          .cast<Map<String, dynamic>>(),
+      journalEntries: (json['journalEntries'] as List)
+          .cast<Map<String, dynamic>>(),
+      drillSettings:
+          json['drillSettings'] as Map<String, dynamic>,
+      preferences: json['preferences'] as Map<String, dynamic>,
+    );
+  }
+
   /// Version of the backup schema. Must be 1 for the current release.
   final int schemaVersion;
 
@@ -28,20 +42,6 @@ class AppBackup {
 
   /// App-wide preference fields (theme, TTS voice, TTS speaking rate).
   final Map<String, dynamic> preferences;
-
-  factory AppBackup.fromJson(Map<String, dynamic> json) {
-    return AppBackup(
-      schemaVersion: json['schemaVersion'] as int,
-      exportedAt: DateTime.parse(json['exportedAt'] as String),
-      customPrompts: (json['customPrompts'] as List)
-          .cast<Map<String, dynamic>>(),
-      journalEntries: (json['journalEntries'] as List)
-          .cast<Map<String, dynamic>>(),
-      drillSettings:
-          (json['drillSettings'] as Map<String, dynamic>),
-      preferences: (json['preferences'] as Map<String, dynamic>),
-    );
-  }
 
   Map<String, dynamic> toJson() => {
         'schemaVersion': schemaVersion,

@@ -38,7 +38,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       return;
     }
     final sessions =
-        await appServices.practiceHistoryRepository.getRecentSessions(limit: 20);
+        await appServices.practiceHistoryRepository.getRecentSessions();
     if (mounted) {
       setState(() {
         _sessions = sessions;
@@ -79,10 +79,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   color: cs.onSurface,
                 ),
               ),
-              centerTitle: false,
               backgroundColor: cs.surface,
               surfaceTintColor: Colors.transparent,
-              forceElevated: false,
             ),
             // ── Journal entry point ────────────────────────────────────────
             SliverPadding(
@@ -90,7 +88,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               sliver: SliverToBoxAdapter(
                 child: _JournalCard(
                   onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (_) => const JournalScreen(),
                     ),
                   ),
@@ -358,7 +356,7 @@ class _SessionTile extends StatelessWidget {
       label: '${session.drillId.displayName}, ${_formatDate(session.loggedAt)}, duration: ${_formatSessionDuration(session.duration)}',
       child: ExcludeSemantics(
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(vertical: 4),
           title: Text(
             session.drillId.displayName,
             style: tt.bodyMedium?.copyWith(

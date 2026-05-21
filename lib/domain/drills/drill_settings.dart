@@ -55,6 +55,22 @@ final class CatClockSettings extends DrillSettings {
     this.handsFreeModeEnabled = false,
   });
 
+  factory CatClockSettings.fromJson(Map<String, dynamic> json) =>
+      CatClockSettings(
+        speakingDuration:
+            Duration(milliseconds: json['speakingDuration'] as int),
+        regroupDuration:
+            Duration(milliseconds: json['regroupDuration'] as int),
+        prompt1Categories: (json['prompt1Categories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        prompt2Categories: (json['prompt2Categories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
+      );
+
   final Duration speakingDuration;
   final Duration regroupDuration;
   final List<PromptCategory> prompt1Categories;
@@ -77,22 +93,6 @@ final class CatClockSettings extends DrillSettings {
         'prompt2Categories': prompt2Categories.map((c) => c.name).toList(),
         'handsFreeModeEnabled': handsFreeModeEnabled,
       };
-
-  factory CatClockSettings.fromJson(Map<String, dynamic> json) =>
-      CatClockSettings(
-        speakingDuration:
-            Duration(milliseconds: json['speakingDuration'] as int),
-        regroupDuration:
-            Duration(milliseconds: json['regroupDuration'] as int),
-        prompt1Categories: (json['prompt1Categories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        prompt2Categories: (json['prompt2Categories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        handsFreeModeEnabled:
-            (json['handsFreeModeEnabled'] as bool?) ?? false,
-      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -104,6 +104,18 @@ final class CharacterCreationSettings extends DrillSettings {
     this.promptCategories = PromptCategory.wordBucket,
     this.handsFreeModeEnabled = false,
   });
+
+  factory CharacterCreationSettings.fromJson(Map<String, dynamic> json) =>
+      CharacterCreationSettings(
+        characterCount: json['characterCount'] as int,
+        segmentDuration:
+            Duration(milliseconds: json['segmentDuration'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
+      );
 
   final int characterCount;
   final Duration segmentDuration;
@@ -134,18 +146,6 @@ final class CharacterCreationSettings extends DrillSettings {
         'promptCategories': promptCategories.map((c) => c.name).toList(),
         'handsFreeModeEnabled': handsFreeModeEnabled,
       };
-
-  factory CharacterCreationSettings.fromJson(Map<String, dynamic> json) =>
-      CharacterCreationSettings(
-        characterCount: json['characterCount'] as int,
-        segmentDuration:
-            Duration(milliseconds: json['segmentDuration'] as int),
-        promptCategories: (json['promptCategories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        handsFreeModeEnabled:
-            (json['handsFreeModeEnabled'] as bool?) ?? false,
-      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -157,6 +157,18 @@ final class TwoCharacterScenesSettings extends DrillSettings {
     this.promptCategories = PromptCategory.wordBucket,
     this.handsFreeModeEnabled = false,
   });
+
+  factory TwoCharacterScenesSettings.fromJson(Map<String, dynamic> json) =>
+      TwoCharacterScenesSettings(
+        sceneDuration: Duration(milliseconds: json['sceneDuration'] as int),
+        regroupDuration:
+            Duration(milliseconds: json['regroupDuration'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
+      );
 
   final Duration sceneDuration;
   final Duration regroupDuration;
@@ -178,18 +190,6 @@ final class TwoCharacterScenesSettings extends DrillSettings {
         'promptCategories': promptCategories.map((c) => c.name).toList(),
         'handsFreeModeEnabled': handsFreeModeEnabled,
       };
-
-  factory TwoCharacterScenesSettings.fromJson(Map<String, dynamic> json) =>
-      TwoCharacterScenesSettings(
-        sceneDuration: Duration(milliseconds: json['sceneDuration'] as int),
-        regroupDuration:
-            Duration(milliseconds: json['regroupDuration'] as int),
-        promptCategories: (json['promptCategories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        handsFreeModeEnabled:
-            (json['handsFreeModeEnabled'] as bool?) ?? false,
-      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -200,6 +200,15 @@ final class AtoCSettings extends DrillSettings {
     this.promptCategories = PromptCategory.wordBucket,
     this.handsFreeModeEnabled = false,
   });
+
+  factory AtoCSettings.fromJson(Map<String, dynamic> json) => AtoCSettings(
+        interval: Duration(milliseconds: json['interval'] as int),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
+      );
 
   final Duration interval;
   final List<PromptCategory> promptCategories;
@@ -226,15 +235,6 @@ final class AtoCSettings extends DrillSettings {
         'promptCategories': promptCategories.map((c) => c.name).toList(),
         'handsFreeModeEnabled': handsFreeModeEnabled,
       };
-
-  factory AtoCSettings.fromJson(Map<String, dynamic> json) => AtoCSettings(
-        interval: Duration(milliseconds: json['interval'] as int),
-        promptCategories: (json['promptCategories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        handsFreeModeEnabled:
-            (json['handsFreeModeEnabled'] as bool?) ?? false,
-      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -246,6 +246,21 @@ final class FiveLineGameSettings extends DrillSettings {
     this.promptCategories = PromptCategory.wordBucket,
     this.handsFreeModeEnabled = false,
   });
+
+  factory FiveLineGameSettings.fromJson(Map<String, dynamic> json) =>
+      FiveLineGameSettings(
+        autoAdvance: json['autoAdvance'] as bool,
+        autoAdvanceInterval: json['autoAdvanceInterval'] == null
+            ? null
+            : Duration(
+                milliseconds: json['autoAdvanceInterval'] as int,
+              ),
+        promptCategories: (json['promptCategories'] as List)
+            .map((e) => PromptCategory.values.byName(e as String))
+            .toList(),
+        handsFreeModeEnabled:
+            (json['handsFreeModeEnabled'] as bool?) ?? false,
+      );
 
   final bool autoAdvance;
 
@@ -277,19 +292,4 @@ final class FiveLineGameSettings extends DrillSettings {
         'promptCategories': promptCategories.map((c) => c.name).toList(),
         'handsFreeModeEnabled': handsFreeModeEnabled,
       };
-
-  factory FiveLineGameSettings.fromJson(Map<String, dynamic> json) =>
-      FiveLineGameSettings(
-        autoAdvance: json['autoAdvance'] as bool,
-        autoAdvanceInterval: json['autoAdvanceInterval'] == null
-            ? null
-            : Duration(
-                milliseconds: json['autoAdvanceInterval'] as int,
-              ),
-        promptCategories: (json['promptCategories'] as List)
-            .map((e) => PromptCategory.values.byName(e as String))
-            .toList(),
-        handsFreeModeEnabled:
-            (json['handsFreeModeEnabled'] as bool?) ?? false,
-      );
 }

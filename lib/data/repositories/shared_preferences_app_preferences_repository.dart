@@ -1,10 +1,10 @@
 // ABOUTME: SharedPreferences-backed implementation of AppPreferencesRepository.
 // ABOUTME: Stores theme and TTS speaking rate as individual preference keys.
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences_repository.dart';
 import 'package:hermit_prov_app/domain/settings/app_theme_preference.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesAppPreferencesRepository
     implements AppPreferencesRepository {

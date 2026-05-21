@@ -16,10 +16,10 @@ import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 class AtoCSessionScreen extends StatefulWidget {
   const AtoCSessionScreen({
-    super.key,
     required this.settings,
     required this.promptRepository,
     required this.onSessionEnd,
+    super.key,
     this.onConfigure,
     this.historyRepository,
     this.ttsService,
@@ -72,7 +72,6 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
         _controller = DrillSessionController(
           segments: segs,
           loops: true,
-          tickDuration: const Duration(seconds: 1),
         );
       });
     }
@@ -104,7 +103,6 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
       _controller = DrillSessionController(
         segments: newSegs,
         loops: true,
-        tickDuration: const Duration(seconds: 1),
       );
       if (wasRunning) _controller!.start();
     });

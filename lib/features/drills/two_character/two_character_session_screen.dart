@@ -17,10 +17,10 @@ import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 class TwoCharacterSessionScreen extends StatefulWidget {
   const TwoCharacterSessionScreen({
-    super.key,
     required this.settings,
     required this.promptRepository,
     required this.onSessionEnd,
+    super.key,
     this.onConfigure,
     this.historyRepository,
     this.ttsService,
@@ -75,7 +75,6 @@ class _TwoCharacterSessionScreenState
         _controller = DrillSessionController(
           segments: segs,
           loops: true,
-          tickDuration: const Duration(seconds: 1),
         );
       });
     }
