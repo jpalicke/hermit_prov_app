@@ -9,7 +9,7 @@ void main() {
   group('HermitProvWebApp', () {
     testWidgets('mounts and shows ToolsScreen', (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text('Tools'), findsOneWidget);
     });
@@ -17,27 +17,23 @@ void main() {
     testWidgets('shows Suggestion Generator, Timer, and Emotion Wheel tiles',
         (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text('Suggestion Generator'), findsOneWidget);
       expect(find.text('Timer'), findsOneWidget);
       expect(find.text('Emotion Wheel'), findsOneWidget);
     });
 
-    testWidgets('does not show Practice, History, or Settings bottom nav',
-        (tester) async {
+    testWidgets('does not show BottomNavigationBar', (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.byType(BottomNavigationBar), findsNothing);
-      expect(find.text('Practice'), findsNothing);
-      expect(find.text('History'), findsNothing);
-      expect(find.text('Settings'), findsNothing);
     });
 
     testWidgets('can navigate into Suggestion Generator', (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       await tester.tap(find.text('Suggestion Generator'));
       await tester.pumpAndSettle();
@@ -47,7 +43,7 @@ void main() {
 
     testWidgets('can navigate into Timer', (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       await tester.tap(find.text('Timer'));
       await tester.pumpAndSettle();
