@@ -1,5 +1,5 @@
-# ABOUTME: GitHub Actions workflow for building and signing a release IPA.
-# ABOUTME: Requires 6 secrets. See docs/KT_07_IOS_SIGNING_SETUP.md for setup instructions.
+# ABOUTME: GitHub Actions workflow for building, signing, and submitting a release IPA.
+# ABOUTME: Requires 9 secrets. See docs/KT_07_IOS_SIGNING_SETUP.md for setup instructions.
 
 name: iOS Release
 
@@ -89,6 +89,20 @@ jobs:
 
       - name: Build IPA
         run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+
+      - name: Submit to App Store Connect
+        env:
+          ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          mkdir -p ~/.private_keys
+          echo "$ASC_API_KEY_BASE64" | base64 --decode > ~/.private_keys/AuthKey_${ASC_KEY_ID}.p8
+          xcrun altool --upload-app \
+            --type ios \
+            -f build/ios/ipa/*.ipa \
+            --apiKey "$ASC_KEY_ID" \
+            --apiIssuer "$ASC_ISSUER_ID"
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
