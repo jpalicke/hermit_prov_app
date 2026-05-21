@@ -57,3 +57,6 @@ trigg_wheel*
 
 # Local UAT / manual testing screenshots
 uat_screenshots/
+
+# Generated at runtime by CI with secret values; never commit
+ios/ExportOptions.plist

@@ -1,0 +1,112 @@
+# ABOUTME: GitHub Actions workflow for building and signing a release IPA.
+# ABOUTME: Requires 6 secrets. See docs/KT_07_IOS_SIGNING_SETUP.md for setup instructions.
+
+name: iOS Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.8'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Set up signing keychain
+        env:
+          CERT_P12_BASE64: ${{ secrets.IOS_CERT_P12 }}
+          CERT_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          P12_PATH=$RUNNER_TEMP/cert.p12
+
+          echo "$CERT_P12_BASE64" | base64 --decode > "$P12_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          # -A allows all applications to access the key without prompting, required for headless xcodebuild codesign on ephemeral runners.
+          security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH" ~/Library/Keychains/login.keychain-db
+
+      - name: Install provisioning profile
+        env:
+          PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/hermit-prov.mobileprovision
+          echo "$PROVISION_PROFILE_BASE64" | base64 --decode > "$PP_PATH"
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Switch Runner target to manual signing
+        run: |
+          # Verify occurrence count with: grep -c 'CODE_SIGN_STYLE' ios/Runner.xcodeproj/project.pbxproj
+          # The sed uses the g flag to replace all occurrences on each line; confirm the count matches expectations.
+          sed -i '' \
+            's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' \
+            ios/Runner.xcodeproj/project.pbxproj
+
+      - name: Write ExportOptions.plist
+        env:
+          TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          PROFILE_NAME: ${{ secrets.IOS_PROVISION_PROFILE_NAME }}
+        run: |
+          cat > ios/ExportOptions.plist <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key>
+  <string>app-store</string>
+  <key>teamID</key>
+  <string>$TEAM_ID</string>
+  <key>uploadBitcode</key>
+  <false/>
+  <key>uploadSymbols</key>
+  <true/>
+  <key>signingStyle</key>
+  <string>manual</string>
+  <key>signingCertificate</key>
+  <string>Apple Distribution</string>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>com.hermitprov.hermitProvApp</key>
+    <string>$PROFILE_NAME</string>
+  </dict>
+</dict>
+</plist>
+EOF
+
+      - name: Build IPA
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermit-prov-ios-${{ github.sha }}
+          path: build/ios/ipa/*.ipa
+          retention-days: 30
+
+      - name: Clean up keychain
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/build.keychain"
+          security list-keychain -d user -s ~/Library/Keychains/login.keychain-db
