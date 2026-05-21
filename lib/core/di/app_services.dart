@@ -35,8 +35,8 @@ class AppServices extends InheritedWidget {
     required this.appPreferencesRepository,
     required this.ttsService,
     required this.crashReportService,
-    this.notifyDependents = false,
     required super.child,
+    this.notifyDependents = false,
     super.key,
     ValueNotifier<ThemeMode>? themeNotifier,
   }) : themeNotifier = themeNotifier ?? ValueNotifier(ThemeMode.system);
