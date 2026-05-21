@@ -122,7 +122,7 @@ void main() {
     });
 
     testWidgets(
-        'empty selection cannot occur — falls back to objects category',
+        'tapping the sole remaining chip is a no-op — chip stays selected',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
@@ -141,14 +141,21 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      // Now deselect Objects — should fall back to objects, not empty.
+      // Objects is now the sole selected chip. Tapping it is a no-op.
       await tester.tap(find.text('Objects'));
       await tester.pumpAndSettle();
 
+      // Objects chip must still be selected — the tap was silently ignored.
       final objectsChip = tester.widget<FilterChip>(
         find.widgetWithText(FilterChip, 'Objects'),
       );
       expect(objectsChip.selected, isTrue);
+
+      // New Prompt button must still be enabled.
+      final button = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'New Prompt'),
+      );
+      expect(button.onPressed, isNotNull);
     });
 
     testWidgets(
