@@ -35,6 +35,7 @@ class AppServices extends InheritedWidget {
     required this.appPreferencesRepository,
     required this.ttsService,
     required this.crashReportService,
+    this.notifyDependents = false,
     required super.child,
     super.key,
     ValueNotifier<ThemeMode>? themeNotifier,
@@ -91,6 +92,12 @@ class AppServices extends InheritedWidget {
   /// Notifier for the current theme mode. Update this to trigger a live theme change.
   final ValueNotifier<ThemeMode> themeNotifier;
 
+  /// When true, forces all dependent widgets to rebuild and receive a
+  /// didChangeDependencies call on the next pump. Intended for use in widget
+  /// tests that need to exercise initialization guards in StatefulWidgets
+  /// that depend on AppServices. Leave false (the default) in production use.
+  final bool notifyDependents;
+
   /// Retrieves the nearest [AppServices] from the widget tree.
   /// Throws if no [AppServices] ancestor is found.
   static AppServices of(BuildContext context) {
@@ -100,9 +107,9 @@ class AppServices extends InheritedWidget {
     return result!;
   }
 
-  /// The repository references held by this widget never change after
-  /// construction, so the tree never needs to rebuild when data inside
-  /// a repository changes.
+  /// Repository references never change after construction, so dependents do
+  /// not need to rebuild on a normal update. The notifyDependents flag can be
+  /// set to true in widget tests to exercise didChangeDependencies guard logic.
   @override
-  bool updateShouldNotify(AppServices oldWidget) => false;
+  bool updateShouldNotify(AppServices oldWidget) => notifyDependents;
 }
