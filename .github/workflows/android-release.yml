@@ -1,0 +1,66 @@
+# ABOUTME: GitHub Actions workflow for building and publishing a release AAB to Google Play.
+# ABOUTME: Requires 5 secrets. See docs/KT_08_ANDROID_SIGNING_SETUP.md for setup instructions.
+
+name: Android Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.8'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Restore keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          JKS_PATH=$RUNNER_TEMP/hermit-prov-release.jks
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$JKS_PATH"
+          # Write key.properties pointing to the restored keystore.
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=%s\n' \
+            "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" \
+            "$ANDROID_KEY_ALIAS" "$JKS_PATH" > android/key.properties
+
+      - name: Build release AAB
+        run: flutter build appbundle --release
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.hermitprov.hermitProvApp
+          releaseFiles: build/app/outputs/bundle/release/*.aab
+          track: internal
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermit-prov-android-${{ github.sha }}
+          path: build/app/outputs/bundle/release/*.aab
+          retention-days: 30
