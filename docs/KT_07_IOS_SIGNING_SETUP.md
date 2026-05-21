@@ -180,12 +180,19 @@ Your 10-character Apple Team ID from Step 2 (e.g. `AB12CD34EF`).
 
 ## Verify the Setup
 
-Once all 6 secrets are added, trigger the workflow manually:
+**Prerequisite:** The `ios-release.yml` file must be merged to the default branch (main)
+before the workflow appears in the GitHub Actions UI. If you see no "iOS Release" entry
+in the sidebar, the PR is not yet merged.
+
+Once all 6 secrets are added and the PR is merged, trigger a manual run:
 
 1. Go to github.com/jpalicke/hermit_prov_app/actions.
-2. Select "iOS Release" from the left sidebar.
-3. Click "Run workflow" > "Run workflow" (on the main branch or a test branch).
-4. Watch the run. A successful run uploads a `.ipa` artifact (retained 30 days).
+2. Select "iOS Release" in the left sidebar (it appears only after the workflow is on main).
+3. On the right side of the page, click the "Run workflow" dropdown button.
+4. A small popover appears: select the branch (main for a real release) and click the
+   green "Run workflow" button inside the popover.
+5. Refresh the page -- a new run row appears. Click it to watch the logs.
+6. A successful run uploads a `.ipa` artifact (retained 30 days) under the "Artifacts" section.
 
 Common failure modes:
 
