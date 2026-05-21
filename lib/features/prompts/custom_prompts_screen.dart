@@ -40,7 +40,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
           _error = null;
         });
       }
-    } on Object catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         setState(() {
           _loading = false;
