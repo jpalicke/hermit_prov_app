@@ -14,12 +14,13 @@ void main() {
       expect(find.text('Tools'), findsOneWidget);
     });
 
-    testWidgets('shows Suggestion Generator, Timer, and Emotion Wheel tiles',
-        (tester) async {
+    testWidgets('shows all five tool tiles', (tester) async {
       await tester.pumpWidget(const HermitProvWebApp());
       await tester.pumpAndSettle();
 
       expect(find.text('Suggestion Generator'), findsOneWidget);
+      expect(find.text('Add words to the suggestion bank'), findsOneWidget);
+      expect(find.text('Journal'), findsOneWidget);
       expect(find.text('Timer'), findsOneWidget);
       expect(find.text('Emotion Wheel'), findsOneWidget);
     });
@@ -62,7 +63,7 @@ void main() {
       expect(find.text('Pick random emotion'), findsOneWidget);
     });
 
-    // Journal and Custom Suggestion Bank are also present in the web build.
+    // Journal and "Add words to the suggestion bank" are also present in the web build.
     // Their data is backed by in-memory repositories: entries are lost on page refresh.
   });
 }
