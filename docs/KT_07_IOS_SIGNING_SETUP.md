@@ -50,11 +50,16 @@ openssl genrsa -out hermit_prov_dist.key 2048
 
 # 2. Generate the CSR
 #    Replace the email with your Apple ID email
-openssl req -new \
+#    Note: Git Bash converts leading / to a Windows path. Use // prefix to prevent this.
+MSYS_NO_PATHCONV=1 openssl req -new \
   -key hermit_prov_dist.key \
   -out HermitProvDistribution.certSigningRequest \
-  -subj "/emailAddress=your@appleid.com/CN=Hermit Prov Distribution/C=US"
+  -subj "/emailAddress=soundonsound78@gmail.com/CN=Hermit Prov Distribution/C=US"
 ```
+
+If you see an error like `C:/Program Files/Git/emailAddress=...`, Git Bash is mangling
+the subject path. `MSYS_NO_PATHCONV=1` disables that for the single command. Alternatively,
+prefix the subject value with `//` instead of `/`.
 
 You now have two files:
 - `hermit_prov_dist.key` -- the private key. Keep this safe; you need it later.
