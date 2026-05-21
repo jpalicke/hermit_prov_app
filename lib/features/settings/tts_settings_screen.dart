@@ -42,7 +42,6 @@ class _TtsSettingsScreenState extends State<TtsSettingsScreen> {
     final prefs = _prefs;
     if (prefs == null) {
       return const Scaffold(
-        appBar: null,
         body: Center(child: CircularProgressIndicator()),
       );
     }

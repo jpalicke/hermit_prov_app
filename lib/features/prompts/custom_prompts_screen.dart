@@ -38,12 +38,12 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
   Future<void> _addPrompt() async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) => AddEditCustomPromptScreen(
+        builder: (_) => const AddEditCustomPromptScreen(
           existingPrompt: null,
         ),
       ),
     );
-    if (result == true) {
+    if (result ?? false) {
       await _loadPrompts();
     }
   }
@@ -56,7 +56,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
         ),
       ),
     );
-    if (result == true) {
+    if (result ?? false) {
       await _loadPrompts();
     }
   }
@@ -79,7 +79,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       final repo = AppServices.of(context).promptRepository;
       await repo.deleteCustomPrompt(prompt.id);
       await _loadPrompts();

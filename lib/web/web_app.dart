@@ -27,7 +27,6 @@ class _WebMaterialApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       // ThemeMode.system intentionally; web build has no Settings screen to change it.
-      themeMode: ThemeMode.system,
       supportedLocales: const [Locale('en')],
       home: const ToolsScreen(),
     );

@@ -283,7 +283,7 @@ class _DrillBreakdown extends StatelessWidget {
     final tt = Theme.of(context).textTheme;
 
     final drills = DrillId.values
-        .where((d) => stats.sessionsByDrill.containsKey(d))
+        .where(stats.sessionsByDrill.containsKey)
         .toList();
 
     return Card(

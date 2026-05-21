@@ -8,11 +8,6 @@ import 'package:hermit_prov_app/domain/emotions/emotion_wheel_data.dart';
 // ── Segment model ─────────────────────────────────────────────────────────────
 
 class _Segment {
-  final EmotionEntry emotion;
-  final double r1, r2; // as fractions of outerRadius
-  final double startDeg, endDeg; // degrees from north (top), clockwise
-  final Color fillColor;
-
   const _Segment({
     required this.emotion,
     required this.r1,
@@ -21,6 +16,13 @@ class _Segment {
     required this.endDeg,
     required this.fillColor,
   });
+
+  final EmotionEntry emotion;
+  final double r1; // as fractions of outerRadius
+  final double r2; // as fractions of outerRadius
+  final double startDeg; // degrees from north (top), clockwise
+  final double endDeg; // degrees from north (top), clockwise
+  final Color fillColor;
 
   bool contains(Offset center, double outerRadius, Offset point) {
     final dx = point.dx - center.dx;
@@ -44,7 +46,7 @@ Color _lighten(Color color, int amount) => Color.fromARGB(
     );
 
 List<_Segment> _buildSegments() {
-  int totalOuter = 0;
+  var totalOuter = 0;
   for (final e in kEmotionWheel) {
     for (final m in e.mid) {
       totalOuter += m.outer.length;
@@ -66,7 +68,7 @@ List<_Segment> _buildSegments() {
       fillColor: e.color,
     ));
 
-    double midAngle = currentAngle;
+    var midAngle = currentAngle;
     for (final m in e.mid) {
       final midSpan = (m.outer.length / totalOuter) * 360;
       result.add(_Segment(
@@ -77,12 +79,12 @@ List<_Segment> _buildSegments() {
         fillColor: _lighten(e.color, 30),
       ));
 
-      double outerAngle = midAngle;
+      var outerAngle = midAngle;
       final outerSpan = 360.0 / totalOuter;
       for (final o in m.outer) {
         result.add(_Segment(
           emotion: EmotionEntry(word: o, ring: 'outer', category: e.core, color: e.color),
-          r1: 160 / 250, r2: 1.0,
+          r1: 160 / 250, r2: 1,
           startDeg: outerAngle,
           endDeg: outerAngle + outerSpan,
           fillColor: _lighten(e.color, 60),
@@ -102,17 +104,17 @@ final _kFlatEmotions = buildFlatEmotionList();
 // ── CustomPainter ─────────────────────────────────────────────────────────────
 
 class _WheelPainter extends CustomPainter {
-  final List<_Segment> segments;
-  final EmotionEntry? selected;
-  final Offset center;
-  final double outerRadius;
-
   _WheelPainter({
     required this.segments,
     required this.selected,
     required this.center,
     required this.outerRadius,
   });
+
+  final List<_Segment> segments;
+  final EmotionEntry? selected;
+  final Offset center;
+  final double outerRadius;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -228,12 +230,14 @@ class _WheelPainter extends CustomPainter {
     final midRad = (midDeg - 90) * pi / 180;
     final pos = Offset(center.dx + r * cos(midRad), center.dy + r * sin(midRad));
 
-    canvas.save();
-    canvas.translate(pos.dx, pos.dy);
+    canvas
+      ..save()
+      ..translate(pos.dx, pos.dy);
     var rotate = midRad;
     if (midDeg > 180) rotate += pi;
-    canvas.rotate(rotate);
-    canvas.translate(-tp.width / 2, -tp.height / 2);
+    canvas
+      ..rotate(rotate)
+      ..translate(-tp.width / 2, -tp.height / 2);
     tp.paint(canvas, Offset.zero);
     canvas.restore();
   }
@@ -324,8 +328,8 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
                     height: side,
                     color: cs.surfaceContainerLowest,
                     child: InteractiveViewer(
-                      minScale: 1.0,
-                      maxScale: 5.0,
+                      minScale: 1,
+                      maxScale: 5,
                       boundaryMargin: const EdgeInsets.all(double.infinity),
                       child: Semantics(
                         button: true,

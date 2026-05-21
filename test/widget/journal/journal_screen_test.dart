@@ -136,7 +136,7 @@ void main() {
           child: Builder(
             builder: (context) {
               services = AppServices.of(context);
-              return MaterialApp(home: const JournalScreen());
+              return const MaterialApp(home: JournalScreen());
             },
           ),
         ),
@@ -146,14 +146,14 @@ void main() {
       final older = JournalEntry(
         id: '1',
         body: 'Older entry',
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
+        createdAt: DateTime(2026),
+        updatedAt: DateTime(2026),
       );
       final newer = JournalEntry(
         id: '2',
         body: 'Newer entry',
-        createdAt: DateTime(2026, 6, 1),
-        updatedAt: DateTime(2026, 6, 1),
+        createdAt: DateTime(2026, 6),
+        updatedAt: DateTime(2026, 6),
       );
 
       await services.journalRepository.addEntry(older);
@@ -200,12 +200,12 @@ void main() {
       // The first tile's title should be the newer date (June)
       final firstTileTitle = tester
           .widget<ListTile>(listItems.at(0))
-          .title as Text;
+          .title! as Text;
       expect(firstTileTitle.data, contains('June'));
 
       final secondTileTitle = tester
           .widget<ListTile>(listItems.at(1))
-          .title as Text;
+          .title! as Text;
       expect(secondTileTitle.data, contains('January'));
     });
   });

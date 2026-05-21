@@ -4,16 +4,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
 import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
-import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
 import 'package:hermit_prov_app/domain/prompts/custom_prompt.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
+import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
 
 Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
   return AppServices(
@@ -61,8 +61,8 @@ void main() {
         id: 'test-1',
         text: 'unique-objects-prompt-xyz',
         category: PromptCategory.objects,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
+        createdAt: DateTime(2026),
+        updatedAt: DateTime(2026),
       ));
 
       await tester
@@ -183,7 +183,7 @@ void main() {
               body: ElevatedButton(
                 key: const Key('open_generator'),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute<void>(
                     builder: (_) => const PromptGeneratorScreen(),
                   ));
                 },

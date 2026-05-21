@@ -19,7 +19,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         const FiveLineSessionScreen(
-          settings: FiveLineGameSettings(autoAdvance: false),
+          settings: FiveLineGameSettings(),
           onSessionEnd: _noop,
         ),
       ),
@@ -36,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         const FiveLineSessionScreen(
-          settings: FiveLineGameSettings(autoAdvance: false),
+          settings: FiveLineGameSettings(),
           onSessionEnd: _noop,
         ),
       ),
@@ -72,7 +72,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         const FiveLineSessionScreen(
-          settings: FiveLineGameSettings(autoAdvance: false),
+          settings: FiveLineGameSettings(),
           onSessionEnd: _noop,
         ),
       ),

@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
-import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 import 'package:hermit_prov_app/features/tools/timer_screen.dart';
+import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 Widget _wrapWithServices(Widget child) {
   return AppServices.withInMemory(

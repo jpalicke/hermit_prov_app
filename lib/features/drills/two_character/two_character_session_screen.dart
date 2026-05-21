@@ -106,7 +106,6 @@ class _TwoCharacterSessionScreenState
       _controller = DrillSessionController(
         segments: newSegs,
         loops: true,
-        tickDuration: const Duration(seconds: 1),
       );
       if (wasRunning) _controller!.start();
     });

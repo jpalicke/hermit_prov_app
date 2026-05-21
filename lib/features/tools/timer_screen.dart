@@ -79,8 +79,7 @@ class _TimerScreenState extends State<TimerScreen> {
     final controller = DrillSessionController(
       segments: _buildSegments(),
       loops: _mode == _TimerMode.interval,
-    );
-    controller.start();
+    )..start();
     setState(() {
       _controller = controller;
     });
@@ -92,9 +91,7 @@ class _TimerScreenState extends State<TimerScreen> {
       if (!mounted) return;
       final ctrl = _controller;
       if (ctrl == null) return;
-      setState(() {
-        ctrl.tick();
-      });
+      setState(ctrl.tick);
     });
   }
 

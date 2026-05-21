@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
+import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 DrillSessionController _makeController() {
@@ -37,7 +37,7 @@ void main() {
     testWidgets('idle state: back gesture exits without dialog',
         (WidgetTester tester) async {
       final controller = _makeController();
-      bool exited = false;
+      var exited = false;
       final navKey = GlobalKey<NavigatorState>();
 
       await tester.pumpWidget(_wrap(
@@ -80,7 +80,7 @@ void main() {
     testWidgets('running state: confirming leave calls onSessionEnd',
         (WidgetTester tester) async {
       final controller = _makeController();
-      bool exited = false;
+      var exited = false;
       final navKey = GlobalKey<NavigatorState>();
 
       await tester.pumpWidget(_wrap(
@@ -106,7 +106,7 @@ void main() {
     testWidgets('running state: cancelling leave keeps session running',
         (WidgetTester tester) async {
       final controller = _makeController();
-      bool exited = false;
+      var exited = false;
       final navKey = GlobalKey<NavigatorState>();
 
       await tester.pumpWidget(_wrap(

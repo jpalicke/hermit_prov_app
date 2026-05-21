@@ -74,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       await _resetDrillDefaults();
     }
   }
@@ -122,7 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SnackBar(content: Text('Backup exported.')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         messenger.showSnackBar(
           SnackBar(content: Text('Export failed: $e')),
@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SnackBar(content: Text('Import failed: invalid backup file.')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         messenger.showSnackBar(
           SnackBar(content: Text('Import failed: $e')),
@@ -226,7 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       await _resetAllData();
     }
   }
@@ -260,14 +260,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: ListView(
             children: [
           // ── Appearance ────────────────────────────────────────────────────
-          _SectionHeader(title: 'Appearance'),
+          const _SectionHeader(title: 'Appearance'),
           _ThemeSelector(
             selected: prefs.themePreference,
             onChanged: _saveTheme,
           ),
 
           // ── Text-to-Speech ────────────────────────────────────────────────
-          _SectionHeader(title: 'Text-to-Speech'),
+          const _SectionHeader(title: 'Text-to-Speech'),
           ListTile(
             title: const Text('Text-to-Speech'),
             subtitle: const Text('change speaking rate'),
@@ -282,7 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
 
           // ── Drill Defaults ────────────────────────────────────────────────
-          _SectionHeader(title: 'Drill Defaults'),
+          const _SectionHeader(title: 'Drill Defaults'),
           ListTile(
             title: const Text('Reset Drill Defaults'),
             subtitle: const Text(
@@ -291,7 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
 
           // ── Data Backup ───────────────────────────────────────────────────
-          _SectionHeader(title: 'Data Backup'),
+          const _SectionHeader(title: 'Data Backup'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Card(
@@ -320,7 +320,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
 
           // ── Privacy / About ───────────────────────────────────────────────
-          _SectionHeader(title: 'Privacy and About'),
+          const _SectionHeader(title: 'Privacy and About'),
           ListTile(
             title: const Text('Privacy, About, and Support'),
             subtitle: const Text('Data practices, credits, feedback, and donate'),

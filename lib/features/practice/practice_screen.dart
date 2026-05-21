@@ -1,6 +1,8 @@
 // ABOUTME: Practice tab home screen — the "Choose Your Drill" entry point.
 // ABOUTME: Card tap starts the drill directly; gear icon opens configure screen.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
@@ -79,7 +81,7 @@ class PracticeScreen extends StatelessWidget {
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const CatClockConfigureScreen()));
             if (context.mounted) _restartWithFreshSettings(context, DrillId.catClock);
           },
@@ -93,7 +95,7 @@ class PracticeScreen extends StatelessWidget {
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const TwoCharacterConfigureScreen()));
             if (context.mounted) _restartWithFreshSettings(context, DrillId.twoCharacterScenes);
           },
@@ -107,7 +109,7 @@ class PracticeScreen extends StatelessWidget {
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const AtoCConfigureScreen()));
             if (context.mounted) _restartWithFreshSettings(context, DrillId.atoC);
           },
@@ -120,7 +122,7 @@ class PracticeScreen extends StatelessWidget {
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const FiveLineConfigureScreen()));
             if (context.mounted) _restartWithFreshSettings(context, DrillId.fiveLineGame);
           },
@@ -133,14 +135,14 @@ class PracticeScreen extends StatelessWidget {
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
           onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const CharacterCreationConfigureScreen()));
             if (context.mounted) _restartWithFreshSettings(context, DrillId.characterCreation);
           },
         );
     }
     if (!context.mounted) return;
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+    unawaited(Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen)));
   }
 
   /// Opens the configure screen for [drillId] without starting a session.
@@ -158,12 +160,12 @@ class PracticeScreen extends StatelessWidget {
       case DrillId.characterCreation:
         screen = const CharacterCreationConfigureScreen();
     }
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
   }
 
   void _openTools(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const ToolsScreen()),
+      MaterialPageRoute<void>(builder: (_) => const ToolsScreen()),
     );
   }
 
@@ -187,7 +189,6 @@ class PracticeScreen extends StatelessWidget {
             centerTitle: false,
             backgroundColor: cs.surface,
             surfaceTintColor: Colors.transparent,
-            forceElevated: false,
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
