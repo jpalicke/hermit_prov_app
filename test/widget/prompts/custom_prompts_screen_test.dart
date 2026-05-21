@@ -31,6 +31,21 @@ Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
   );
 }
 
+/// Always throws on [getCustomPrompts] to exercise the error path.
+class _ThrowingPromptRepository extends InMemoryPromptRepository {
+  int callCount = 0;
+  bool shouldThrow = true;
+
+  @override
+  Future<List<CustomPrompt>> getCustomPrompts({
+    PromptCategory? category,
+  }) async {
+    callCount++;
+    if (shouldThrow) throw Exception('repo unavailable');
+    return super.getCustomPrompts(category: category);
+  }
+}
+
 /// Counts how many times [getCustomPrompts] is called so the guard test can
 /// verify it fires only once across multiple didChangeDependencies invocations.
 class _CountingPromptRepository extends InMemoryPromptRepository {
@@ -197,7 +212,59 @@ void main() {
     });
   });
 
-  // ── Test 7: _loadPrompts fires only once despite repeated didChangeDependencies
+  // ── Test 7: Error state when _loadPrompts throws ──────────────────────────
+  group('error state', () {
+    testWidgets(
+        'shows error message and retry button when _loadPrompts throws',
+        (WidgetTester tester) async {
+      final repo = _ThrowingPromptRepository();
+      await tester.pumpWidget(
+          _wrapWithServices(const CustomPromptsScreen(), repo: repo));
+      await tester.pumpAndSettle();
+
+      // Spinner must be gone — loading is false after the throw.
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+
+      // Error message widget must be visible.
+      expect(find.byKey(const Key('load_error_message')), findsOneWidget);
+
+      // Retry button must be present.
+      expect(find.widgetWithText(TextButton, 'Retry'), findsOneWidget);
+    });
+
+    testWidgets(
+        'tapping retry re-invokes _loadPrompts and shows list on recovery',
+        (WidgetTester tester) async {
+      final repo = _ThrowingPromptRepository();
+      await repo.addCustomPrompt(CustomPrompt(
+        id: 'retry-test-1',
+        text: 'recovered prompt',
+        category: PromptCategory.objects,
+        createdAt: DateTime(2026),
+        updatedAt: DateTime(2026),
+      ));
+
+      await tester.pumpWidget(
+          _wrapWithServices(const CustomPromptsScreen(), repo: repo));
+      await tester.pumpAndSettle();
+
+      // First call threw — error state shown.
+      expect(repo.callCount, 1);
+      expect(find.widgetWithText(TextButton, 'Retry'), findsOneWidget);
+
+      // Allow recovery on next call.
+      repo.shouldThrow = false;
+
+      await tester.tap(find.widgetWithText(TextButton, 'Retry'));
+      await tester.pumpAndSettle();
+
+      // Repo was called again and prompt list is shown.
+      expect(repo.callCount, 2);
+      expect(find.text('recovered prompt'), findsOneWidget);
+    });
+  });
+
+  // ── Test 8: _loadPrompts fires only once despite repeated didChangeDependencies
   group('initialization guard', () {
     testWidgets(
         'repo is queried only once even when didChangeDependencies fires again',
