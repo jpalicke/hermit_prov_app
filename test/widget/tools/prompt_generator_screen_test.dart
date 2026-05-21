@@ -77,75 +77,126 @@ void main() {
     });
   });
 
-  // ── Test: Chip isolation when all are selected ──────────────────────────────
-  group('chip isolation', () {
+  // ── Test: Standard toggle semantics (issue #32) ────────────────────────────
+  group('category chip toggle', () {
     testWidgets(
-        'tapping a chip when all categories are selected isolates that category',
+        'tapping a selected chip deselects it (no isolate behavior)',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
 
-      // All categories start selected. Tap "Objects" chip to isolate it.
+      // All categories start selected. Tapping Objects should deselect it only.
       await tester.tap(find.text('Objects'));
       await tester.pumpAndSettle();
 
-      // Only Objects should now be selected (chip is selected).
+      final objectsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Objects'),
+      );
+      expect(objectsChip.selected, isFalse);
+
+      // Locations must still be selected — no isolate wipe.
+      final locationsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Locations'),
+      );
+      expect(locationsChip.selected, isTrue);
+    });
+
+    testWidgets(
+        'tapping an unselected chip selects it',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // Deselect Objects first.
+      await tester.tap(find.text('Objects'));
+      await tester.pumpAndSettle();
+
+      // Tap it again — should re-select it.
+      await tester.tap(find.text('Objects'));
+      await tester.pumpAndSettle();
+
+      final objectsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Objects'),
+      );
+      expect(objectsChip.selected, isTrue);
+    });
+
+    testWidgets(
+        'tapping the sole remaining chip is a no-op — chip stays selected',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // Deselect all chips one by one except Objects.
+      for (final label in [
+        'Locations',
+        'Relationships',
+        'Occupations',
+        'Emotions',
+        'Activities',
+        'Genre',
+        'Events',
+      ]) {
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+      }
+
+      // Objects is now the sole selected chip. Tapping it is a no-op.
+      await tester.tap(find.text('Objects'));
+      await tester.pumpAndSettle();
+
+      // Objects chip must still be selected — the tap was silently ignored.
       final objectsChip = tester.widget<FilterChip>(
         find.widgetWithText(FilterChip, 'Objects'),
       );
       expect(objectsChip.selected, isTrue);
 
-      // Other categories should be deselected.
+      // New Prompt button must still be enabled.
+      final button = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'New Prompt'),
+      );
+      expect(button.onPressed, isNotNull);
+    });
+
+    testWidgets(
+        'deselect-all falls back to objects category, not empty',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
+      await tester.pumpAndSettle();
+
+      // Tap "Deselect All Categories" — must not result in empty selection.
+      await tester.tap(find.byKey(const Key('select_all_categories_button')));
+      await tester.pumpAndSettle();
+
+      final objectsChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Objects'),
+      );
+      expect(objectsChip.selected, isTrue);
+
+      // Every other chip must be deselected.
       final locationsChip = tester.widget<FilterChip>(
         find.widgetWithText(FilterChip, 'Locations'),
       );
       expect(locationsChip.selected, isFalse);
     });
-
-    testWidgets(
-        'tapping a chip when not all are selected toggles normally',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
-      await tester.pumpAndSettle();
-
-      // First isolate one category (tap when all are selected).
-      await tester.tap(find.text('Objects'));
-      await tester.pumpAndSettle();
-
-      // Now tap Locations — it should be added (not all selected, so normal toggle).
-      await tester.tap(find.text('Locations'));
-      await tester.pumpAndSettle();
-
-      final locationsChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Locations'),
-      );
-      expect(locationsChip.selected, isTrue);
-
-      // Objects still selected.
-      final objectsChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Objects'),
-      );
-      expect(objectsChip.selected, isTrue);
-    });
   });
 
-  // ── Test: New Prompt disabled when nothing selected ───────────────────────
+  // ── Test: New Prompt button state ─────────────────────────────────────────
   group('new prompt button state', () {
     testWidgets(
-        'New Prompt button is disabled when no categories are selected',
+        'New Prompt button stays enabled after deselect-all because fallback prevents empty selection',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
 
-      // Tap "Deselect All Categories" to clear selection.
+      // Tap "Deselect All Categories" — fallback to objects means button stays enabled.
       await tester.tap(find.byKey(const Key('select_all_categories_button')));
       await tester.pumpAndSettle();
 
-      // New Prompt button should now be disabled (onPressed == null).
       final button = tester.widget<FilledButton>(
         find.widgetWithText(FilledButton, 'New Prompt'),
       );
-      expect(button.onPressed, isNull);
+      expect(button.onPressed, isNotNull);
     });
 
     testWidgets(

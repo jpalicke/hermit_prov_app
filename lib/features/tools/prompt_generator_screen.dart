@@ -19,7 +19,8 @@ class PromptGeneratorScreen extends StatefulWidget {
 }
 
 class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
-  // Category selection — all selected by default.
+  // Invariant: always non-empty. _toggleCategory and _toggleAllCategories both
+  // enforce a minimum of one selected category.
   late Set<PromptCategory> _selectedCategories;
 
   String? _currentPrompt;
@@ -41,7 +42,6 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   }
 
   Future<void> _generatePrompt() async {
-    if (_selectedCategories.isEmpty) return;
     final repo = AppServices.of(context).promptRepository;
     final picker = PromptPicker(repo);
 
@@ -81,7 +81,8 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   void _toggleAllCategories() {
     setState(() {
       if (_allSelected) {
-        _selectedCategories = {};
+        // Fallback to the default category rather than allowing an empty set.
+        _selectedCategories = {PromptCategory.objects};
       } else {
         _selectedCategories = Set.of(PromptCategory.values);
       }
@@ -90,11 +91,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
   void _toggleCategory(PromptCategory cat) {
     setState(() {
-      if (_allSelected) {
-        // Isolate: selecting one chip when all are selected narrows to just that one.
-        _selectedCategories = {cat};
-      } else if (_selectedCategories.contains(cat)) {
-        _selectedCategories = Set.of(_selectedCategories)..remove(cat);
+      if (_selectedCategories.contains(cat)) {
+        // No-op if removing this chip would empty the set.
+        final next = Set.of(_selectedCategories)..remove(cat);
+        if (next.isNotEmpty) _selectedCategories = next;
       } else {
         _selectedCategories = Set.of(_selectedCategories)..add(cat);
       }
@@ -134,7 +134,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
             // ── New Prompt button ────────────────────────────────────────
             FilledButton.icon(
-              onPressed: _selectedCategories.isEmpty ? null : _generatePrompt,
+              onPressed: _generatePrompt,
               icon: const Icon(Icons.shuffle),
               label: const Text('New Prompt'),
             ),
