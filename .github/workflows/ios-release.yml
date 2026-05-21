@@ -44,6 +44,9 @@ jobs:
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           # -A allows all applications to access the key without prompting, required for headless xcodebuild codesign on ephemeral runners.
           security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          # Import Apple WWDR G3 intermediate CA so the certificate chain is complete and valid.
+          curl -sSL https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o "$RUNNER_TEMP/wwdr.cer"
+          security import "$RUNNER_TEMP/wwdr.cer" -k "$KEYCHAIN_PATH" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           security list-keychain -d user -s "$KEYCHAIN_PATH" ~/Library/Keychains/login.keychain-db
 
@@ -56,13 +59,21 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/
 
-      - name: Switch Runner target to manual signing
+      - name: Configure manual signing
+        env:
+          TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          PROFILE_NAME: ${{ secrets.IOS_PROVISION_PROFILE_NAME }}
         run: |
-          # Verify occurrence count with: grep -c 'CODE_SIGN_STYLE' ios/Runner.xcodeproj/project.pbxproj
-          # The sed uses the g flag to replace all occurrences on each line; confirm the count matches expectations.
+          # Switch project from automatic to manual signing.
+          # Verify all occurrences: grep -c 'CODE_SIGN_STYLE' ios/Runner.xcodeproj/project.pbxproj
           sed -i '' \
             's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' \
             ios/Runner.xcodeproj/project.pbxproj
+
+          # Inject DEVELOPMENT_TEAM, signing identity, and profile via Flutter's release xcconfig.
+          # These settings override the project file and are required for xcodebuild to find the cert.
+          printf '\nDEVELOPMENT_TEAM=%s\nCODE_SIGN_IDENTITY=Apple Distribution\nPROVISIONING_PROFILE_SPECIFIER=%s\n' \
+            "$TEAM_ID" "$PROFILE_NAME" >> ios/Flutter/Release.xcconfig
 
       - name: Write ExportOptions.plist
         env:
