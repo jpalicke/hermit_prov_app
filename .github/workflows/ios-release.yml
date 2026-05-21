@@ -88,7 +88,7 @@ jobs:
   <string>Apple Distribution</string>
   <key>provisioningProfiles</key>
   <dict>
-    <key>com.hermitprov.hermit_prov_app</key>
+    <key>com.hermitprov.hermitProvApp</key>
     <string>$PROFILE_NAME</string>
   </dict>
 </dict>

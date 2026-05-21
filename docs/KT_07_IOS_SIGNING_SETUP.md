@@ -33,7 +33,7 @@ If not found in Git Bash, WSL has it: `wsl openssl version`
 3. Click the + button and select "App IDs", then "App".
 4. Fill in:
    - Description: `Hermit Prov`
-   - Bundle ID (Explicit): `com.hermitprov.hermit_prov_app`
+   - Bundle ID (Explicit): `com.hermitprov.hermitProvApp`
 5. Enable any capabilities you need (none required for v1).
 6. Click Continue, then Register.
 
@@ -93,7 +93,7 @@ When prompted for "Export Password", choose a strong password and save it. This 
 
 1. In the Developer Portal, go to Profiles > + button.
 2. Select "App Store Connect" (for App Store distribution).
-3. Select the App ID you created: `com.hermitprov.hermit_prov_app`.
+3. Select the App ID you created: `com.hermitprov.hermitProvApp`.
 4. Select the Distribution certificate you just created.
 5. Name the profile: `HermitProv AppStore Distribution`
 6. Click Generate, then Download. You get a `.mobileprovision` file.
