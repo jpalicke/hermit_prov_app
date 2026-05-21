@@ -17,11 +17,15 @@ class CustomPromptsScreen extends StatefulWidget {
 class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
   List<CustomPrompt> _prompts = [];
   bool _loading = true;
+  bool _initialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadPrompts();
+    if (!_initialized) {
+      _initialized = true;
+      _loadPrompts();
+    }
   }
 
   Future<void> _loadPrompts() async {

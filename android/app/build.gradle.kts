@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.File
 import java.io.FileInputStream
 import org.gradle.api.GradleException
 
@@ -49,7 +50,11 @@ android {
             create("release") {
                 keyAlias = keystoreProperties.require("keyAlias")
                 keyPassword = keystoreProperties.require("keyPassword")
-                storeFile = file(keystoreProperties.require("storeFile"))
+                val storeFilePath = keystoreProperties.require("storeFile")
+                if (!File(storeFilePath).isAbsolute) {
+                    throw GradleException("key.properties storeFile must be an absolute path, got: $storeFilePath")
+                }
+                storeFile = file(storeFilePath)
                 storePassword = keystoreProperties.require("storePassword")
             }
         }

@@ -31,6 +31,20 @@ Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
   );
 }
 
+/// Counts how many times [getCustomPrompts] is called so the guard test can
+/// verify it fires only once across multiple didChangeDependencies invocations.
+class _CountingPromptRepository extends InMemoryPromptRepository {
+  int getCustomPromptsCallCount = 0;
+
+  @override
+  Future<List<CustomPrompt>> getCustomPrompts({
+    PromptCategory? category,
+  }) async {
+    getCustomPromptsCallCount++;
+    return super.getCustomPrompts(category: category);
+  }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
@@ -180,6 +194,58 @@ void main() {
       // (built-ins are never shown here)
       expect(find.byIcon(Icons.edit), findsNothing);
       expect(find.byIcon(Icons.delete), findsNothing);
+    });
+  });
+
+  // ── Test 7: _loadPrompts fires only once despite repeated didChangeDependencies
+  group('initialization guard', () {
+    testWidgets(
+        'repo is queried only once when InheritedWidget ancestors rebuild',
+        (WidgetTester tester) async {
+      final repo = _CountingPromptRepository();
+
+      // Initial render -- wraps in a MediaQuery we can later change to force
+      // didChangeDependencies to fire a second time.
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(1.0)),
+          child: AppServices(
+            promptRepository: repo,
+            drillSettingsRepository: InMemoryDrillSettingsRepository(),
+            practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
+            journalRepository: InMemoryJournalRepository(),
+            appPreferencesRepository: InMemoryAppPreferencesRepository(),
+            ttsService: FakeTtsService(),
+            crashReportService: const NoOpCrashReportService(),
+            child: const MaterialApp(home: CustomPromptsScreen()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(repo.getCustomPromptsCallCount, 1);
+
+      // Rebuild with a different MediaQueryData to trigger didChangeDependencies
+      // on any widget that depends on MediaQuery.
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
+          child: AppServices(
+            promptRepository: repo,
+            drillSettingsRepository: InMemoryDrillSettingsRepository(),
+            practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
+            journalRepository: InMemoryJournalRepository(),
+            appPreferencesRepository: InMemoryAppPreferencesRepository(),
+            ttsService: FakeTtsService(),
+            crashReportService: const NoOpCrashReportService(),
+            child: const MaterialApp(home: CustomPromptsScreen()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Guard must prevent a second repo read.
+      expect(repo.getCustomPromptsCallCount, 1);
     });
   });
 }
