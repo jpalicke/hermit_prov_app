@@ -14,12 +14,10 @@ val keystoreProperties = Properties()
 val hasKeystore = keystorePropertiesFile.exists()
 if (hasKeystore) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
-    val required = listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
-    val missing = required.filter { keystoreProperties.getProperty(it) == null }
-    if (missing.isNotEmpty()) {
-        throw GradleException("key.properties is missing required keys: $missing")
-    }
 }
+
+fun Properties.require(key: String): String =
+    getProperty(key) ?: throw GradleException("key.properties is missing required key: $key")
 
 android {
     namespace = "com.hermitprov.hermit_prov_app"
@@ -49,10 +47,10 @@ android {
     signingConfigs {
         if (hasKeystore) {
             create("release") {
-                keyAlias = keystoreProperties.getProperty("keyAlias")
-                keyPassword = keystoreProperties.getProperty("keyPassword")
-                storeFile = file(keystoreProperties.getProperty("storeFile"))
-                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.require("keyAlias")
+                keyPassword = keystoreProperties.require("keyPassword")
+                storeFile = file(keystoreProperties.require("storeFile"))
+                storePassword = keystoreProperties.require("storePassword")
             }
         }
     }
