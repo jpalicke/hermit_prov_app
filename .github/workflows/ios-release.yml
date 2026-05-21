@@ -46,8 +46,9 @@ jobs:
           # "already exists" (exit 1) is harmless — the cert is present; a real failure surfaces later at build time.
           security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH" || true
           # Import Apple WWDR G3 intermediate CA so the certificate chain is complete and valid.
+          # "already exists" (exit 1) is harmless on runners where WWDR G3 is pre-installed.
           curl -sSL https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o "$RUNNER_TEMP/wwdr.cer"
-          security import "$RUNNER_TEMP/wwdr.cer" -k "$KEYCHAIN_PATH" -T /usr/bin/codesign
+          security import "$RUNNER_TEMP/wwdr.cer" -k "$KEYCHAIN_PATH" -T /usr/bin/codesign || true
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           security list-keychain -d user -s "$KEYCHAIN_PATH" ~/Library/Keychains/login.keychain-db
 
