@@ -200,51 +200,46 @@ void main() {
   // ── Test 7: _loadPrompts fires only once despite repeated didChangeDependencies
   group('initialization guard', () {
     testWidgets(
-        'repo is queried only once when InheritedWidget ancestors rebuild',
+        'repo is queried only once even when didChangeDependencies fires again',
         (WidgetTester tester) async {
       final repo = _CountingPromptRepository();
 
-      // Initial render -- wraps in a MediaQuery we can later change to force
-      // didChangeDependencies to fire a second time.
+      // First render — standard AppServices (notifyDependents defaults to false).
       await tester.pumpWidget(
-        MediaQuery(
-          data: const MediaQueryData(textScaler: TextScaler.linear(1.0)),
-          child: AppServices(
-            promptRepository: repo,
-            drillSettingsRepository: InMemoryDrillSettingsRepository(),
-            practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
-            journalRepository: InMemoryJournalRepository(),
-            appPreferencesRepository: InMemoryAppPreferencesRepository(),
-            ttsService: FakeTtsService(),
-            crashReportService: const NoOpCrashReportService(),
-            child: const MaterialApp(home: CustomPromptsScreen()),
-          ),
+        AppServices(
+          promptRepository: repo,
+          drillSettingsRepository: InMemoryDrillSettingsRepository(),
+          practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
+          journalRepository: InMemoryJournalRepository(),
+          appPreferencesRepository: InMemoryAppPreferencesRepository(),
+          ttsService: FakeTtsService(),
+          crashReportService: const NoOpCrashReportService(),
+          child: const MaterialApp(home: CustomPromptsScreen()),
         ),
       );
       await tester.pumpAndSettle();
-
       expect(repo.getCustomPromptsCallCount, 1);
 
-      // Rebuild with a different MediaQueryData to trigger didChangeDependencies
-      // on any widget that depends on MediaQuery.
+      // Second pump with notifyDependents: true forces updateShouldNotify to
+      // return true, causing Flutter to call didChangeDependencies on all
+      // AppServices subscribers. The _initialized guard must block the second
+      // _loadPrompts call.
       await tester.pumpWidget(
-        MediaQuery(
-          data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
-          child: AppServices(
-            promptRepository: repo,
-            drillSettingsRepository: InMemoryDrillSettingsRepository(),
-            practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
-            journalRepository: InMemoryJournalRepository(),
-            appPreferencesRepository: InMemoryAppPreferencesRepository(),
-            ttsService: FakeTtsService(),
-            crashReportService: const NoOpCrashReportService(),
-            child: const MaterialApp(home: CustomPromptsScreen()),
-          ),
+        AppServices(
+          promptRepository: repo,
+          drillSettingsRepository: InMemoryDrillSettingsRepository(),
+          practiceHistoryRepository: InMemoryPracticeHistoryRepository(),
+          journalRepository: InMemoryJournalRepository(),
+          appPreferencesRepository: InMemoryAppPreferencesRepository(),
+          ttsService: FakeTtsService(),
+          crashReportService: const NoOpCrashReportService(),
+          notifyDependents: true,
+          child: const MaterialApp(home: CustomPromptsScreen()),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Guard must prevent a second repo read.
+      // Guard must have blocked the second _loadPrompts call.
       expect(repo.getCustomPromptsCallCount, 1);
     });
   });
