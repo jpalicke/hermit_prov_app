@@ -51,5 +51,18 @@ void main() {
       // Timer screen has a start button.
       expect(find.text('Start'), findsOneWidget);
     });
+
+    testWidgets('can navigate into Emotion Wheel', (tester) async {
+      await tester.pumpWidget(const HermitProvWebApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Emotion Wheel'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Pick random emotion'), findsOneWidget);
+    });
+
+    // Journal and Custom Suggestion Bank are also present in the web build.
+    // Their data is backed by in-memory repositories: entries are lost on page refresh.
   });
 }
