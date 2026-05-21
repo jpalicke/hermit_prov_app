@@ -49,6 +49,14 @@ For a connected device or emulator:
 flutter run -d <device-id>
 ```
 
+### Web tools build
+
+A tools-only web build is available (Suggestion Generator, Timer, Emotion Wheel, Journal, Custom Suggestion Bank). No drills, no drill history. All data is in-memory: custom words and journal entries are lost on page refresh.
+
+```bash
+flutter build web --target lib/main_web.dart
+```
+
 ---
 
 ## Documentation
