@@ -1,5 +1,6 @@
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.GradleException
 
 plugins {
     id("com.android.application")
@@ -10,8 +11,14 @@ plugins {
 
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val hasKeystore = keystorePropertiesFile.exists()
+if (hasKeystore) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+    val required = listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
+    val missing = required.filter { keystoreProperties.getProperty(it) == null }
+    if (missing.isNotEmpty()) {
+        throw GradleException("key.properties is missing required keys: $missing")
+    }
 }
 
 android {
@@ -40,7 +47,7 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
+        if (hasKeystore) {
             create("release") {
                 keyAlias = keystoreProperties.getProperty("keyAlias")
                 keyPassword = keystoreProperties.getProperty("keyPassword")
@@ -52,7 +59,9 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (keystorePropertiesFile.exists()) {
+            // Uses release signing when key.properties is present; falls back to the
+            // AGP-implicit debug config otherwise so CI and fresh clones build without error.
+            signingConfig = if (hasKeystore) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
