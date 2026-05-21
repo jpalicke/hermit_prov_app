@@ -81,7 +81,8 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   void _toggleAllCategories() {
     setState(() {
       if (_allSelected) {
-        _selectedCategories = {};
+        // Fallback to the default category rather than allowing an empty set.
+        _selectedCategories = {PromptCategory.objects};
       } else {
         _selectedCategories = Set.of(PromptCategory.values);
       }
@@ -90,11 +91,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
   void _toggleCategory(PromptCategory cat) {
     setState(() {
-      if (_allSelected) {
-        // Isolate: selecting one chip when all are selected narrows to just that one.
-        _selectedCategories = {cat};
-      } else if (_selectedCategories.contains(cat)) {
-        _selectedCategories = Set.of(_selectedCategories)..remove(cat);
+      if (_selectedCategories.contains(cat)) {
+        final next = Set.of(_selectedCategories)..remove(cat);
+        // Guard against empty selection — fall back to the default category.
+        _selectedCategories = next.isEmpty ? {PromptCategory.objects} : next;
       } else {
         _selectedCategories = Set.of(_selectedCategories)..add(cat);
       }
