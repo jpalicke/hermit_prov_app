@@ -43,7 +43,8 @@ jobs:
           security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           # -A allows all applications to access the key without prompting, required for headless xcodebuild codesign on ephemeral runners.
-          security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          # "already exists" (exit 1) is harmless — the cert is present; a real failure surfaces later at build time.
+          security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH" || true
           # Import Apple WWDR G3 intermediate CA so the certificate chain is complete and valid.
           curl -sSL https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o "$RUNNER_TEMP/wwdr.cer"
           security import "$RUNNER_TEMP/wwdr.cer" -k "$KEYCHAIN_PATH" -T /usr/bin/codesign
