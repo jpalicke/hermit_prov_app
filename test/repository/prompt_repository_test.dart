@@ -8,7 +8,7 @@ import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
 
 void main() {
   late InMemoryPromptRepository repo;
-  final now = DateTime(2026, 1, 1);
+  final now = DateTime(2026);
 
   setUp(() => repo = InMemoryPromptRepository());
 

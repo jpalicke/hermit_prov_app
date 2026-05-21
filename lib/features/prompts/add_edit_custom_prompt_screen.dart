@@ -9,8 +9,8 @@ import 'package:hermit_prov_app/domain/prompts/prompt_category.dart';
 
 class AddEditCustomPromptScreen extends StatefulWidget {
   const AddEditCustomPromptScreen({
-    super.key,
     required this.existingPrompt,
+    super.key,
   });
 
   /// Null when adding a new prompt; non-null when editing.

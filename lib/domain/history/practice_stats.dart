@@ -14,20 +14,8 @@ class PracticeStats {
     required this.sessionsByDrill,
   });
 
-  final Duration totalTime;
-  final int sessionsCompleted;
-
-  /// Consecutive calendar days of practice ending on today or yesterday.
-  final int currentStreak;
-
-  /// The longest consecutive-day practice run in all history.
-  final int longestStreak;
-
-  final Map<DrillId, Duration> timeByDrill;
-  final Map<DrillId, int> sessionsByDrill;
-
   /// Returns empty stats when [sessions] is empty.
-  static PracticeStats empty() {
+  factory PracticeStats.empty() {
     return const PracticeStats(
       totalTime: Duration.zero,
       sessionsCompleted: 0,
@@ -41,13 +29,13 @@ class PracticeStats {
   /// Computes aggregate stats from a list of sessions.
   ///
   /// Session ordering does not matter — all calculations sort internally.
-  /// Day attribution uses [PracticeSession.loggedAt] in local time.
-  static PracticeStats compute(List<PracticeSession> sessions) {
-    if (sessions.isEmpty) return empty();
+  /// Day attribution uses loggedAt in local time.
+  factory PracticeStats.compute(List<PracticeSession> sessions) {
+    if (sessions.isEmpty) return PracticeStats.empty();
 
-    Duration totalTime = Duration.zero;
-    final Map<DrillId, Duration> timeByDrill = {};
-    final Map<DrillId, int> sessionsByDrill = {};
+    var totalTime = Duration.zero;
+    final timeByDrill = <DrillId, Duration>{};
+    final sessionsByDrill = <DrillId, int>{};
 
     for (final s in sessions) {
       totalTime += s.duration;
@@ -70,12 +58,24 @@ class PracticeStats {
     );
   }
 
+  final Duration totalTime;
+  final int sessionsCompleted;
+
+  /// Consecutive calendar days of practice ending on today or yesterday.
+  final int currentStreak;
+
+  /// The longest consecutive-day practice run in all history.
+  final int longestStreak;
+
+  final Map<DrillId, Duration> timeByDrill;
+  final Map<DrillId, int> sessionsByDrill;
+
   // ── Internal helpers ────────────────────────────────────────────────────────
 
   /// Returns a sorted list of unique calendar days (local time) that have sessions.
   static List<DateTime> _practiceDays(List<PracticeSession> sessions) {
-    final Set<String> seen = {};
-    final List<DateTime> days = [];
+    final seen = <String>{};
+    final days = <DateTime>[];
     for (final s in sessions) {
       final d = s.loggedAt.toLocal();
       final key = '${d.year}-${d.month}-${d.day}';
@@ -98,8 +98,8 @@ class PracticeStats {
     final last = sortedDays.last;
     if (last != today && last != yesterday) return 0;
 
-    int streak = 1;
-    for (int i = sortedDays.length - 2; i >= 0; i--) {
+    var streak = 1;
+    for (var i = sortedDays.length - 2; i >= 0; i--) {
       final expected = sortedDays[i + 1].subtract(const Duration(days: 1));
       if (sortedDays[i] == expected) {
         streak++;
@@ -114,10 +114,10 @@ class PracticeStats {
   static int _computeLongestStreak(List<DateTime> sortedDays) {
     if (sortedDays.isEmpty) return 0;
 
-    int longest = 1;
-    int current = 1;
+    var longest = 1;
+    var current = 1;
 
-    for (int i = 1; i < sortedDays.length; i++) {
+    for (var i = 1; i < sortedDays.length; i++) {
       final expected = sortedDays[i - 1].add(const Duration(days: 1));
       if (sortedDays[i] == expected) {
         current++;

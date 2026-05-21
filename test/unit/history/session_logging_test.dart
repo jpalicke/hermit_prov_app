@@ -23,7 +23,7 @@ void main() {
       final shortSession = PracticeSession(
         id: 'short',
         drillId: DrillId.catClock,
-        startedAt: DateTime(2025, 1, 1, 12, 0),
+        startedAt: DateTime(2025, 1, 1, 12),
         duration: const Duration(seconds: 10),
         loggedAt: DateTime(2025, 1, 1, 12, 0, 10),
       );
@@ -36,7 +36,7 @@ void main() {
       final session = PracticeSession(
         id: 'threshold',
         drillId: DrillId.atoC,
-        startedAt: DateTime(2025, 5, 1, 10, 0),
+        startedAt: DateTime(2025, 5, 1, 10),
         duration: const Duration(seconds: 30),
         loggedAt: DateTime(2025, 5, 1, 10, 0, 30),
       );

@@ -48,8 +48,8 @@ void main() {
       speakingDuration: Duration(seconds: 3),
       regroupDuration: Duration(seconds: 2),
     ));
-    final ctrl = DrillSessionController(segments: segs, loops: true);
-    ctrl.start();
+    final ctrl = DrillSessionController(segments: segs, loops: true)
+      ..start();
 
     // Tick through both segments (5 ticks).
     for (var i = 0; i < 5; i++) {
@@ -63,7 +63,7 @@ void main() {
 
   // 3. Prompts regenerate for each new speaking rep.
   test('different rep indices produce distinct segment ids', () {
-    final rep0 = sequence.buildRep(settings: settings, repIndex: 0);
+    final rep0 = sequence.buildRep(settings: settings);
     final rep1 = sequence.buildRep(settings: settings, repIndex: 1);
 
     expect(rep0[0].id, isNot(rep1[0].id));

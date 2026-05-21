@@ -23,8 +23,9 @@ class PromptPicker {
           await _repository.getBuiltInPrompts(category: category);
       final customs =
           await _repository.getCustomPrompts(category: category);
-      texts.addAll(builtIns.map((p) => p.text));
-      texts.addAll(customs.map((p) => p.text));
+      texts
+        ..addAll(builtIns.map((p) => p.text))
+        ..addAll(customs.map((p) => p.text));
     }
     if (texts.isEmpty) return null;
     return texts[_random.nextInt(texts.length)];

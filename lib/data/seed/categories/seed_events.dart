@@ -22,7 +22,7 @@ const List<BuiltInPrompt> seedEvents = [
   BuiltInPrompt(id: 'evt-012', text: 'an anniversary', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-013', text: 'a holiday party', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-014', text: 'a class reunion', category: PromptCategory.events),
-  BuiltInPrompt(id: 'evt-015', text: 'a New Year\'s Eve party', category: PromptCategory.events),
+  BuiltInPrompt(id: 'evt-015', text: "a New Year's Eve party", category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-016', text: 'a surprise party', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-017', text: 'a housewarming', category: PromptCategory.events),
   BuiltInPrompt(id: 'evt-018', text: 'a victory celebration', category: PromptCategory.events),

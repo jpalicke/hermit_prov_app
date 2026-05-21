@@ -86,9 +86,9 @@ class DrillSessionState {
   /// 0.0 means just started; 1.0 means segment is complete.
   double get segmentProgress {
     final seg = currentSegment;
-    if (seg == null || seg.duration == Duration.zero) return 0.0;
+    if (seg == null || seg.duration == Duration.zero) return 0;
     final raw = segmentElapsed.inMicroseconds / seg.duration.inMicroseconds;
-    return raw.clamp(0.0, 1.0);
+    return raw.clamp(0, 1);
   }
 
   DrillSessionState copyWith({

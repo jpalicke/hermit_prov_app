@@ -4,15 +4,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
 import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_app_preferences_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_drill_settings_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_journal_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_prompt_repository.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
-import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 import 'package:hermit_prov_app/features/tools/prompt_generator_screen.dart';
+import 'package:hermit_prov_app/features/tools/tools_screen.dart';
 
 Widget _wrapWithServices(Widget child) {
   return AppServices(

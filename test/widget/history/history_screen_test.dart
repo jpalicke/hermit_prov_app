@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
-import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
+import 'package:hermit_prov_app/data/repositories/in_memory_practice_history_repository.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/history/practice_session.dart';
@@ -47,7 +47,7 @@ PracticeSession _session({
   DateTime? loggedAt,
   Duration duration = const Duration(minutes: 5),
 }) {
-  final ts = loggedAt ?? DateTime(2025, 5, 18, 12, 0);
+  final ts = loggedAt ?? DateTime(2025, 5, 18, 12);
   return PracticeSession(
     id: id,
     drillId: drillId,

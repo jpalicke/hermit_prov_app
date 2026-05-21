@@ -14,7 +14,7 @@ AppDatabase openTestDatabase() => AppDatabase(NativeDatabase.memory());
 void main() {
   late AppDatabase db;
   late DriftPromptRepository repo;
-  final now = DateTime(2026, 1, 1);
+  final now = DateTime(2026);
 
   setUp(() {
     db = openTestDatabase();

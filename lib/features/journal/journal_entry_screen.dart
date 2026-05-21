@@ -86,7 +86,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       final repo = AppServices.of(context).journalRepository;
       await repo.deleteEntry(widget.entry!.id);
       if (mounted) Navigator.of(context).pop();

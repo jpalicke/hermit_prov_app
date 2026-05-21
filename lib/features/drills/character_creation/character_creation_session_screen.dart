@@ -16,9 +16,9 @@ import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 
 class CharacterCreationSessionScreen extends StatefulWidget {
   const CharacterCreationSessionScreen({
-    super.key,
     required this.settings,
     required this.onSessionEnd,
+    super.key,
     this.onConfigure,
     this.historyRepository,
     this.ttsService,
@@ -69,8 +69,7 @@ class _CharacterCreationSessionScreenState
     setState(() {
       _controller = DrillSessionController(
         segments: segments,
-        loops: false, // Finite: ends after the full cycle.
-        tickDuration: const Duration(seconds: 1),
+        // Finite: ends after the full cycle.
       );
     });
     // Auto-generate prompts for all first-pass segments.

@@ -131,13 +131,13 @@ class _TwoCharacterConfigureScreenState
 
 class _DurationRow extends StatelessWidget {
   const _DurationRow({
-    super.key,
     required this.label,
     required this.value,
     required this.min,
     required this.max,
     required this.step,
     required this.onChanged,
+    super.key,
   });
 
   final String label;

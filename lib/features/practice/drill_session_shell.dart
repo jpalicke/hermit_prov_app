@@ -36,9 +36,9 @@ import 'package:hermit_prov_app/domain/history/practice_session.dart';
 /// [drillId] — the drill being practiced; required for logging.
 class DrillSessionShell extends StatefulWidget {
   const DrillSessionShell({
-    super.key,
     required this.controller,
     required this.onSessionEnd,
+    super.key,
     this.onConfigure,
     this.contentBuilder,
     this.autoStart = false,
@@ -190,7 +190,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if ((confirmed ?? false) && mounted) {
       _handleExit();
     }
   }

@@ -11,10 +11,10 @@ import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 /// [onSave] — called when the user taps "Save"; should persist settings.
 class DrillConfigureScreen extends StatelessWidget {
   const DrillConfigureScreen({
-    super.key,
     required this.drillId,
     required this.body,
     required this.onSave,
+    super.key,
   });
 
   final DrillId drillId;

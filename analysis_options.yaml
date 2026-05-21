@@ -5,24 +5,27 @@
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    # Disabled: this is an app, not a published library; API docs are not required.
+    public_member_api_docs: false
+    # Disabled: 80-char line limit is impractical for Flutter widget trees with
+    # deep nesting and long string literals in seed data.
+    lines_longer_than_80_chars: false
+    # Disabled: comment_references flags references to private types in doc
+    # comments; these are intentional internal cross-references in an app.
+    comment_references: false
+    # Disabled: avoid_equals_and_hash_code_on_mutable_classes is flagged on
+    # DrillSegment which intentionally implements value equality for set/map use.
+    avoid_equals_and_hash_code_on_mutable_classes: false
+    # Disabled: one_member_abstracts is flagged on CrashReportService which is
+    # an intentional single-method service interface for dependency injection.
+    one_member_abstracts: false
+    # Disabled: avoid_positional_boolean_parameters conflicts with Flutter's
+    # standard onChanged callback pattern (e.g. Switch.onChanged: (bool) => ...).
+    avoid_positional_boolean_parameters: false
     # Null-aware collection element syntax (?x) is a Dart 3.8+ feature not yet
     # available in the SDK pinned by this project's flutter_lints version.
     use_null_aware_elements: false

@@ -70,7 +70,7 @@ class LocalBackupService implements BackupService {
     late Map<String, dynamic> decoded;
     try {
       decoded = jsonDecode(json) as Map<String, dynamic>;
-    } catch (_) {
+    } on FormatException {
       throw const FormatException('Backup file is not valid JSON.');
     }
 
@@ -89,7 +89,7 @@ class LocalBackupService implements BackupService {
     // Merge custom prompts -- skip any whose id already exists.
     final existingPrompts = await _prompts.getCustomPrompts();
     final existingPromptIds = {for (final p in existingPrompts) p.id};
-    int promptsAdded = 0;
+    var promptsAdded = 0;
     for (final map in backup.customPrompts) {
       final prompt = _promptFromJson(map);
       if (!existingPromptIds.contains(prompt.id)) {
@@ -101,7 +101,7 @@ class LocalBackupService implements BackupService {
     // Merge journal entries -- skip any whose id already exists.
     final existingEntries = await _journal.getEntries();
     final existingEntryIds = {for (final e in existingEntries) e.id};
-    int journalEntriesAdded = 0;
+    var journalEntriesAdded = 0;
     for (final map in backup.journalEntries) {
       final entry = _entryFromJson(map);
       if (!existingEntryIds.contains(entry.id)) {
@@ -111,12 +111,12 @@ class LocalBackupService implements BackupService {
     }
 
     // Overwrite drill settings (last-write-wins).
-    int settingsUpdated = 0;
+    var settingsUpdated = 0;
     for (final rawEntry in backup.drillSettings.entries) {
       final drillId = DrillId.values.byName(rawEntry.key);
       final settings = DrillSettings.fromJson(
         drillId,
-        (rawEntry.value as Map<String, dynamic>),
+        rawEntry.value as Map<String, dynamic>,
       );
       await _drillSettings.saveSettings(settings);
       settingsUpdated++;

@@ -204,13 +204,13 @@ class _CatClockConfigBody extends StatelessWidget {
 
 class _DurationPicker extends StatelessWidget {
   const _DurationPicker({
-    super.key,
     required this.label,
     required this.value,
     required this.min,
     required this.max,
-    this.step = 1,
     required this.onChanged,
+    super.key,
+    this.step = 1,
   });
 
   final String label;
@@ -252,10 +252,10 @@ class _DurationPicker extends StatelessWidget {
 
 class _CategoryPicker extends StatelessWidget {
   const _CategoryPicker({
-    super.key,
     required this.title,
     required this.selected,
     required this.onChanged,
+    super.key,
   });
 
   final String title;

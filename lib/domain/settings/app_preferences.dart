@@ -6,7 +6,7 @@ import 'package:hermit_prov_app/domain/settings/app_theme_preference.dart';
 class AppPreferences {
   const AppPreferences({
     this.themePreference = AppThemePreference.system,
-    this.ttsSpeakingRate = 1.0,
+    this.ttsSpeakingRate = 1,
   });
 
   final AppThemePreference themePreference;
@@ -14,7 +14,7 @@ class AppPreferences {
 
   /// Inclusive bounds for [ttsSpeakingRate]. Matches common Flutter TTS plugin ranges.
   static const double minSpeakingRate = 0.25;
-  static const double maxSpeakingRate = 2.0;
+  static const double maxSpeakingRate = 2;
 
   static const AppPreferences defaults = AppPreferences();
 }

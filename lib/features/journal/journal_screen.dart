@@ -33,20 +33,20 @@ class _JournalScreenState extends State<JournalScreen> {
 
   Future<void> _openCreateScreen() async {
     await Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => const JournalEntryScreen(),
       ),
     );
-    _loadEntries();
+    await _loadEntries();
   }
 
   Future<void> _openEditScreen(JournalEntry entry) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => JournalEntryScreen(entry: entry),
       ),
     );
-    _loadEntries();
+    await _loadEntries();
   }
 
   @override

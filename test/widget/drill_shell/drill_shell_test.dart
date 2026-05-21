@@ -4,11 +4,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_segment.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/features/practice/drill_configure_screen.dart';
 import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
-import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -144,7 +144,7 @@ void main() {
   // 2. Session loads idle — Start button visible, Pause/Resume not yet shown.
   testWidgets('Session loads idle with Start button', (tester) async {
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
 
@@ -167,7 +167,7 @@ void main() {
   testWidgets('Tapping Start begins session and shows Pause button',
       (tester) async {
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
 
@@ -193,7 +193,7 @@ void main() {
   testWidgets('Pause changes button to Resume and freezes timer',
       (tester) async {
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
     late _ManualSessionShellState shellState;
@@ -215,8 +215,9 @@ void main() {
     await tester.pump();
 
     // Advance a few ticks.
-    shellState.tick();
-    shellState.tick();
+    shellState
+      ..tick()
+      ..tick();
     await tester.pump();
 
     // Timer should be running — button shows "Pause".
@@ -232,8 +233,9 @@ void main() {
         tester.widget<Text>(find.byKey(const Key('session_countdown_text'))).data;
 
     // Tick while paused — timer display should not change.
-    shellState.tick();
-    shellState.tick();
+    shellState
+      ..tick()
+      ..tick();
     await tester.pump();
 
     expect(
@@ -247,7 +249,7 @@ void main() {
   testWidgets('Stop button ends session immediately without dialog',
       (tester) async {
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
     var ended = false;
@@ -277,7 +279,7 @@ void main() {
       (tester) async {
     var configureOpened = false;
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
 
@@ -320,7 +322,7 @@ void main() {
       'DrillSessionShell does not show configure button when onConfigure is null',
       (tester) async {
     final controller = DrillSessionController(
-      segments: [_seg('s0', seconds: 60)],
+      segments: [_seg('s0')],
       loops: true,
     );
 

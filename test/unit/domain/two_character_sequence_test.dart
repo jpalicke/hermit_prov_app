@@ -43,7 +43,7 @@ void main() {
 
   // 2. Prompt regenerates after regroup (distinct segment ids per rep).
   test('different rep indices produce distinct segment ids', () {
-    final rep0 = sequence.buildRep(settings: settings, repIndex: 0);
+    final rep0 = sequence.buildRep(settings: settings);
     final rep1 = sequence.buildRep(settings: settings, repIndex: 1);
     expect(rep0[0].id, isNot(rep1[0].id));
   });
@@ -55,8 +55,8 @@ void main() {
         regroupDuration: Duration(seconds: 2),
       ),
     );
-    final ctrl = DrillSessionController(segments: segs, loops: true);
-    ctrl.start();
+    final ctrl = DrillSessionController(segments: segs, loops: true)
+      ..start();
 
     for (var i = 0; i < 5; i++) {
       ctrl.tick();

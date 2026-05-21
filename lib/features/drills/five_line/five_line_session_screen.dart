@@ -25,9 +25,9 @@ import 'package:hermit_prov_app/features/practice/drill_session_shell.dart';
 ///   - DrillSessionShell manages Start/Pause/Resume/Stop; no confirmation dialog.
 class FiveLineSessionScreen extends StatefulWidget {
   const FiveLineSessionScreen({
-    super.key,
     required this.settings,
     required this.onSessionEnd,
+    super.key,
     this.promptRepository,
     this.onConfigure,
     this.historyRepository,
@@ -108,7 +108,6 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
     _controller = DrillSessionController(
       segments: [seg],
       loops: true,
-      tickDuration: const Duration(seconds: 1),
     );
     // Controller stays idle — DrillSessionShell's Start button will call start().
   }

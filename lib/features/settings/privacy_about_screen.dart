@@ -8,9 +8,7 @@ class PrivacyAboutScreen extends StatelessWidget {
   const PrivacyAboutScreen({super.key});
 
   static const String _mailtoUrl =
-      'mailto:soundonsound78@gmail.com'
-      '?subject=Hermit Prov%20Feedback'
-      '&body=App%20version%3A%20%5Bversion%5D%0ADevice%20OS%3A%20%5BOS%5D%0A%0ADescribe%20your%20issue%3A';
+      'mailto:soundonsound78@gmail.com?subject=Hermit Prov%20Feedback&body=App%20version%3A%20%5Bversion%5D%0ADevice%20OS%3A%20%5BOS%5D%0A%0ADescribe%20your%20issue%3A';
 
   static const String _kofiUrl = 'https://ko-fi.com/joepalicke';
 
@@ -18,7 +16,7 @@ class PrivacyAboutScreen extends StatelessWidget {
     try {
       final uri = Uri.parse(url);
       await launchUrl(uri);
-    } catch (_) {
+    } on Exception catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
@@ -37,7 +35,7 @@ class PrivacyAboutScreen extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 32),
         children: [
           // -- Privacy -------------------------------------------------------
-          _SectionHeader(title: 'Privacy'),
+          const _SectionHeader(title: 'Privacy'),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
@@ -52,7 +50,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           ),
 
           // -- About ---------------------------------------------------------
-          _SectionHeader(title: 'About'),
+          const _SectionHeader(title: 'About'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
@@ -68,7 +66,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           ),
 
           // -- Credits -------------------------------------------------------
-          _SectionHeader(title: 'Credits'),
+          const _SectionHeader(title: 'Credits'),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
@@ -89,7 +87,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           ),
 
           // -- Support -------------------------------------------------------
-          _SectionHeader(title: 'Support'),
+          const _SectionHeader(title: 'Support'),
           ListTile(
             title: const Text('Send Feedback'),
             subtitle: const Text('Email the developer'),
@@ -102,7 +100,7 @@ class PrivacyAboutScreen extends StatelessWidget {
           ),
 
           // -- Donate --------------------------------------------------------
-          _SectionHeader(title: 'Donate'),
+          const _SectionHeader(title: 'Donate'),
           ListTile(
             title: const Text('Support Development'),
             subtitle: const Text('Ko-fi — no account needed'),

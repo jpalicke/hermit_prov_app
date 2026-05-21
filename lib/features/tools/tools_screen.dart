@@ -22,7 +22,7 @@ class ToolsScreen extends StatelessWidget {
             title: 'Suggestion Generator',
             subtitle: 'get a suggestion from a number of categories',
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => const PromptGeneratorScreen(),
               ),
             ),
@@ -30,9 +30,9 @@ class ToolsScreen extends StatelessWidget {
           _ToolTile(
             icon: Icons.edit_note,
             title: 'Add words to the suggestion bank',
-            subtitle: "pretty self-explanatory, actually",
+            subtitle: 'pretty self-explanatory, actually',
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => const CustomPromptsScreen(),
               ),
             ),
@@ -42,7 +42,7 @@ class ToolsScreen extends StatelessWidget {
             title: 'Journal',
             subtitle: 'Write notes about your practice.',
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => const JournalScreen(),
               ),
             ),
@@ -52,7 +52,7 @@ class ToolsScreen extends StatelessWidget {
             title: 'Timer',
             subtitle: 'Simple countdown or work/rest interval timer.',
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => const TimerScreen(),
               ),
             ),
@@ -62,7 +62,7 @@ class ToolsScreen extends StatelessWidget {
             title: 'Emotion Wheel',
             subtitle: 'browse the emotion wheel and search your feelings',
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => const EmotionWheelScreen(),
               ),
             ),

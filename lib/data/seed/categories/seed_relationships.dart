@@ -161,6 +161,6 @@ const List<BuiltInPrompt> seedRelationships = [
   BuiltInPrompt(id: 'rel-127', text: 'competitive best friends', category: PromptCategory.relationships),
   BuiltInPrompt(id: 'rel-128', text: 'the over-sharer and the private person', category: PromptCategory.relationships),
   BuiltInPrompt(id: 'rel-129', text: 'the person who never says no and the person who exploits that', category: PromptCategory.relationships),
-  BuiltInPrompt(id: 'rel-130', text: 'two people who can\'t stand each other but need each other', category: PromptCategory.relationships),
+  BuiltInPrompt(id: 'rel-130', text: "two people who can't stand each other but need each other", category: PromptCategory.relationships),
   BuiltInPrompt(id: 'rel-131', text: 'the optimist and the pessimist', category: PromptCategory.relationships),
 ];

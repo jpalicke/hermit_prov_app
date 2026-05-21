@@ -35,7 +35,7 @@ void main() {
     });
 
     test('includes custom prompts added to the repo', () async {
-      final now = DateTime(2024, 6, 1);
+      final now = DateTime(2024, 6);
       final prompt = CustomPrompt(
         id: 'prompt-abc',
         text: 'What if a dentist became a detective?',
@@ -75,7 +75,7 @@ void main() {
 
   group('exportToJson / importFromJson round-trip', () {
     test('exported backup can be re-imported and fields match', () async {
-      final now = DateTime.utc(2024, 7, 15, 12, 0, 0);
+      final now = DateTime.utc(2024, 7, 15, 12);
       await services.promptRepository.addCustomPrompt(
         CustomPrompt(
           id: 'round-trip-prompt',
@@ -99,7 +99,7 @@ void main() {
 
   group('mergeIntoApp()', () {
     test('adds custom prompts not already in the repo', () async {
-      final now = DateTime(2024, 8, 1);
+      final now = DateTime(2024, 8);
       final backup = AppBackup(
         schemaVersion: 1,
         exportedAt: now,

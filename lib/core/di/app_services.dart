@@ -2,7 +2,7 @@
 // ABOUTME: Use AppServices.of(context) to obtain any repository from any widget.
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
 import 'package:hermit_prov_app/data/local/database_opener.dart';
 import 'package:hermit_prov_app/data/repositories/drift_drill_settings_repository.dart';
 import 'package:hermit_prov_app/data/repositories/drift_journal_repository.dart';
@@ -17,18 +17,17 @@ import 'package:hermit_prov_app/data/repositories/shared_preferences_app_prefere
 import 'package:hermit_prov_app/data/seed/seed_prompts.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/data/tts/flutter_tts_service.dart';
+import 'package:hermit_prov_app/domain/crash/crash_report_service.dart';
+import 'package:hermit_prov_app/domain/drills/drill_settings_repository.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/journal/journal_repository.dart';
 import 'package:hermit_prov_app/domain/prompts/prompt_repository.dart';
-import 'package:hermit_prov_app/domain/drills/drill_settings_repository.dart';
 import 'package:hermit_prov_app/domain/settings/app_preferences_repository.dart';
 import 'package:hermit_prov_app/domain/tts/tts_service.dart';
-import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
-import 'package:hermit_prov_app/domain/crash/crash_report_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppServices extends InheritedWidget {
   AppServices({
-    super.key,
     required this.promptRepository,
     required this.drillSettingsRepository,
     required this.practiceHistoryRepository,
@@ -36,12 +35,13 @@ class AppServices extends InheritedWidget {
     required this.appPreferencesRepository,
     required this.ttsService,
     required this.crashReportService,
-    ValueNotifier<ThemeMode>? themeNotifier,
     required super.child,
+    super.key,
+    ValueNotifier<ThemeMode>? themeNotifier,
   }) : themeNotifier = themeNotifier ?? ValueNotifier(ThemeMode.system);
 
   /// Creates an [AppServices] wired with all in-memory repository implementations.
-  factory AppServices.withInMemory({Key? key, required Widget child}) {
+  factory AppServices.withInMemory({required Widget child, Key? key}) {
     return AppServices(
       key: key,
       promptRepository: InMemoryPromptRepository(),
@@ -58,8 +58,8 @@ class AppServices extends InheritedWidget {
   /// Creates an [AppServices] wired with persistent on-device storage.
   /// Uses Drift/SQLite for structured data and SharedPreferences for app settings.
   static Future<AppServices> withLocalStorage({
-    Key? key,
     required Widget child,
+    Key? key,
   }) async {
     final db = openAppDatabase();
     final prefs = await SharedPreferences.getInstance();

@@ -6,30 +6,32 @@
 import 'package:flutter/material.dart';
 
 class EmotionEntry {
-  final String word;
-  final String ring; // 'core', 'mid', 'outer'
-  final String category;
-  final Color color;
-
   const EmotionEntry({
     required this.word,
     required this.ring,
     required this.category,
     required this.color,
   });
+
+  final String word;
+  final String ring; // 'core', 'mid', 'outer'
+  final String category;
+  final Color color;
 }
 
 class EmotionMid {
+  const EmotionMid({required this.name, required this.outer});
+
   final String name;
   final List<String> outer;
-  const EmotionMid({required this.name, required this.outer});
 }
 
 class EmotionCore {
+  const EmotionCore({required this.core, required this.color, required this.mid});
+
   final String core;
   final Color color;
   final List<EmotionMid> mid;
-  const EmotionCore({required this.core, required this.color, required this.mid});
 }
 
 // Clockwise from top, matching the Trigg wheel layout

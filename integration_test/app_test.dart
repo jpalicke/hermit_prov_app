@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:hermit_prov_app/app.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:integration_test/integration_test.dart';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -141,7 +141,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Navigate to Tools card on Practice screen (may require scroll).
-      await tester.scrollUntilVisible(find.text('Tools'), 100.0);
+      await tester.scrollUntilVisible(find.text('Tools'), 100);
       await tester.tap(find.text('Tools'));
       await tester.pumpAndSettle();
 
@@ -185,7 +185,7 @@ void main() {
       // Go to Settings and reset all data (tile may require scroll).
       await _tapTab(tester, 'Settings');
       await tester.scrollUntilVisible(
-          find.byKey(const Key('reset_all_data_tile')), 200.0);
+          find.byKey(const Key('reset_all_data_tile')), 200);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('reset_all_data_tile')));
       await tester.pumpAndSettle();
@@ -215,7 +215,7 @@ void main() {
       await tester.pump();
 
       // Pump 31 seconds of fake time to clear the 30-second logging threshold.
-      for (int i = 0; i < 31; i++) {
+      for (var i = 0; i < 31; i++) {
         await tester.pump(const Duration(seconds: 1));
       }
 
