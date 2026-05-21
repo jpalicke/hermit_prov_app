@@ -18,11 +18,15 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.41.8'
           channel: 'stable'
           cache: true
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
 
       - name: Set up signing keychain
         env:
@@ -38,9 +42,10 @@ jobs:
           security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          # -A allows all applications to access the key without prompting, required for headless xcodebuild codesign on ephemeral runners.
           security import "$P12_PATH" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH" ~/Library/Keychains/login.keychain-db
 
       - name: Install provisioning profile
         env:
@@ -53,6 +58,8 @@ jobs:
 
       - name: Switch Runner target to manual signing
         run: |
+          # Verify occurrence count with: grep -c 'CODE_SIGN_STYLE' ios/Runner.xcodeproj/project.pbxproj
+          # The sed uses the g flag to replace all occurrences on each line; confirm the count matches expectations.
           sed -i '' \
             's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' \
             ios/Runner.xcodeproj/project.pbxproj
@@ -63,30 +70,30 @@ jobs:
           PROFILE_NAME: ${{ secrets.IOS_PROVISION_PROFILE_NAME }}
         run: |
           cat > ios/ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store</string>
-            <key>teamID</key>
-            <string>$TEAM_ID</string>
-            <key>uploadBitcode</key>
-            <false/>
-            <key>uploadSymbols</key>
-            <true/>
-            <key>signingStyle</key>
-            <string>manual</string>
-            <key>signingCertificate</key>
-            <string>Apple Distribution</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>com.hermitprov.hermit_prov_app</key>
-              <string>$PROFILE_NAME</string>
-            </dict>
-          </dict>
-          </plist>
-          EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key>
+  <string>app-store</string>
+  <key>teamID</key>
+  <string>$TEAM_ID</string>
+  <key>uploadBitcode</key>
+  <false/>
+  <key>uploadSymbols</key>
+  <true/>
+  <key>signingStyle</key>
+  <string>manual</string>
+  <key>signingCertificate</key>
+  <string>Apple Distribution</string>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>com.hermitprov.hermit_prov_app</key>
+    <string>$PROFILE_NAME</string>
+  </dict>
+</dict>
+</plist>
+EOF
 
       - name: Build IPA
         run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
@@ -100,4 +107,6 @@ jobs:
 
       - name: Clean up keychain
         if: always()
-        run: security delete-keychain $RUNNER_TEMP/build.keychain
+        run: |
+          security delete-keychain "$RUNNER_TEMP/build.keychain"
+          security list-keychain -d user -s ~/Library/Keychains/login.keychain-db
