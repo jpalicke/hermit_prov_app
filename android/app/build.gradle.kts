@@ -1,9 +1,23 @@
+import java.util.Properties
+import java.io.FileInputStream
+import org.gradle.api.GradleException
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+val hasKeystore = keystorePropertiesFile.exists()
+if (hasKeystore) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+}
+
+fun Properties.require(key: String): String =
+    getProperty(key) ?: throw GradleException("key.properties is missing required key: $key")
 
 android {
     namespace = "com.hermitprov.hermit_prov_app"
@@ -30,11 +44,26 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasKeystore) {
+            create("release") {
+                keyAlias = keystoreProperties.require("keyAlias")
+                keyPassword = keystoreProperties.require("keyPassword")
+                storeFile = file(keystoreProperties.require("storeFile"))
+                storePassword = keystoreProperties.require("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // Uses release signing when key.properties is present; falls back to the
+            // AGP-implicit debug config otherwise so CI and fresh clones build without error.
+            signingConfig = if (hasKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
