@@ -18,6 +18,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
   List<CustomPrompt> _prompts = [];
   bool _loading = true;
   bool _initialized = false;
+  String? _error;
 
   @override
   void didChangeDependencies() {
@@ -30,13 +31,31 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
 
   Future<void> _loadPrompts() async {
     final repo = AppServices.of(context).promptRepository;
-    final prompts = await repo.getCustomPrompts();
-    if (mounted) {
-      setState(() {
-        _prompts = prompts;
-        _loading = false;
-      });
+    try {
+      final prompts = await repo.getCustomPrompts();
+      if (mounted) {
+        setState(() {
+          _prompts = prompts;
+          _loading = false;
+          _error = null;
+        });
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _error = e.toString();
+        });
+      }
     }
+  }
+
+  void _retryLoad() {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    _loadPrompts();
   }
 
   Future<void> _addPrompt() async {
@@ -103,17 +122,42 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _prompts.isEmpty
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Text(
-                      'No custom prompts yet.\nTap + to add one.',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : _buildGroupedList(),
+          : _error != null
+              ? _buildErrorState()
+              : _prompts.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32),
+                        child: Text(
+                          'No custom prompts yet.\nTap + to add one.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : _buildGroupedList(),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              key: Key('load_error_message'),
+              'Could not load prompts. Please try again.',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: _retryLoad,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
