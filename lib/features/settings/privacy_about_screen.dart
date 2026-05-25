@@ -40,12 +40,12 @@ class PrivacyAboutScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               'Hermit Prov does not collect, store, or transmit any personal data. '
-              'All data — custom prompts, journal entries, and practice history — stays on your device.\n\n'
+              'All data — custom suggestions, journal entries, and practice history — stays on your device.\n\n'
               'Hermit Prov does not record audio and does not request microphone permission.\n\n'
-              'No prompts, journal entries, or practice history are sent anywhere by default. '
+              'No suggestions, journal entries, or practice history are sent anywhere by default. '
               'Data is local-only. Export your data before deleting the app or switching devices.\n\n'
               'Optional crash reports are user-triggered only, and only after a crash. '
-              'They include technical details and app state, but never your custom prompts or journal entries.',
+              'They include technical details and app state, but never your custom suggestions or journal entries.',
             ),
           ),
 
@@ -72,6 +72,10 @@ class PrivacyAboutScreen extends StatelessWidget {
             child: Text(
               'Hermit Prov is unofficial and unaffiliated with all inspiration sources.',
             ),
+          ),
+          const ListTile(
+            title: Text('Will Hines — Solo Improv Practice'),
+            subtitle: Text('willhines.substack.com/p/solo-improv-practice — inspiration for this app.'),
           ),
           const ListTile(
             title: Text('Glenn Trigg Emotion Wheel'),

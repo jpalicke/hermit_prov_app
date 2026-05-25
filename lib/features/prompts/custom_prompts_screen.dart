@@ -88,7 +88,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Prompt?'),
+        title: const Text('Delete Suggestion?'),
         content: Text('Delete "${prompt.text}"? This cannot be undone.'),
         actions: [
           TextButton(
@@ -117,7 +117,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addPrompt,
-        tooltip: 'Add Prompt',
+        tooltip: 'Add Suggestion',
         child: const Icon(Icons.add),
       ),
       body: _loading
@@ -129,7 +129,7 @@ class _CustomPromptsScreenState extends State<CustomPromptsScreen> {
                       child: Padding(
                         padding: EdgeInsets.all(32),
                         child: Text(
-                          'No custom prompts yet.\nTap + to add one.',
+                          'No custom suggestions yet.\nTap + to add one.',
                           textAlign: TextAlign.center,
                         ),
                       ),

@@ -39,7 +39,7 @@ class _CrashReportDialogContent extends StatelessWidget {
       title: const Text('Something went wrong'),
       content: const Text(
         'An unexpected error occurred. Would you like to send a report to help fix it?\n\n'
-        'Includes technical crash details and app state, but not your custom prompts or journal entries.',
+        'Includes technical crash details and app state, but not your custom suggestions or journal entries.',
       ),
       actions: [
         TextButton(

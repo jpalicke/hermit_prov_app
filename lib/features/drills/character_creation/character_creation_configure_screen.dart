@@ -124,7 +124,7 @@ class _CharacterCreationConfigureScreenState
             key: const Key('hands_free_toggle'),
             title: const Text('Hands-Free Mode'),
             subtitle: const Text(
-                'Speak prompts and countdown cues aloud during the session'),
+                'Speak suggestions and countdown cues aloud during the session'),
             value: settings.handsFreeModeEnabled,
             onChanged: _setHandsFree,
           ),

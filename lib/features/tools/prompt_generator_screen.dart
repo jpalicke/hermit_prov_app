@@ -47,7 +47,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
     final prompt = await picker.pickFromCategories(_selectedCategories.toList());
     if (mounted) {
-      setState(() => _currentPrompt = prompt ?? '(no prompts in selection)');
+      setState(() => _currentPrompt = prompt ?? '(no suggestions in selection)');
     }
   }
 
@@ -136,7 +136,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
             FilledButton.icon(
               onPressed: _generatePrompt,
               icon: const Icon(Icons.shuffle),
-              label: const Text('New Prompt'),
+              label: const Text('New Suggestion'),
             ),
 
             const SizedBox(height: 24),

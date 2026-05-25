@@ -93,7 +93,7 @@ class _FiveLineConfigureScreenState extends State<FiveLineConfigureScreen> {
             key: const Key('auto_advance_toggle'),
             title: const Text('Auto-advance'),
             subtitle: const Text(
-                'Automatically show a new prompt at each interval'),
+                'Automatically show a new suggestion at each interval'),
             value: settings.autoAdvance,
             onChanged: _setAutoAdvance,
           ),
@@ -120,7 +120,7 @@ class _FiveLineConfigureScreenState extends State<FiveLineConfigureScreen> {
             key: const Key('hands_free_toggle'),
             title: const Text('Hands-Free Mode'),
             subtitle: const Text(
-                'Speak prompts and countdown cues aloud during the session'),
+                'Speak suggestions and countdown cues aloud during the session'),
             value: settings.handsFreeModeEnabled,
             onChanged: _setHandsFree,
           ),

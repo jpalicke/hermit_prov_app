@@ -173,8 +173,8 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
       drillId: DrillId.catClock,
       autoStart: widget.settings.handsFreeModeEnabled,
       instructions:
-          'Two prompts appear on screen. Connect the two words through free association, '
-          'speaking out loud until the timer ends. A short regroup follows, then fresh prompts '
+          'Two suggestions appear on screen. Connect the two words through free association, '
+          'speaking out loud until the timer ends. A short regroup follows, then fresh suggestions '
           'appear automatically for the next rep. Runs until you stop it.',
       contentBuilder: (context, state) {
         _handleTick(state);

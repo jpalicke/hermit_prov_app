@@ -47,7 +47,7 @@ class _AddEditCustomPromptScreenState
   Future<void> _save() async {
     final text = _textController.text.trim();
     if (text.isEmpty) {
-      setState(() => _errorMessage = 'Prompt text cannot be empty.');
+      setState(() => _errorMessage = 'Suggestion text cannot be empty.');
       return;
     }
 
@@ -55,7 +55,7 @@ class _AddEditCustomPromptScreenState
     if (!result.isValid) {
       setState(() {
         _errorMessage =
-            "This prompt can't be saved because it violates content rules.";
+            "This suggestion can't be saved because it violates content rules.";
       });
       return;
     }
@@ -99,7 +99,7 @@ class _AddEditCustomPromptScreenState
     final isEditing = widget.existingPrompt != null;
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? 'Edit Prompt' : 'Add Prompt'),
+        title: Text(isEditing ? 'Edit Suggestion' : 'Add Suggestion'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -111,7 +111,7 @@ class _AddEditCustomPromptScreenState
               autofocus: true,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: 'Prompt text',
+                labelText: 'Suggestion text',
                 border: const OutlineInputBorder(),
                 errorText: _errorMessage,
               ),

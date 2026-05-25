@@ -152,8 +152,8 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
       drillId: DrillId.atoC,
       autoStart: widget.settings.handsFreeModeEnabled,
       instructions:
-          'A prompt appears and a countdown runs. React to the prompt out loud. '
-          'When the timer hits, a new prompt appears automatically. Runs until you stop it.',
+          'A suggestion appears and a countdown runs. React to the suggestion out loud. '
+          'When the timer hits, a new suggestion appears automatically. Runs until you stop it.',
       contentBuilder: (context, state) {
         _onStateChanged(state);
         _handleTick(state);

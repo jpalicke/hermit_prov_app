@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Reset Drill Defaults?'),
         content: const Text(
           'This will restore all drill settings to their original defaults. '
-          'Your custom prompts, journal, and history will not be affected.',
+          'Your custom suggestions, journal, and history will not be affected.',
         ),
         actions: [
           TextButton(
@@ -171,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         final parts = [
           if (mergeResult.promptsAdded > 0)
-            '${mergeResult.promptsAdded} prompts',
+            '${mergeResult.promptsAdded} suggestions',
           if (mergeResult.journalEntriesAdded > 0)
             '${mergeResult.journalEntriesAdded} journal entries',
           if (mergeResult.settingsUpdated > 0) 'preferences',
@@ -207,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (ctx) => AlertDialog(
         title: const Text('Reset All Data?'),
         content: const Text(
-          'This will permanently delete all custom prompts, journal entries, '
+          'This will permanently delete all custom suggestions, journal entries, '
           'and practice history, and reset all settings to defaults. '
           'This cannot be undone.',
         ),
@@ -308,7 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             title: const Text('Export Data'),
-            subtitle: const Text('Save a JSON backup of your prompts, journal, and settings'),
+            subtitle: const Text('Save a JSON backup of your suggestions, journal, and settings'),
             trailing: const Icon(Icons.chevron_right),
             onTap: _exportData,
           ),

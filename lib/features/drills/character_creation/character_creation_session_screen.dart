@@ -170,9 +170,9 @@ class _CharacterCreationSessionScreenState
       drillId: DrillId.characterCreation,
       autoStart: _handsFreeActive,
       instructions:
-          'Each segment is one character. On the first pass, a prompt appears automatically. '
-          'Tap New Prompt if you want a different one. On the return pass, return to that character. '
-          'No prompt is shown on return passes. The session ends when every character has had '
+          'Each segment is one character. On the first pass, a suggestion appears automatically. '
+          'Tap New Suggestion if you want a different one. On the return pass, return to that character. '
+          'No suggestion is shown on return passes. The session ends when every character has had '
           'both the initial and return passes.',
       ringLabelBuilder: (state) {
         final seg = state.currentSegment;
@@ -235,7 +235,7 @@ class _CharacterCreationSessionScreenState
             FilledButton.tonal(
               key: const Key('generate_prompt_button'),
               onPressed: () => _generatePromptForSegment(seg.id),
-              child: const Text('New Prompt'),
+              child: const Text('New Suggestion'),
             ),
           ],
         );

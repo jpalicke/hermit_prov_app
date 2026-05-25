@@ -53,7 +53,7 @@ class FiveLineSessionScreen extends StatefulWidget {
 
 class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
   static const _instructions =
-      'A prompt appears. Perform a five-line scene out loud. When you are done, tap New Prompt '
+      'A suggestion appears. Perform a five-line scene out loud. When you are done, tap New Suggestion '
       'to go again. No timer by default. Turn on auto-advance in configure if you want one.';
   String? _prompt;
   bool _loading = false;
@@ -210,7 +210,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 18),
               ),
-              child: const Text('New Prompt'),
+              child: const Text('New Suggestion'),
             ),
             if (widget.onConfigure != null) ...[
               const SizedBox(height: 12),
