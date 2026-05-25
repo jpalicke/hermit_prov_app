@@ -64,6 +64,10 @@ class PrivacyAboutScreen extends StatelessWidget {
               'A free, offline-first solo long-form comedy improv practice app.',
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 0),
+            child: Text('© 2026 Joseph Palicke'),
+          ),
 
           // -- Credits -------------------------------------------------------
           const _SectionHeader(title: 'Credits'),
