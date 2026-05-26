@@ -28,7 +28,7 @@ void main() {
     await tester.tap(find.byKey(const Key('drill_card_configure_fiveLineGame')));
     await tester.pumpAndSettle();
     await _capture(tester, '02_five_line_configure');
-    await tester.tap(find.byTooltip('Back'));
+    await tester.pageBack();
     await tester.pumpAndSettle();
 
     // 3. Five Line session — tap the card to start, wait for suggestion to load.
