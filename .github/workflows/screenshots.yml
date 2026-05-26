@@ -92,34 +92,37 @@ jobs:
             xcrun simctl shutdown "$udid" || true
           }
 
-          # Identify simulator UDIDs by device name.
+          # Identify simulator UDIDs by exact device name.
+          # Anchors the match with " $1 (" so "iPhone 17 Pro" won't match "iPhone 17 Pro Max".
           # The || true prevents set -e from aborting when grep finds no match.
           get_udid() {
             xcrun simctl list devices available \
-              | grep "$1" \
+              | grep " ${1} (" \
               | grep -oE '\([A-F0-9a-f-]+\)' \
               | tr -d '()' \
               | head -1 \
               || true
           }
 
-          UDID_69=$(get_udid "iPhone 16 Pro Max")
-          UDID_65=$(get_udid "iPhone 16 Plus")
+          UDID_69=$(get_udid "iPhone 17 Pro Max")
+          UDID_65=$(get_udid "iPhone 17 Pro")
 
           if [ -z "$UDID_69" ]; then
-            echo "ERROR: iPhone 16 Pro Max simulator not found" >&2
+            echo "ERROR: iPhone 17 Pro Max simulator not found" >&2
+            xcrun simctl list devices available >&2
             exit 1
           fi
           if [ -z "$UDID_65" ]; then
-            echo "ERROR: iPhone 16 Plus simulator not found" >&2
+            echo "ERROR: iPhone 17 Pro simulator not found" >&2
+            xcrun simctl list devices available >&2
             exit 1
           fi
 
-          echo "6.9\" UDID: $UDID_69"
-          echo "6.5\" UDID: $UDID_65"
+          echo "6.9in UDID (iPhone 17 Pro Max): $UDID_69"
+          echo "6.3in UDID (iPhone 17 Pro):     $UDID_65"
 
-          capture_device "$UDID_69" "6_9_inch"
-          capture_device "$UDID_65" "6_5_inch"
+          capture_device "$UDID_69" "pro_max"
+          capture_device "$UDID_65" "pro"
 
       - name: Upload flutter drive logs on failure
         if: failure()
