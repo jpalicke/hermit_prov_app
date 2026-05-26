@@ -1723,24 +1723,24 @@ These are not core engineering blockers unless you decide to include them in the
 
 ## Prompt List Content
 
-- [ ] Research prompt-list sources and licensing
-- [ ] Create robust Objects list
-- [ ] Create robust Locations list
-- [ ] Create robust Relationships list
-- [ ] Create robust Occupations list
-- [ ] Create robust Emotions list
-- [ ] Create robust Activities list
-- [ ] Ensure no specific brands
-- [ ] Ensure no celebrities
-- [ ] Ensure no copyrighted fictional character names
-- [ ] Ensure no slurs
-- [ ] Ensure no explicitly sexual content
-- [ ] Ensure no hateful content
-- [ ] Allow mildly edgy adult-life prompts
-- [ ] Review prompt list for duplicates
-- [ ] Review prompt list for spelling/format consistency
-- [ ] Convert prompt lists into app seed format
-- [ ] Add content version metadata if useful
+- [x] Research prompt-list sources and licensing
+- [x] Create robust Objects list
+- [x] Create robust Locations list
+- [x] Create robust Relationships list
+- [x] Create robust Occupations list
+- [x] Create robust Emotions list
+- [x] Create robust Activities list
+- [x] Ensure no specific brands
+- [x] Ensure no celebrities
+- [x] Ensure no copyrighted fictional character names
+- [x] Ensure no slurs
+- [x] Ensure no explicitly sexual content
+- [x] Ensure no hateful content
+- [x] Allow mildly edgy adult-life prompts
+- [x] Review prompt list for duplicates
+- [x] Review prompt list for spelling/format consistency
+- [x] Convert prompt lists into app seed format
+- [x] Add content version metadata if useful
 
 ## Emotion Wheel Content
 
