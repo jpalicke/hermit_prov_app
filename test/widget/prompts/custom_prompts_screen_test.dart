@@ -194,7 +194,7 @@ void main() {
 
       expect(
         find.text(
-            "This prompt can't be saved because it violates content rules."),
+            "This suggestion can't be saved because it violates content rules."),
         findsOneWidget,
       );
       // The save/edit screen should still be open (not navigated back)

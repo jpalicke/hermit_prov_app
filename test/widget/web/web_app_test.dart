@@ -39,7 +39,7 @@ void main() {
       await tester.tap(find.text('Suggestion Generator'));
       await tester.pumpAndSettle();
 
-      expect(find.text('New Prompt'), findsOneWidget);
+      expect(find.text('New Suggestion'), findsOneWidget);
     });
 
     testWidgets('can navigate into Timer', (tester) async {

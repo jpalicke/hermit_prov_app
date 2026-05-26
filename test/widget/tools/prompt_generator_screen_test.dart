@@ -29,15 +29,15 @@ Widget _wrapWithServices(Widget child, {InMemoryPromptRepository? repo}) {
 }
 
 void main() {
-  // ── Test 3: Tapping New Prompt displays a prompt ───────────────────────────
+  // ── Test 3: Tapping New Suggestion displays a prompt ───────────────────────────
   group('prompt generation', () {
-    testWidgets('tapping New Prompt displays a prompt from the word bucket',
+    testWidgets('tapping New Suggestion displays a prompt from the word bucket',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
 
       // Initially no prompt text shown (or a placeholder)
-      await tester.tap(find.text('New Prompt'));
+      await tester.tap(find.text('New Suggestion'));
       await tester.pumpAndSettle();
 
       // After tapping, something should be displayed in the prompt area.
@@ -151,9 +151,9 @@ void main() {
       );
       expect(objectsChip.selected, isTrue);
 
-      // New Prompt button must still be enabled.
+      // New Suggestion button must still be enabled.
       final button = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'New Prompt'),
+        find.widgetWithText(FilledButton, 'New Suggestion'),
       );
       expect(button.onPressed, isNotNull);
     });
@@ -181,10 +181,10 @@ void main() {
     });
   });
 
-  // ── Test: New Prompt button state ─────────────────────────────────────────
+  // ── Test: New Suggestion button state ─────────────────────────────────────────
   group('new prompt button state', () {
     testWidgets(
-        'New Prompt button stays enabled after deselect-all because fallback prevents empty selection',
+        'New Suggestion button stays enabled after deselect-all because fallback prevents empty selection',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
@@ -194,20 +194,20 @@ void main() {
       await tester.pumpAndSettle();
 
       final button = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'New Prompt'),
+        find.widgetWithText(FilledButton, 'New Suggestion'),
       );
       expect(button.onPressed, isNotNull);
     });
 
     testWidgets(
-        'New Prompt button is enabled when at least one category is selected',
+        'New Suggestion button is enabled when at least one category is selected',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWithServices(const PromptGeneratorScreen()));
       await tester.pumpAndSettle();
 
       // By default all categories are selected — button should be enabled.
       final button = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'New Prompt'),
+        find.widgetWithText(FilledButton, 'New Suggestion'),
       );
       expect(button.onPressed, isNotNull);
     });

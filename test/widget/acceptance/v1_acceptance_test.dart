@@ -359,8 +359,8 @@ void main() {
 
       expect(find.byType(PromptGeneratorScreen), findsOneWidget);
 
-      // Tap "New Prompt" to generate a prompt (all categories selected by default).
-      await tester.tap(find.text('New Prompt'));
+      // Tap "New Suggestion" to generate a suggestion (all categories selected by default).
+      await tester.tap(find.text('New Suggestion'));
       await tester.pumpAndSettle();
 
       // A prompt string is now displayed (non-empty text somewhere on screen).

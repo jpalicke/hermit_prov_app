@@ -119,8 +119,8 @@ void main() {
 
     expect(find.byKey(const Key('prompt1_category_picker')), findsOneWidget);
     expect(find.byKey(const Key('prompt2_category_picker')), findsOneWidget);
-    expect(find.text('Prompt 1 categories'), findsOneWidget);
-    expect(find.text('Prompt 2 categories'), findsOneWidget);
+    expect(find.text('Suggestion 1 categories'), findsOneWidget);
+    expect(find.text('Suggestion 2 categories'), findsOneWidget);
   });
 
   // 6. Toggling a category chip saves the change.

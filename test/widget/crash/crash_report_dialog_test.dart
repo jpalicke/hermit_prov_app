@@ -59,7 +59,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.textContaining('not your custom prompts or journal entries'),
+        find.textContaining('not your custom suggestions or journal entries'),
         findsOneWidget,
       );
     });
