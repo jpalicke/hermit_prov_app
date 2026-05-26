@@ -25,6 +25,9 @@ jobs:
       - name: Run unit tests
         run: flutter test
 
+      - name: List available simulators
+        run: xcrun simctl list devices available
+
       - name: Capture screenshots
         run: |
           set -euo pipefail
@@ -90,8 +93,14 @@ jobs:
           }
 
           # Identify simulator UDIDs by device name.
+          # The || true prevents set -e from aborting when grep finds no match.
           get_udid() {
-            xcrun simctl list devices available | grep "$1" | grep -oE '\([A-F0-9-]+\)' | tr -d '()' | head -1
+            xcrun simctl list devices available \
+              | grep "$1" \
+              | grep -oE '\([A-F0-9a-f-]+\)' \
+              | tr -d '()' \
+              | head -1 \
+              || true
           }
 
           UDID_69=$(get_udid "iPhone 16 Pro Max")
@@ -111,6 +120,14 @@ jobs:
 
           capture_device "$UDID_69" "6_9_inch"
           capture_device "$UDID_65" "6_5_inch"
+
+      - name: Upload flutter drive logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-drive-logs-${{ github.sha }}
+          path: /tmp/flutter_drive_*.log
+          retention-days: 7
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
