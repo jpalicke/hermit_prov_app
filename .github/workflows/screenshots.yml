@@ -1,0 +1,120 @@
+# ABOUTME: GitHub Actions workflow that captures App Store screenshots via iOS Simulator.
+# ABOUTME: Produces all required screenshot sizes (6.9" and 6.5") by driving an integration test.
+
+name: App Store Screenshots
+
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.8'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run unit tests
+        run: flutter test
+
+      - name: Capture screenshots
+        run: |
+          set -euo pipefail
+
+          BUNDLE_ID="com.hermitprov.hermitProvApp"
+          SENTINELS=(01_practice_home 02_five_line_configure 03_five_line_session 04_tools 05_suggestion_generator)
+
+          # Helper: poll for a file to appear, up to $3 seconds.
+          wait_for_file() {
+            local path="$1" label="$2" timeout_s="${3:-120}"
+            local elapsed=0
+            until [ -f "$path" ]; do
+              sleep 1
+              elapsed=$((elapsed + 1))
+              if [ $elapsed -ge $timeout_s ]; then
+                echo "Timed out waiting for $label" >&2
+                return 1
+              fi
+            done
+          }
+
+          # Helper: capture all five screens for one booted simulator UDID.
+          capture_device() {
+            local udid="$1" label="$2"
+            local out_dir="screenshots/$label"
+            mkdir -p "$out_dir"
+
+            echo "=== Booting $label ($udid) ==="
+            xcrun simctl boot "$udid" 2>/dev/null || true
+            until xcrun simctl list devices | grep "$udid" | grep -q "Booted"; do
+              sleep 1
+            done
+
+            echo "=== Running flutter drive for $label ==="
+            flutter drive \
+              --driver=test_driver/integration_test.dart \
+              --target=integration_test/screenshots_test.dart \
+              --device-id="$udid" \
+              > "/tmp/flutter_drive_${label}.log" 2>&1 &
+            local flutter_pid=$!
+
+            echo "=== Waiting for app to be installed ==="
+            local data_dir=""
+            until data_dir=$(xcrun simctl get_app_container "$udid" "$BUNDLE_ID" data 2>/dev/null); do
+              sleep 2
+            done
+            local tmp_dir="$data_dir/tmp"
+            echo "App tmp dir: $tmp_dir"
+
+            echo "=== Polling sentinels for $label ==="
+            for name in "${SENTINELS[@]}"; do
+              wait_for_file "$tmp_dir/${name}_ready" "${name}_ready" 180
+              echo "Taking screenshot: $name"
+              xcrun simctl io "$udid" screenshot --type png "$out_dir/${name}.png"
+              touch "$tmp_dir/${name}_done"
+            done
+
+            echo "=== Waiting for flutter drive to finish ==="
+            wait "$flutter_pid"
+
+            echo "=== Shutting down $label ==="
+            xcrun simctl shutdown "$udid" || true
+          }
+
+          # Identify simulator UDIDs by device name.
+          get_udid() {
+            xcrun simctl list devices available | grep "$1" | grep -oE '\([A-F0-9-]+\)' | tr -d '()' | head -1
+          }
+
+          UDID_69=$(get_udid "iPhone 16 Pro Max")
+          UDID_65=$(get_udid "iPhone 16 Plus")
+
+          if [ -z "$UDID_69" ]; then
+            echo "ERROR: iPhone 16 Pro Max simulator not found" >&2
+            exit 1
+          fi
+          if [ -z "$UDID_65" ]; then
+            echo "ERROR: iPhone 16 Plus simulator not found" >&2
+            exit 1
+          fi
+
+          echo "6.9\" UDID: $UDID_69"
+          echo "6.5\" UDID: $UDID_65"
+
+          capture_device "$UDID_69" "6_9_inch"
+          capture_device "$UDID_65" "6_5_inch"
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-screenshots-${{ github.sha }}
+          path: screenshots/
+          retention-days: 90
