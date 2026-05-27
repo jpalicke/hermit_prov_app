@@ -110,24 +110,25 @@ jobs:
           }
 
           UDID_69=$(get_udid "iPhone 17 Pro Max")
-          UDID_AIR=$(get_udid "iPhone Air")
 
           if [ -z "$UDID_69" ]; then
             echo "ERROR: iPhone 17 Pro Max simulator not found" >&2
             xcrun simctl list devices available >&2
             exit 1
           fi
-          if [ -z "$UDID_AIR" ]; then
-            echo "ERROR: iPhone Air simulator not found" >&2
-            xcrun simctl list devices available >&2
-            exit 1
-          fi
 
           echo "6.9in UDID (iPhone 17 Pro Max): $UDID_69"
-          echo "6.5in UDID (iPhone Air):        $UDID_AIR"
 
+          # Capture native 6.9" screenshots (1320x2868).
           capture_device "$UDID_69" "6.9in"
-          capture_device "$UDID_AIR" "6.5in"
+
+          # No simulator on macos-26 produces 6.5" dimensions natively (1284x2778).
+          # Resize the 6.9" captures with sips for the App Store 6.5" slot.
+          mkdir -p screenshots/6.5in
+          for f in screenshots/6.9in/*.png; do
+            sips -z 2778 1284 "$f" --out "screenshots/6.5in/$(basename "$f")" > /dev/null
+          done
+          echo "Generated 6.5in screenshots (1284x2778) via sips."
 
       - name: Upload flutter drive logs on failure
         if: failure()
