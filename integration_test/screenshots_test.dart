@@ -27,7 +27,11 @@ void main() {
     );
     await tester.tap(find.byKey(const Key('drill_card_configure_fiveLineGame')));
     await tester.pumpAndSettle();
+    // SQLite _load() is async; pumpAndSettle alone may return before it resolves.
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
     await _capture(tester, '02_five_line_configure');
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('drill_configure_save_button')));
     await tester.pumpAndSettle();
 
