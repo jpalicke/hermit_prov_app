@@ -11,7 +11,7 @@ Tests serve as executable documentation. Before you change anything, read the te
 ## Running Tests
 
 ```bash
-flutter test                          # run everything (361 tests)
+flutter test                          # run everything (391 tests)
 flutter test test/unit/               # unit tests only
 flutter test test/repository/         # repository integration tests only
 flutter test test/widget/             # widget tests only

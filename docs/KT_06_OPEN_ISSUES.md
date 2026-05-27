@@ -1,27 +1,39 @@
-# Hermit Prov — Open Issues at Handoff
+# Hermit Prov — Open Issues
 
-These are the known gaps as of the v1 handoff. All items have GitHub issues on the `jpalicke/hermit_prov_app` repo.
+Known gaps and in-progress items. All items have GitHub issues on the `jpalicke/hermit_prov_app` repo.
+
+---
+
+## Issue #1 — Crash Reporting Not Wired Up
+
+**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/1  
+**Priority:** Low (privacy-first app; adding a crash backend requires careful decision)
+
+The crash reporting infrastructure exists (`CrashReportService` interface, `NoOpCrashReportService`, `CrashReportDialog`) but is not connected. `AppServices` does not include `CrashReportService`, and `main.dart` has no `FlutterError.onError` or `runZonedGuarded`. The crash dialog will never fire in production.
+
+To wire it up: choose a backend (or keep it local-only), add to `AppServices`, and wrap `runApp` in `runZonedGuarded`.
 
 ---
 
 ## Issue #2 — Android Release Signing
 
 **GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/2  
-**Priority:** Blocker for Play Store submission
+**Priority:** Resolved for CI; local builds still need `key.properties`
 
-**What's wrong:** `android/app/build.gradle.kts` release config uses the debug keystore:
+**CI status:** The `android-release.yml` workflow builds a signed AAB and submits to Play Store using keystore credentials stored as GitHub secrets (`KEYSTORE_BASE64`, `KEY_ALIAS`, `KEY_PASSWORD`, `STORE_PASSWORD`). CI release builds are fully signed.
 
-```kotlin
-release {
-    signingConfig = signingConfigs.getByName("debug")  // TODO: Add your own signing config
-```
+**Local builds:** `android/app/build.gradle.kts` reads signing config from `android/key.properties`. This file is gitignored. To build a signed release locally:
+1. Create `android/key.properties` with `storeFile`, `storePassword`, `keyAlias`, `keyPassword`
+2. Ensure the file is NOT committed
 
-**How to fix (requires developer action — cannot be done in code alone):**
-1. Generate a production keystore: `keytool -genkey -v -keystore hermit_prov_release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias hermit_prov`
-2. Store the keystore file somewhere safe (NOT in the repo)
-3. Create `android/key.properties` (gitignored) with the keystore path, password, and alias
-4. Update `build.gradle.kts` to read from `key.properties` for release config
-5. Verify `android/key.properties` is in `.gitignore`
+---
+
+## Issue #3 — DEVELOPER_NOTES.md Stale Entries
+
+**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/3  
+**Priority:** Low (documentation only)
+
+`DEVELOPER_NOTES.md` has entries that reference implementation decisions that have since changed or been superseded. These should be reviewed and pruned or updated.
 
 ---
 
@@ -46,6 +58,20 @@ release {
 **Current state:** All screens are single-column mobile layouts. There are no `MediaQuery` or `LayoutBuilder` breakpoints anywhere. iOS `Info.plist` allows all orientations on iPad.
 
 **Decision needed:** Either implement a responsive two-column layout for tablets (≥600dp), or explicitly descope and constrain to portrait-phone layout for v1.
+
+---
+
+## Release Status (v1.0.1+3)
+
+The app has been submitted to Apple App Store Connect. The following items are still needed to complete the App Store listing:
+
+- Screenshots: captured via `screenshots.yml` workflow; need to be uploaded to App Store Connect
+- App description, keywords, and support URL in App Store Connect
+- Copyright field: "© 2026 Joseph Palicke"
+- Support URL: `https://github.com/jpalicke/hermit_prov_app/issues`
+- Privacy policy URL: `https://jpalicke.github.io/hermit_prov_app/privacy.html` (live)
+
+Android Play Store submission is pending: requires adding 5 GitHub secrets, creating the app in Play Console, setting up a service account, and performing a first manual AAB upload.
 
 ---
 

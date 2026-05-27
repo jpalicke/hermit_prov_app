@@ -4,7 +4,7 @@
 
 Hermit Prov is a free, offline-first Flutter mobile app for **solo long-form comedy improv practice**. It is designed for improvisers who want to practice alone, at home, without a scene partner. The app provides structured drills, tools (suggestion generator, timer, emotion wheel), and a journal to track progress.
 
-The app targets Android and iOS. There is no web version.
+The app targets Android and iOS. A web build exists (`lib/web/web_app.dart`) but is not a primary target and is not published.
 
 ---
 
@@ -108,9 +108,9 @@ The `prompt_plan.md` file serves as a detailed build log. If you need to underst
 
 | Platform | Status |
 |----------|--------|
-| Android | Primary target |
-| iOS | Primary target |
-| Web | Not supported |
+| Android | Primary target; automated release workflow builds signed AAB and publishes to Play Store |
+| iOS | Primary target; automated release workflow builds IPA and submits to App Store Connect |
+| Web | Build exists (`lib/web/web_app.dart`) but not published or maintained |
 | Desktop | Not supported |
 
 ---
@@ -120,7 +120,7 @@ The `prompt_plan.md` file serves as a detailed build log. If you need to underst
 See `docs/KT_06_OPEN_ISSUES.md` for a full list. The short version:
 
 1. Crash reporting is coded but not wired up
-2. Android release signing uses the debug keystore (needs a real keystore before Play Store submission)
-3. `DEVELOPER_NOTES.md` has 4 stale entries
+2. Android release signing: CI workflow (`android-release.yml`) handles this via GitHub secrets; local release builds still need a `key.properties` file
+3. `DEVELOPER_NOTES.md` has stale entries
 4. `todo.md` milestone completion state is not fully up to date
-5. Tablet/iPad layout has not been decided for v1
+5. Tablet/iPad layout has not been decided

@@ -110,7 +110,7 @@ jobs:
           }
 
           UDID_69=$(get_udid "iPhone 17 Pro Max")
-          UDID_65=$(get_udid "iPhone 17 Pro")
+          UDID_65=$(get_udid "iPhone 14 Plus")
 
           if [ -z "$UDID_69" ]; then
             echo "ERROR: iPhone 17 Pro Max simulator not found" >&2
@@ -118,13 +118,13 @@ jobs:
             exit 1
           fi
           if [ -z "$UDID_65" ]; then
-            echo "ERROR: iPhone 17 Pro simulator not found" >&2
+            echo "ERROR: iPhone 14 Plus simulator not found" >&2
             xcrun simctl list devices available >&2
             exit 1
           fi
 
           echo "6.9in UDID (iPhone 17 Pro Max): $UDID_69"
-          echo "6.3in UDID (iPhone 17 Pro):     $UDID_65"
+          echo "6.5in UDID (iPhone 14 Plus):    $UDID_65"
 
           capture_device "$UDID_69" "pro_max"
           capture_device "$UDID_65" "pro"

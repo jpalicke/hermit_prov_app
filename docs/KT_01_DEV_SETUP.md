@@ -64,7 +64,7 @@ All tests — unit, repository, and widget — run with a single command:
 flutter test
 ```
 
-Expected output: **361 tests, 0 failures** (as of handoff). If you see failures, do not proceed; fix them first.
+Expected output: **391 tests, 0 failures** (as of v1.0.1). If you see failures, do not proceed; fix them first.
 
 To run a specific file:
 ```bash
@@ -95,7 +95,7 @@ Must be **clean (0 issues)** before committing. Fix any warnings — the codebas
 flutter build apk --release
 ```
 
-> **Warning:** The release build currently uses the debug signing key. This will be rejected by the Play Store. See `docs/KT_06_OPEN_ISSUES.md` — issue #2. A proper keystore must be generated and wired into `android/app/build.gradle.kts` before submitting.
+> **Note:** CI release builds are signed automatically via the `android-release.yml` workflow using secrets stored in GitHub. For local release builds you need `android/key.properties` pointing at a valid keystore — see `docs/KT_06_OPEN_ISSUES.md` issue #2.
 
 ### iOS Archive (macOS only):
 ```bash
