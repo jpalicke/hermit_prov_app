@@ -28,6 +28,14 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Boot iOS simulator
+        run: |
+          xcrun simctl boot "iPhone 16" 2>/dev/null || true
+          xcrun simctl bootstatus "iPhone 16" -b
+
+      - name: Run integration tests
+        run: flutter test integration_test/app_test.dart -d "iPhone 16"
+
       - name: Set up signing keychain
         env:
           CERT_P12_BASE64: ${{ secrets.IOS_CERT_P12 }}
