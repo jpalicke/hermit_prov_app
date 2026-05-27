@@ -63,15 +63,16 @@ To wire it up: choose a backend (or keep it local-only), add to `AppServices`, a
 
 ## Release Status (v1.0.1+3)
 
-The app has been submitted to Apple App Store Connect. The following items are still needed to complete the App Store listing:
+**iOS App Store:** Submitted for review (2026-05-27). Awaiting Apple approval.
+- Privacy policy live at `https://jpalicke.github.io/hermit_prov_app/privacy.html`
+- Screenshots captured via `screenshots.yml` — see `docs/KT_09_SCREENSHOTS_WORKFLOW.md`
 
-- Screenshots: captured via `screenshots.yml` workflow; need to be uploaded to App Store Connect
-- App description, keywords, and support URL in App Store Connect
-- Copyright field: "© 2026 Joseph Palicke"
-- Support URL: `https://github.com/jpalicke/hermit_prov_app/issues`
-- Privacy policy URL: `https://jpalicke.github.io/hermit_prov_app/privacy.html` (live)
-
-Android Play Store submission is pending: requires adding 5 GitHub secrets, creating the app in Play Console, setting up a service account, and performing a first manual AAB upload.
+**Android Play Store:** Not yet submitted. Requires:
+1. Keystore generation and `scripts/android_secrets.sh` to encode it
+2. 5 GitHub secrets added (see `docs/KT_08_ANDROID_SIGNING_SETUP.md`)
+3. App created in Play Console
+4. Google Cloud service account with Play access
+5. One manual AAB upload to bootstrap the listing
 
 ---
 
