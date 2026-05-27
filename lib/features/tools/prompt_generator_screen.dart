@@ -134,6 +134,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
             // ── New Prompt button ────────────────────────────────────────
             FilledButton.icon(
+              key: const Key('new_suggestion_button'),
               onPressed: _generatePrompt,
               icon: const Icon(Icons.shuffle),
               label: const Text('New Suggestion'),

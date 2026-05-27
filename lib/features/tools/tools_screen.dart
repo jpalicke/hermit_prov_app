@@ -18,6 +18,7 @@ class ToolsScreen extends StatelessWidget {
       body: ListView(
         children: [
           _ToolTile(
+            key: const Key('tool_tile_suggestion_generator'),
             icon: Icons.shuffle,
             title: 'Suggestion Generator',
             subtitle: 'get a suggestion from a number of categories',
@@ -81,6 +82,7 @@ class _ToolTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    super.key,
   });
 
   final IconData icon;

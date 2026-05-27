@@ -245,6 +245,7 @@ class _DrillCard extends StatelessWidget {
         color: cs.surfaceContainerLow,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
+          key: Key('drill_card_start_${drillId.name}'),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 8, 20),
@@ -313,6 +314,7 @@ class _ToolsCard extends StatelessWidget {
       color: cs.secondaryContainer,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
+        key: const Key('tools_card'),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(20),

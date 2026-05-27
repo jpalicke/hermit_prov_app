@@ -36,23 +36,29 @@ void main() {
     await tester.pumpAndSettle();
 
     // 3. Five Line session — tap the card to start, wait for suggestion to load.
-    await tester.scrollUntilVisible(find.text('Five Line Scenes'), 150);
-    await tester.tap(find.text('Five Line Scenes').first);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('drill_card_start_fiveLineGame')),
+      150,
+    );
+    await tester.tap(find.byKey(const Key('drill_card_start_fiveLineGame')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await _capture(tester, '03_five_line_session');
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     // 4. Tools screen.
-    await tester.scrollUntilVisible(find.text('Tools'), 150);
-    await tester.tap(find.text('Tools'));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('tools_card')),
+      150,
+    );
+    await tester.tap(find.byKey(const Key('tools_card')));
     await tester.pumpAndSettle();
     await _capture(tester, '04_tools');
 
     // 5. Suggestion Generator — tap New Suggestion so one is showing.
-    await tester.tap(find.text('Suggestion Generator'));
+    await tester.tap(find.byKey(const Key('tool_tile_suggestion_generator')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('New Suggestion'));
+    await tester.tap(find.byKey(const Key('new_suggestion_button')));
     await tester.pumpAndSettle();
     await _capture(tester, '05_suggestion_generator');
   });
