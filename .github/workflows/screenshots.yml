@@ -36,14 +36,19 @@ jobs:
           SENTINELS=(01_practice_home 02_five_line_configure 03_five_line_session 04_tools 05_suggestion_generator)
 
           # Helper: poll for a file to appear, up to $3 seconds.
+          # Pass $4 as the flutter drive PID to abort early if it exits.
           wait_for_file() {
-            local path="$1" label="$2" timeout_s="${3:-120}"
+            local path="$1" label="$2" timeout_s="${3:-120}" drive_pid="${4:-}"
             local elapsed=0
             until [ -f "$path" ]; do
               sleep 1
               elapsed=$((elapsed + 1))
               if [ $elapsed -ge $timeout_s ]; then
                 echo "Timed out waiting for $label" >&2
+                return 1
+              fi
+              if [ -n "$drive_pid" ] && ! kill -0 "$drive_pid" 2>/dev/null; then
+                echo "flutter drive (pid $drive_pid) exited before $label appeared" >&2
                 return 1
               fi
             done
@@ -79,7 +84,7 @@ jobs:
 
             echo "=== Polling sentinels for $label ==="
             for name in "${SENTINELS[@]}"; do
-              wait_for_file "$tmp_dir/${name}_ready" "${name}_ready" 180
+              wait_for_file "$tmp_dir/${name}_ready" "${name}_ready" 180 "$flutter_pid"
               echo "Taking screenshot: $name"
               xcrun simctl io "$udid" screenshot --type png "$out_dir/${name}.png"
               touch "$tmp_dir/${name}_done"
