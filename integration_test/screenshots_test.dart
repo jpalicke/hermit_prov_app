@@ -25,6 +25,8 @@ void main() {
       find.byKey(const Key('drill_card_configure_fiveLineGame')),
       150,
     );
+    await tester.ensureVisible(find.byKey(const Key('drill_card_configure_fiveLineGame')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('drill_card_configure_fiveLineGame')));
     await tester.pumpAndSettle();
     // SQLite _load() is async; pumpAndSettle alone may return before it resolves.
@@ -40,6 +42,8 @@ void main() {
       find.byKey(const Key('drill_card_start_fiveLineGame')),
       150,
     );
+    await tester.ensureVisible(find.byKey(const Key('drill_card_start_fiveLineGame')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('drill_card_start_fiveLineGame')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await _capture(tester, '03_five_line_session');
@@ -51,6 +55,8 @@ void main() {
       find.byKey(const Key('tools_card')),
       150,
     );
+    await tester.ensureVisible(find.byKey(const Key('tools_card')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('tools_card')));
     await tester.pumpAndSettle();
     await _capture(tester, '04_tools');
