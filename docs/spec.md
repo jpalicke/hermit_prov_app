@@ -277,6 +277,21 @@ When resumed:
 
 - The drill continues from the paused state.
 
+### Screen Lock and Backgrounding
+
+While a session is running:
+
+- Keep the screen on so it does not auto-lock. Hands-free practice happens without touching the phone. This needs no permission.
+- Let the screen lock normally again when the session is paused, stopped, or ended.
+
+If the app is hidden or sent to the background while a session is running (screen locked by hand, app switcher, another app):
+
+- Pause the session, exactly as if the user tapped Pause.
+- Time spent away does not count toward the session.
+- When the user returns, the session stays paused until they tap Resume.
+
+The session clock measures real running time, not the number of timer callbacks. Late timer callbacks and pause/resume must never make the countdown drift.
+
 ### Stop / End
 
 When the user taps Stop/End:
