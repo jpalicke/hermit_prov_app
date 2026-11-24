@@ -16,6 +16,7 @@ Versions and packages are in `pubspec.yaml`. DI is the `AppServices` InheritedWi
 
 - `flutter test test/path/to/file_test.dart` (run only the tests you touched; run the full suite once before the PR)
 - `flutter analyze` must be clean
+- `bash scripts/check_project_rules.sh` checks the code rules below. The PR checks workflow runs it, `flutter analyze` and `flutter test` on every PR.
 - `dart run build_runner build --delete-conflicting-outputs` after any change to `lib/data/local/app_database.dart`
 
 ## Workflow
