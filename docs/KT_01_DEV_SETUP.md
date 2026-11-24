@@ -127,11 +127,9 @@ hermit_prov_app/
 │   └── fonts/              # IndieFlower custom font
 ├── android/                # Android platform config
 ├── ios/                    # iOS platform config
-├── docs/                   # Knowledge transfer documents (this directory)
-├── spec.md                 # Full product specification
-├── prompt_plan.md          # 28-step build plan (historical record)
-├── todo.md                 # Milestone checklist
-└── DEVELOPER_NOTES.md      # Implementation decisions and technical notes
+└── docs/                   # Knowledge transfer documents (this directory)
+    ├── spec.md             # Product specification (source of truth)
+    └── archive/            # 28-step build plan, todo, retro (historical)
 ```
 
 ---
@@ -169,4 +167,4 @@ dart run flutter_launcher_icons
 
 ## Reading the Spec
 
-Before starting any feature work, read `spec.md`. It is the authoritative product specification. It describes every drill, every tool, and every setting in detail. The codebase was built to match it. If code and spec disagree, the spec is the source of truth unless there's a documented reason for the deviation.
+`docs/spec.md` is the product specification and the source of truth for behavior. It describes every drill, tool and setting. Read the section for the feature you're changing rather than the whole file. When a bug shows the spec missed an obligation, add the obligation to the spec along with a test for it.

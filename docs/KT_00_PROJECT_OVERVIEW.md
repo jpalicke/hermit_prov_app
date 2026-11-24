@@ -89,9 +89,7 @@ Standalone utilities accessible from the Practice tab's "Tools" card:
 
 ## The Build Plan
 
-The app was built using a 28-prompt sequential plan (`prompt_plan.md`). All 28 prompts are complete. Each prompt added a slice of functionality and required all tests to pass and `flutter analyze` to be clean before moving to the next.
-
-The `prompt_plan.md` file serves as a detailed build log. If you need to understand why something was built a certain way, it's the best historical record.
+The app was built using a 28-prompt sequential plan. All 28 prompts are complete and the project is now in maintenance. The plan, the milestone todo list and the retro are kept in `docs/archive/` as a historical record of why things were built the way they were. They are not kept up to date.
 
 ---
 
@@ -119,8 +117,6 @@ The `prompt_plan.md` file serves as a detailed build log. If you need to underst
 
 See `docs/KT_06_OPEN_ISSUES.md` for a full list. The short version:
 
-1. Crash reporting is coded but not wired up
+1. Crash reporting is wired up, but reports go to a no-op service (no backend chosen)
 2. Android release signing: CI workflow (`android-release.yml`) handles this via GitHub secrets; local release builds still need a `key.properties` file
-3. `DEVELOPER_NOTES.md` has stale entries
-4. `todo.md` milestone completion state is not fully up to date
-5. Tablet/iPad layout has not been decided
+3. Tablet/iPad layout has not been decided

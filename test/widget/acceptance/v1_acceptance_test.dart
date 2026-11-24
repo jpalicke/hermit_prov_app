@@ -480,7 +480,7 @@ void main() {
 
     // Export/Import acceptance test is skipped because it requires file_picker
     // and share_plus which rely on platform channels that cannot be driven in
-    // widget tests without mocking. Manual QA checklist in DEVELOPER_NOTES.md
+    // widget tests without mocking. Manual QA checklist in docs/MANUAL_QA_CHECKLIST.md
     // covers export/import validation.
 
     // TTS settings screen acceptance test is skipped because FlutterTtsService
