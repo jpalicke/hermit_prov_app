@@ -1,6 +1,8 @@
 // ABOUTME: Unit tests for PracticeStats.compute() — totals, streaks, and per-drill breakdowns.
 // ABOUTME: All tests use fixed dates to avoid clock-dependent failures.
 
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/history/practice_session.dart';
@@ -33,6 +35,20 @@ DateTime _daysAgo(DateTime today, int offset) => DateTime(
       today.day - offset,
       12,
     );
+
+/// Returns the local-midnight days in [year] that are not 24 hours long
+/// (daylight saving transitions in the current time zone). Empty in zones
+/// without DST, such as UTC. CI runs this file with TZ=America/New_York.
+List<DateTime> _dstTransitionDays(int year) {
+  final days = <DateTime>[];
+  for (var d = DateTime(year);
+      d.year == year;
+      d = DateTime(d.year, d.month, d.day + 1)) {
+    final next = DateTime(d.year, d.month, d.day + 1);
+    if (next.difference(d) != const Duration(hours: 24)) days.add(d);
+  }
+  return days;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -186,6 +202,27 @@ void main() {
       ];
       final stats = PracticeStats.compute(sessions);
       expect(stats.currentStreak, 1);
+    });
+
+    test('streaks stay unbroken across daylight saving changes', () {
+      // A day can be 23 or 25 hours long, so stepping by 24 hours breaks streaks.
+      final transitions = _dstTransitionDays(2026);
+      if (Platform.environment['TZ'] == 'America/New_York') {
+        // Guards the CI run: the loop below must actually see both changes.
+        expect(transitions, hasLength(2));
+      }
+      for (final day in transitions) {
+        final sessions = [
+          for (var offset = -1; offset <= 1; offset++)
+            _session(
+              id: '$offset',
+              drillId: DrillId.catClock,
+              loggedAt: DateTime(day.year, day.month, day.day + offset, 12),
+            ),
+        ];
+        final stats = PracticeStats.compute(sessions);
+        expect(stats.longestStreak, 3, reason: 'around $day');
+      }
     });
   });
 }
