@@ -256,6 +256,8 @@ class _DrillSessionShellState extends State<DrillSessionShell>
     );
     // Fire-and-forget: logging is silent, errors are not surfaced to the user.
     repo.addSession(session);
+    // A session is logged once, however many ways it is later stopped.
+    _startedAt = null;
   }
 
   Future<void> _onPopInvoked(bool didPop, Object? result) async {

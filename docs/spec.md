@@ -310,6 +310,10 @@ After logging:
 - Do not show “Session saved.”
 - Return directly to the drill Start screen.
 
+### Finite Session Completion
+
+When a finite session (Character Creation) runs out, the session screen closes, even if the instructions sheet or the "Leave drill?" dialog is open over it. Whatever is open closes with it.
+
 ## 13. Timer Display and Progress Indicator
 
 The timer should be shown as large numeric text.
@@ -891,6 +895,8 @@ A drill session is logged if the user spends at least 30 seconds in a drill.
 
 The logged duration is the whole time the timer ran in that session, across every rep of a looping drill (pauses excluded).
 
+A session is logged at most once, however it ends.
+
 Stored session fields:
 
 - Drill name.
@@ -1448,6 +1454,8 @@ Test:
 - Sessions at/over 30 seconds are logged.
 - Looping drills (Cat/Clock, Two-Character Scenes, A-to-C, Five Line auto-advance) show a new suggestion every rep, not just the first.
 - A session that runs several reps logs its full duration.
+- A finite session that ends under the instructions sheet or the "Leave drill?" dialog closes the session screen and logs once.
+- Tapping Stop after a session was logged does not log it again.
 
 ### Character Creation Tests
 
