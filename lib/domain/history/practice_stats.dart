@@ -92,7 +92,7 @@ class PracticeStats {
     if (sortedDays.isEmpty) return 0;
 
     final today = _dateOnly(DateTime.now());
-    final yesterday = today.subtract(const Duration(days: 1));
+    final yesterday = _addDays(today, -1);
 
     // Streak anchor: must end on today or yesterday.
     final last = sortedDays.last;
@@ -100,7 +100,7 @@ class PracticeStats {
 
     var streak = 1;
     for (var i = sortedDays.length - 2; i >= 0; i--) {
-      final expected = sortedDays[i + 1].subtract(const Duration(days: 1));
+      final expected = _addDays(sortedDays[i + 1], -1);
       if (sortedDays[i] == expected) {
         streak++;
       } else {
@@ -118,7 +118,7 @@ class PracticeStats {
     var current = 1;
 
     for (var i = 1; i < sortedDays.length; i++) {
-      final expected = sortedDays[i - 1].add(const Duration(days: 1));
+      final expected = _addDays(sortedDays[i - 1], 1);
       if (sortedDays[i] == expected) {
         current++;
         if (current > longest) longest = current;
@@ -128,6 +128,11 @@ class PracticeStats {
     }
     return longest;
   }
+
+  /// Steps [day] by whole calendar days. Adding a Duration would be off by an
+  /// hour across a daylight saving change, when a day is 23 or 25 hours long.
+  static DateTime _addDays(DateTime day, int days) =>
+      DateTime(day.year, day.month, day.day + days);
 
   /// Strips time from a DateTime, returning midnight local.
   static DateTime _dateOnly(DateTime dt) {
