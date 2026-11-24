@@ -212,7 +212,9 @@ objects | locations | relationships | occupations | emotions | activities | genr
 
 `DriftPromptRepository` holds the built-in list in memory (it never writes built-ins to SQLite). Custom prompts are stored in SQLite. `getBuiltInPrompts()` returns the in-memory list; custom CRUD hits the database.
 
-Built-in prompt IDs are in the format `bi_<category>_<index>` (e.g. `bi_objects_042`). `DriftPromptRepository` has an `_assertNotBuiltIn` guard that throws if you try to add/update/delete a prompt with a built-in ID prefix.
+Built-in prompt IDs are in the format `bi_<category>_<index>` (e.g. `bi_objects_042`). `DriftPromptRepository` has an `_assertNotBuiltIn` guard that throws if you try to update or delete a prompt whose ID matches a built-in.
+
+To change the built-in word lists, edit the files in `lib/data/seed/categories/`. No migration is needed because built-ins never touch the database.
 
 ---
 
@@ -246,7 +248,20 @@ class LocalBackupService implements BackupService {
 **Export:** Uses `share_plus` to surface the OS share sheet with the JSON file.  
 **Import:** Uses `file_picker` to let the user select a `.json` file.
 
-The backup schema version is `1`. `mergeIntoApp` throws a `FormatException` if the version doesn't match.
+**File format (schema version 1):**
+
+```
+schemaVersion: 1
+exportedAt: ISO-8601 UTC string
+customPrompts: [ { id, text, category, createdAt, updatedAt } ]        # dates are ISO-8601 UTC
+journalEntries: [ { id, body, drillId?, createdAt, updatedAt } ]
+drillSettings: { <DrillId.name>: { ...DrillSettings.toJson() } }
+preferences: { themePreference, ttsSpeakingRate }
+```
+
+`importFromJson` throws a `FormatException` if the file isn't JSON or `schemaVersion` isn't `1`.
+
+**Bumping to version 2:** add a migration branch in `LocalBackupService.importFromJson` that checks `schemaVersion` and fills defaults or renames fields before calling `AppBackup.fromJson`. Keep reading version 1 files.
 
 ---
 
