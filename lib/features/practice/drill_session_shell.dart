@@ -1,20 +1,31 @@
 // ABOUTME: Reusable active drill session UI shell with countdown, progress ring, and controls.
-// ABOUTME: Hosts a DrillSessionController and a real periodic timer; drives Start/Pause/Resume/Stop.
+// ABOUTME: Drives Start/Pause/Resume/Stop from wall-clock time, keeps the screen awake, pauses when backgrounded.
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hermit_prov_app/core/di/app_services.dart';
+import 'package:hermit_prov_app/domain/device/screen_awake_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_controller.dart';
 import 'package:hermit_prov_app/domain/drills/drill_session_state.dart';
+import 'package:hermit_prov_app/domain/drills/session_clock.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/history/practice_session.dart';
 
 /// Reusable active session screen.
 ///
 /// The caller provides a [controller] that has already been configured with
-/// the correct segment list.  The shell manages an internal 1-second periodic
-/// Timer that calls [controller.tick] and rebuilds via [setState].
+/// the correct segment list.  The shell measures running time with a
+/// [SessionClock] and, on a short periodic Timer, calls [controller.tick] once
+/// for every whole tick of real time that has passed, so late timer callbacks
+/// and pause/resume never make the drill clock drift.
+///
+/// While the session is running the shell keeps the screen on through the
+/// [ScreenAwakeService] in [AppServices] (when there is one), because
+/// hands-free practice happens without touching the phone.  If the app is
+/// hidden or backgrounded anyway, a running session is paused so it can be
+/// resumed exactly where it was.
 ///
 /// The session loads with the timer stopped.  A Start button is shown first;
 /// after starting it becomes a Pause / Resume toggle.  A separate Stop button
@@ -68,8 +79,22 @@ class DrillSessionShell extends StatefulWidget {
   State<DrillSessionShell> createState() => _DrillSessionShellState();
 }
 
-class _DrillSessionShellState extends State<DrillSessionShell> {
+class _DrillSessionShellState extends State<DrillSessionShell>
+    with WidgetsBindingObserver {
+  /// How often the shell checks the clock.  Shorter than a tick so the
+  /// countdown changes close to each real second.
+  static const _pollInterval = Duration(milliseconds: 250);
+
   Timer? _ticker;
+
+  /// Running time of the current session, excluding paused time.
+  final SessionClock _clock = SessionClock();
+
+  /// How many controller ticks have been applied for [_clock]'s time so far.
+  int _ticksApplied = 0;
+
+  ScreenAwakeService? _screenAwake;
+  bool _keepingAwake = false;
 
   /// Set when the user taps Start; used to compute session duration for logging.
   DateTime? _startedAt;
@@ -77,6 +102,7 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (widget.autoStart) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _handleStart();
@@ -85,58 +111,126 @@ class _DrillSessionShellState extends State<DrillSessionShell> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _screenAwake = context
+        .getInheritedWidgetOfExactType<AppServices>()
+        ?.screenAwakeService;
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
+    _setKeepAwake(false);
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The OS suspends a hidden app, which stops the timer and TTS.  Pause so
+    // the user resumes where they left off instead of on a stale clock.
+    if (state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.paused) {
+      if (mounted && widget.controller.state.isRunning) {
+        _catchUp();
+        if (!mounted || !widget.controller.state.isRunning) return;
+        _pause();
+      }
+    }
+  }
+
+  /// Holds the screen awake while the session is running, and only then.
+  void _syncKeepAwake() {
+    _setKeepAwake(mounted && widget.controller.state.isRunning);
+  }
+
+  void _setKeepAwake(bool keep) {
+    if (keep == _keepingAwake) return;
+    _keepingAwake = keep;
+    final service = _screenAwake;
+    if (service == null) return;
+    unawaited(keep ? service.keepAwake() : service.allowSleep());
+  }
+
   void _startTicker() {
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      setState(() {
-        widget.controller.tick();
-      });
-      // Auto-end when a finite session completes.
-      if (widget.controller.state.isCompleted) {
-        _handleExit();
+    _ticker?.cancel();
+    _ticker = Timer.periodic(_pollInterval, (_) => _catchUp());
+  }
+
+  /// Applies one controller tick for every whole tick of real running time
+  /// that has not been applied yet.
+  void _catchUp() {
+    if (!mounted) return;
+    final controller = widget.controller;
+    if (!controller.state.isRunning) return;
+    final tickMicros = controller.tickDuration.inMicroseconds;
+    final due = _clock.elapsed.inMicroseconds ~/ tickMicros - _ticksApplied;
+    if (due <= 0) return;
+    setState(() {
+      for (var i = 0; i < due && controller.state.isRunning; i++) {
+        controller.tick();
+        _ticksApplied++;
       }
     });
+    // Auto-end when a finite session completes.
+    if (controller.state.isCompleted) {
+      _handleExit();
+    }
   }
 
   void _handleStart() {
     _startedAt = DateTime.now();
+    _clock
+      ..reset()
+      ..start();
+    _ticksApplied = 0;
     setState(() {
       widget.controller.start();
     });
     _startTicker();
+    _syncKeepAwake();
+  }
+
+  void _pause() {
+    _clock.pause();
+    setState(widget.controller.pause);
+    _syncKeepAwake();
   }
 
   void _handlePauseResume() {
-    setState(() {
-      if (widget.controller.state.isRunning) {
-        widget.controller.pause();
-      } else if (widget.controller.state.isPaused) {
-        widget.controller.resume();
-      }
-    });
+    if (widget.controller.state.isRunning) {
+      _catchUp();
+      if (!mounted || !widget.controller.state.isRunning) return;
+      _pause();
+    } else if (widget.controller.state.isPaused) {
+      _clock.start();
+      setState(widget.controller.resume);
+      _syncKeepAwake();
+    }
   }
 
   // Stops the timer and returns to idle — stays in the drill.
   void _handleResetToIdle() {
     _ticker?.cancel();
     _ticker = null;
+    _clock.reset();
+    _ticksApplied = 0;
     _maybeLogSession();
     setState(() {
       widget.controller.reset();
     });
     _startedAt = null;
+    _syncKeepAwake();
   }
 
   // Exits the drill entirely — called by the Exit button and natural completion.
   void _handleExit() {
     _ticker?.cancel();
+    _clock.pause();
     _maybeLogSession();
     widget.controller.stop();
+    _setKeepAwake(false);
     widget.onSessionEnd();
   }
 
