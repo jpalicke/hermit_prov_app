@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/data/crash/no_op_crash_report_service.dart';
+import 'package:hermit_prov_app/data/device/fake_screen_awake_service.dart';
+import 'package:hermit_prov_app/data/device/wakelock_screen_awake_service.dart';
 import 'package:hermit_prov_app/data/local/database_opener.dart';
 import 'package:hermit_prov_app/data/repositories/drift_drill_settings_repository.dart';
 import 'package:hermit_prov_app/data/repositories/drift_journal_repository.dart';
@@ -18,6 +20,7 @@ import 'package:hermit_prov_app/data/seed/seed_prompts.dart';
 import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 import 'package:hermit_prov_app/data/tts/flutter_tts_service.dart';
 import 'package:hermit_prov_app/domain/crash/crash_report_service.dart';
+import 'package:hermit_prov_app/domain/device/screen_awake_service.dart';
 import 'package:hermit_prov_app/domain/drills/drill_settings_repository.dart';
 import 'package:hermit_prov_app/domain/history/practice_history_repository.dart';
 import 'package:hermit_prov_app/domain/journal/journal_repository.dart';
@@ -39,7 +42,9 @@ class AppServices extends InheritedWidget {
     this.notifyDependents = false,
     super.key,
     ValueNotifier<ThemeMode>? themeNotifier,
-  }) : themeNotifier = themeNotifier ?? ValueNotifier(ThemeMode.system);
+    ScreenAwakeService? screenAwakeService,
+  })  : themeNotifier = themeNotifier ?? ValueNotifier(ThemeMode.system),
+        screenAwakeService = screenAwakeService ?? FakeScreenAwakeService();
 
   /// Creates an [AppServices] wired with all in-memory repository implementations.
   factory AppServices.withInMemory({required Widget child, Key? key}) {
@@ -77,6 +82,7 @@ class AppServices extends InheritedWidget {
         enabled: true,
       ),
       crashReportService: const NoOpCrashReportService(),
+      screenAwakeService: const WakelockScreenAwakeService(),
       child: child,
     );
   }
@@ -88,6 +94,10 @@ class AppServices extends InheritedWidget {
   final AppPreferencesRepository appPreferencesRepository;
   final TtsService ttsService;
   final CrashReportService crashReportService;
+
+  /// Keeps the screen on while a drill session runs. Defaults to an in-memory
+  /// fake so tests and in-memory wiring never touch the wakelock plugin.
+  final ScreenAwakeService screenAwakeService;
 
   /// Notifier for the current theme mode. Update this to trigger a live theme change.
   final ValueNotifier<ThemeMode> themeNotifier;

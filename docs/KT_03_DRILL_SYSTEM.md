@@ -101,7 +101,7 @@ class DrillSessionController {
 }
 ```
 
-**Key design decision:** The controller has no real timer inside it. It advances by `tickDuration` each time `tick()` is called. The Flutter widget layer (`DrillSessionShell`) is responsible for calling `tick()` once per second using a `Timer.periodic`. This makes the controller 100% unit-testable without fake timers or async.
+**Key design decision:** The controller has no real timer inside it. It advances by `tickDuration` each time `tick()` is called. The Flutter widget layer (`DrillSessionShell`) is responsible for calling `tick()`: it measures real running time with a `SessionClock` (`lib/domain/drills/session_clock.dart`, reads `package:clock` so `fake_async` controls it in tests) and, from a 250 ms `Timer.periodic`, calls `tick()` once for each whole second of running time not yet applied. Counting callbacks instead would drift when callbacks run late or the user pauses mid-second. This makes the controller 100% unit-testable without fake timers or async.
 
 **Status lifecycle:**
 
@@ -163,8 +163,9 @@ class DrillSessionShell extends StatefulWidget {
 ```
 
 `DrillSessionShell` is the one-size-fits-all session UI. It:
-- Owns a `Timer.periodic` that calls `controller.tick()` every second
-- Calls `setState` after each tick so Flutter rebuilds with the new state
+- Owns a `SessionClock` and a 250 ms `Timer.periodic` that calls `controller.tick()` for each whole second of real running time, then `setState` so Flutter rebuilds
+- Holds the screen awake while the session is running, through `AppServices.screenAwakeService` (`wakelock_plus` in the app, `FakeScreenAwakeService` in tests). With no `AppServices` above it, it skips the wakelock.
+- Observes the app lifecycle and pauses a running session when the app becomes `hidden` or `paused` (screen locked, app switched). `inactive` alone does not pause.
 - Renders the circular countdown ring and progress indicator
 - Renders the Start / Pause / Resume / Stop-or-Exit button
 - Calls `contentBuilder(state)` to render the drill-specific content (prompt text, character labels, etc.)
@@ -219,7 +220,7 @@ class PromptPicker {
 
 `PromptPicker` draws from the union of built-in prompts and custom user prompts matching the requested categories. It picks randomly and returns the text only (not the full model).
 
-For looping drills (Cat/Clock, Two-Character, A-to-C), a new prompt is fetched on each loop boundary. The session screen listens for loop boundaries via the controller state and regenerates.
+For looping drills (Cat/Clock, Two-Character, A-to-C, Five Line auto-advance), a new prompt is fetched on each loop boundary. The session screen watches `state.loops` in its `contentBuilder` and loads the next prompt when it goes up. Keep the same `DrillSessionController` for the whole session: replacing it resets `loops` and `sessionElapsed`, which stops later refreshes and under-counts the logged time. Hands-free announcements are keyed by `rep:segmentId`, because segment ids repeat every rep, and wait until that rep's prompt has loaded.
 
 ---
 
@@ -255,7 +256,7 @@ CatClockSessionScreen.build()
   → contentBuilder shows: blank during regroup
 
 DrillSessionShell manages:
-  → Timer.periodic calling controller.tick() every second
+  → Wall-clock ticking of controller.tick(), wakelock, pause on background
   → Countdown ring redraw
   → Start/Pause/Resume/Stop buttons
 

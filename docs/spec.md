@@ -277,6 +277,21 @@ When resumed:
 
 - The drill continues from the paused state.
 
+### Screen Lock and Backgrounding
+
+While a session is running:
+
+- Keep the screen on so it does not auto-lock. Hands-free practice happens without touching the phone. This needs no permission.
+- Let the screen lock normally again when the session is paused, stopped, or ended.
+
+If the app is hidden or sent to the background while a session is running (screen locked by hand, app switcher, another app):
+
+- Pause the session, exactly as if the user tapped Pause.
+- Time spent away does not count toward the session.
+- When the user returns, the session stays paused until they tap Resume.
+
+The session clock measures real running time, not the number of timer callbacks. Late timer callbacks and pause/resume must never make the countdown drift.
+
 ### Stop / End
 
 When the user taps Stop/End:
@@ -465,7 +480,7 @@ TTS settings apply across the whole app.
 
 For non-character drills:
 
-- The app reads the prompt aloud when it appears.
+- The app reads the prompt aloud when it appears, including the new prompt at the start of every rep.
 - Reading the prompt replaces the “begin” announcement.
 
 Timer announcements apply only to segments longer than 30 seconds.
@@ -874,6 +889,8 @@ Adding a journal entry does not count toward streaks.
 
 A drill session is logged if the user spends at least 30 seconds in a drill.
 
+The logged duration is the whole time the timer ran in that session, across every rep of a looping drill (pauses excluded).
+
 Stored session fields:
 
 - Drill name.
@@ -900,6 +917,8 @@ Summary should include:
 - Breakdown by drill.
 
 Every summary figure is computed from all logged sessions, not only the ones shown in Recent Sessions.
+
+Streaks count calendar days in the device's local time zone. A daylight saving change (a 23- or 25-hour day) must never break or lengthen a streak.
 
 Streaks should be quiet personal stats only.
 
@@ -1427,6 +1446,8 @@ Test:
 - Stop confirmation behavior.
 - Sessions under 30 seconds are not logged.
 - Sessions at/over 30 seconds are logged.
+- Looping drills (Cat/Clock, Two-Character Scenes, A-to-C, Five Line auto-advance) show a new suggestion every rep, not just the first.
+- A session that runs several reps logs its full duration.
 
 ### Character Creation Tests
 

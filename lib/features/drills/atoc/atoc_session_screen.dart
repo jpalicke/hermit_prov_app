@@ -1,6 +1,8 @@
 // ABOUTME: Active session screen for the A-to-C / Bad Idea / Initiation drill.
 // ABOUTME: Rapid-fire single-prompt intervals, looping until stopped.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/domain/drills/atoc/atoc_sequence.dart';
 import 'package:hermit_prov_app/domain/drills/drill_id.dart';
@@ -44,9 +46,14 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
 
   DrillSessionController? _controller;
   String? _prompt;
-  int _repIndex = 0;
   HandsFreeAnnouncementPolicy? _policy;
-  String? _lastAnnouncedSegmentId;
+
+  /// The rep whose suggestion is currently in [_prompt].
+  int _promptRep = 0;
+  bool _loadingPrompt = false;
+
+  /// 'rep:segmentId' of the last segment start that was announced.
+  String? _lastAnnouncedKey;
 
   bool get _handsFreActive =>
       widget.settings.handsFreeModeEnabled && widget.ttsService != null;
@@ -65,7 +72,6 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
     final segs = _sequence.buildRep(
       settings: widget.settings,
       prompt: _prompt,
-      repIndex: _repIndex,
     );
     if (mounted) {
       setState(() {
@@ -83,29 +89,26 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
         await picker.pickFromCategories(widget.settings.promptCategories);
   }
 
+  /// Loads a fresh suggestion when a new rep starts.
+  ///
+  /// The session keeps one controller for its whole life so loop count and
+  /// elapsed time (used for history logging) carry across reps. Only the
+  /// suggestion text changes between reps.
   void _onStateChanged(DrillSessionState state) {
-    if (state.loops > _repIndex) {
-      _repIndex = state.loops;
-      _regeneratePrompt();
+    // Stop resets the controller to rep 0; keep the current suggestion.
+    if (state.loops < _promptRep) _promptRep = state.loops;
+    if (state.isIdle) _lastAnnouncedKey = null;
+    if (state.loops > _promptRep && !_loadingPrompt) {
+      unawaited(_loadPromptForRep(state.loops));
     }
   }
 
-  Future<void> _regeneratePrompt() async {
+  Future<void> _loadPromptForRep(int rep) async {
+    _loadingPrompt = true;
     await _loadPrompt();
-    if (!mounted || _controller == null) return;
-    final newSegs = _sequence.buildRep(
-      settings: widget.settings,
-      prompt: _prompt,
-      repIndex: _repIndex,
-    );
-    setState(() {
-      final wasRunning = _controller!.state.isRunning;
-      _controller = DrillSessionController(
-        segments: newSegs,
-        loops: true,
-      );
-      if (wasRunning) _controller!.start();
-    });
+    _loadingPrompt = false;
+    if (!mounted) return;
+    setState(() => _promptRep = rep);
   }
 
   void _handleTick(DrillSessionState state) {
@@ -115,10 +118,15 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
     if (seg == null) return;
 
     final paused = state.isPaused;
+    final key = '${state.loops}:${seg.id}';
+    const speaksPrompt = true;
 
-    if (_lastAnnouncedSegmentId != seg.id) {
-      _lastAnnouncedSegmentId = seg.id;
-      if (_prompt != null) {
+    // Segment ids repeat every rep, so key announcements by rep as well.
+    // Wait for this rep's suggestion before announcing it.
+    if (_lastAnnouncedKey != key &&
+        (!speaksPrompt || _promptRep == state.loops)) {
+      _lastAnnouncedKey = key;
+      if (speaksPrompt && _prompt != null) {
         policy.onSegmentStart(
           seg.copyWith(promptPayload: _prompt),
           paused: paused,
@@ -128,7 +136,6 @@ class _AtoCSessionScreenState extends State<AtoCSessionScreen> {
       }
     }
 
-    // AtoC default interval is 30 s — no timer announcements per spec.
     policy.onTick(seg, state.segmentRemaining, paused: paused);
   }
 
