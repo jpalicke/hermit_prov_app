@@ -219,7 +219,7 @@ class PromptPicker {
 
 `PromptPicker` draws from the union of built-in prompts and custom user prompts matching the requested categories. It picks randomly and returns the text only (not the full model).
 
-For looping drills (Cat/Clock, Two-Character, A-to-C), a new prompt is fetched on each loop boundary. The session screen listens for loop boundaries via the controller state and regenerates.
+For looping drills (Cat/Clock, Two-Character, A-to-C, Five Line auto-advance), a new prompt is fetched on each loop boundary. The session screen watches `state.loops` in its `contentBuilder` and loads the next prompt when it goes up. Keep the same `DrillSessionController` for the whole session: replacing it resets `loops` and `sessionElapsed`, which stops later refreshes and under-counts the logged time. Hands-free announcements are keyed by `rep:segmentId`, because segment ids repeat every rep, and wait until that rep's prompt has loaded.
 
 ---
 

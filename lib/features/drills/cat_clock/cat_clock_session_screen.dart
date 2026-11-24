@@ -48,11 +48,14 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
   DrillSessionController? _controller;
   String? _prompt1;
   String? _prompt2;
-  int _repIndex = 0;
   HandsFreeAnnouncementPolicy? _policy;
 
-  // Tracks which segment TTS was last fired for to avoid re-announcing.
-  String? _lastAnnouncedSegmentId;
+  /// The rep whose words are currently in [_prompt1] and [_prompt2].
+  int _promptRep = 0;
+  bool _loadingPrompts = false;
+
+  /// 'rep:segmentId' of the last segment start that was announced.
+  String? _lastAnnouncedKey;
 
   bool get _handsFreActive =>
       widget.settings.handsFreeModeEnabled && widget.ttsService != null;
@@ -72,7 +75,6 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
       settings: widget.settings,
       prompt1: _prompt1,
       prompt2: _prompt2,
-      repIndex: _repIndex,
     );
     if (mounted) {
       setState(() {
@@ -90,39 +92,31 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
     _prompt2 = await picker.pickFromCategories(widget.settings.prompt2Categories);
   }
 
-  /// Called by the session shell when a loop completes — regenerate prompts.
-  void _onLoopComplete(DrillSessionState state) {
-    if (state.loops > _repIndex) {
-      _repIndex = state.loops;
-      _regeneratePromptsForNextRep();
+  /// Loads fresh words when a new rep starts.
+  ///
+  /// The session keeps one controller for its whole life so loop count and
+  /// elapsed time (used for history logging) carry across reps. Only the
+  /// words change between reps.
+  void _onStateChanged(DrillSessionState state) {
+    // Stop resets the controller to rep 0; keep the current words.
+    if (state.loops < _promptRep) _promptRep = state.loops;
+    if (state.isIdle) _lastAnnouncedKey = null;
+    if (state.loops > _promptRep && !_loadingPrompts) {
+      unawaited(_loadPromptsForRep(state.loops));
     }
+  }
+
+  Future<void> _loadPromptsForRep(int rep) async {
+    _loadingPrompts = true;
+    await _loadNextPrompts();
+    _loadingPrompts = false;
+    if (!mounted) return;
+    setState(() => _promptRep = rep);
   }
 
   Future<void> _regeneratePromptsNow() async {
     await _loadNextPrompts();
     if (mounted) setState(() {});
-  }
-
-  Future<void> _regeneratePromptsForNextRep() async {
-    await _loadNextPrompts();
-    if (!mounted || _controller == null) return;
-    // Rebuild the controller's segment list for the upcoming loop.
-    final newSegs = _sequence.buildRep(
-      settings: widget.settings,
-      prompt1: _prompt1,
-      prompt2: _prompt2,
-      repIndex: _repIndex,
-    );
-    // Update by creating a new controller that resumes from the same loop count.
-    // We rebuild so the next loop has fresh prompts in the segments.
-    setState(() {
-      final wasRunning = _controller!.state.isRunning;
-      _controller = DrillSessionController(
-        segments: newSegs,
-        loops: true,
-      );
-      if (wasRunning) _controller!.start();
-    });
   }
 
   void _handleTick(DrillSessionState state) {
@@ -132,14 +126,16 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
     if (seg == null) return;
 
     final paused = state.isPaused;
+    final key = '${state.loops}:${seg.id}';
+    final speaksPrompt = seg.type != DrillSegmentType.regroup;
 
-    // Fire segment start announcement when we enter a new segment.
-    if (_lastAnnouncedSegmentId != seg.id) {
-      _lastAnnouncedSegmentId = seg.id;
+    // Segment ids repeat every rep, so key announcements by rep as well.
+    // Wait for this rep's words before announcing them.
+    if (_lastAnnouncedKey != key &&
+        (!speaksPrompt || _promptRep == state.loops)) {
+      _lastAnnouncedKey = key;
       // For Cat/Clock speaking segments, speak both prompts.
-      if (seg.type != DrillSegmentType.regroup &&
-          _prompt1 != null &&
-          _prompt2 != null) {
+      if (speaksPrompt && _prompt1 != null && _prompt2 != null) {
         policy.onSegmentStart(
           seg.copyWith(promptPayload: '$_prompt1 — $_prompt2'),
           paused: paused,
@@ -177,6 +173,7 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
           'speaking out loud until the timer ends. A short regroup follows, then fresh suggestions '
           'appear automatically for the next rep. Runs until you stop it.',
       contentBuilder: (context, state) {
+        _onStateChanged(state);
         _handleTick(state);
         final seg = state.currentSegment;
         if (seg == null) return const SizedBox.shrink();
@@ -188,7 +185,6 @@ class _CatClockSessionScreenState extends State<CatClockSessionScreen> {
         return _SpeakingContent(
           prompt1: _prompt1,
           prompt2: _prompt2,
-          onStateChanged: () => _onLoopComplete(state),
           onRegenerate: _regeneratePromptsNow,
         );
       },
@@ -202,13 +198,11 @@ class _SpeakingContent extends StatelessWidget {
   const _SpeakingContent({
     required this.prompt1,
     required this.prompt2,
-    required this.onStateChanged,
     required this.onRegenerate,
   });
 
   final String? prompt1;
   final String? prompt2;
-  final VoidCallback onStateChanged;
   final VoidCallback onRegenerate;
 
   @override
