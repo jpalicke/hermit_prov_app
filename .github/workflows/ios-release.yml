@@ -13,7 +13,12 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  # Unit/widget tests and the unsigned build must pass before anything is signed.
+  unsigned:
+    uses: ./.github/workflows/ios_unsigned.yml
+
   build:
+    needs: unsigned
     runs-on: macos-26
 
     steps:
