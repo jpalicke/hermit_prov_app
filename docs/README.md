@@ -16,10 +16,9 @@ Welcome to the project. Read these in order if you're new. Skip around if you kn
 
 | File | Purpose |
 |------|---------|
-| [spec.md](spec.md) | Authoritative product specification — when in doubt, the spec wins |
-| [prompt_plan.md](prompt_plan.md) | The 28-step build plan; useful historical context for why things were built the way they were |
-| [todo.md](todo.md) | Milestone checklist (note: not fully up to date — see issue #4) |
-| [`DEVELOPER_NOTES.md`](../DEVELOPER_NOTES.md) | Implementation decisions and platform-specific notes |
+| [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) | Manual checks that automated tests can't cover |
+| [spec.md](spec.md) | Product specification and source of truth for behavior. Keep it current: when a bug shows the spec missed something, add it here. |
+| [archive/](archive/) | Build-phase history: the 28-step plan, milestone todo list and retro. Not maintained. |
 
 ## Where to start
 

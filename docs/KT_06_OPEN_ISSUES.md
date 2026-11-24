@@ -4,14 +4,12 @@ Known gaps and in-progress items. All items have GitHub issues on the `jpalicke/
 
 ---
 
-## Issue #1 — Crash Reporting Not Wired Up
+## Issue #1 — Crash Reporting Has No Backend
 
 **GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/1  
 **Priority:** Low (privacy-first app; adding a crash backend requires careful decision)
 
-The crash reporting infrastructure exists (`CrashReportService` interface, `NoOpCrashReportService`, `CrashReportDialog`) but is not connected. `AppServices` does not include `CrashReportService`, and `main.dart` has no `FlutterError.onError` or `runZonedGuarded`. The crash dialog will never fire in production.
-
-To wire it up: choose a backend (or keep it local-only), add to `AppServices`, and wrap `runApp` in `runZonedGuarded`.
+Crash handling is wired up: `main.dart` sets `FlutterError.onError` and `runZonedGuarded`, and `AppServices` provides `crashReportService`. The service is `NoOpCrashReportService`, so the dialog appears but reports go nowhere. Choosing a backend (or keeping it local-only) is still open. See `KT_02_ARCHITECTURE.md` for details.
 
 ---
 
@@ -25,28 +23,6 @@ To wire it up: choose a backend (or keep it local-only), add to `AppServices`, a
 **Local builds:** `android/app/build.gradle.kts` reads signing config from `android/key.properties`. This file is gitignored. To build a signed release locally:
 1. Create `android/key.properties` with `storeFile`, `storePassword`, `keyAlias`, `keyPassword`
 2. Ensure the file is NOT committed
-
----
-
-## Issue #3 — DEVELOPER_NOTES.md Stale Entries
-
-**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/3  
-**Priority:** Low (documentation only)
-
-`DEVELOPER_NOTES.md` has entries that reference implementation decisions that have since changed or been superseded. These should be reviewed and pruned or updated.
-
----
-
-## Issue #4 — todo.md Milestone Completion State
-
-**GitHub:** https://github.com/jpalicke/hermit_prov_app/issues/4  
-**Priority:** Low (documentation only; doesn't affect the app)
-
-`todo.md` milestone checkboxes have not been kept fully current with the actual implementation state:
-
-- Milestones 5–26: Many items are implemented but not ticked
-- Milestone 3.1: Lists 6 prompt categories — the app has 8 (`PromptCategory` enum: objects, locations, relationships, occupations, emotions, activities, genre, events) with 1,661 total built-in prompts
-- Milestone 3.6: TTS voice selection is listed as in-scope but was removed; only speaking rate remains
 
 ---
 

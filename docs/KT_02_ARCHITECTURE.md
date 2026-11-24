@@ -234,11 +234,12 @@ final updated = AppPreferences(
 
 ---
 
-## Crash Reporting (Not Wired Up)
+## Crash Reporting
 
-The domain, data, and feature layers for crash reporting all exist:
-- `lib/domain/crash/` — interface + sanitizer
-- `lib/data/crash/no_op_crash_report_service.dart` — no-op implementation
-- `lib/features/crash/crash_report_dialog.dart` — the dialog widget
+- `lib/domain/crash/` — `CrashReportService` interface, `CrashReport` model, `CrashPayloadSanitizer`
+- `lib/data/crash/no_op_crash_report_service.dart` — the only implementation; discards reports
+- `lib/features/crash/crash_report_dialog.dart` — the dialog that asks the user whether to send
 
-However, `CrashReportService` is not in `AppServices`, and `main.dart` has no `FlutterError.onError` or `runZonedGuarded`. The crash dialog will never fire. See GitHub issue #1.
+`main.dart` sets `FlutterError.onError` and wraps `runApp` in `runZonedGuarded`. Both call `_handleCrash`, which sanitizes the error and shows `CrashReportDialog` using `appNavigatorKey`. `AppServices.crashReportService` is a `NoOpCrashReportService` in both the in-memory and local-storage factories, so nothing leaves the device. Custom prompts and journal text are never included in a report.
+
+To add a real backend, implement `CrashReportService` and swap it in at `AppServices.withLocalStorage()`. Any backend needs an explicit privacy decision first (see the product constraints).

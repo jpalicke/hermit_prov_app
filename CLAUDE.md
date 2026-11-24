@@ -1,65 +1,50 @@
 # CLAUDE.md — Hermit Prov
 
-## Who We Are
+AI: GRAVEDIGGER BEAUMONT III · Human: J-POCALYPSE (Joe P / JP / Palicke)
 
-- **AI:** GRAVEDIGGER BEAUMONT III
-- **Human:** J-POCALYPSE (Joe P / JP / Palicke)
+Hermit Prov is a shipped (v1.0.1), offline-first Flutter app for solo long-form improv practice. The work now is maintenance: bug fixes and small features.
 
----
+## Product constraints (never negotiate)
 
-## Project: Hermit Prov
+No accounts, cloud sync, ads, IAP, subscriptions, notifications, microphone, recording, speech recognition, or AI features. All data stays on the device unless the user exports it. The app must work fully offline.
 
-A free, offline-first Flutter mobile app for solo long-form comedy improv practice.
+## Architecture
 
-### Core Constraints (never negotiate these)
+Versions and packages are in `pubspec.yaml`. DI is the `AppServices` InheritedWidget (`lib/core/di/app_services.dart`). Navigation is plain `Navigator.push`. Don't add a state-management package without asking.
 
-- No accounts, no login, no cloud sync
-- No audio recording, no microphone permission, no speech recognition
-- No AI-generated prompts, no AI coaching
-- No ads, no subscriptions, no in-app purchases
-- No push notifications, no local reminder notifications
-- All user data stays local unless the user explicitly exports it
-- App must be fully usable offline after installation
+## Commands
 
-### Build Approach
+- `flutter test test/path/to/file_test.dart` (run only the tests you touched; run the full suite once before the PR)
+- `flutter analyze` must be clean
+- `dart run build_runner build --delete-conflicting-outputs` after any change to `lib/data/local/app_database.dart`
 
-- Follow the 28-prompt sequence in `prompt_plan.md` — one prompt at a time
-- TDD: write tests before or alongside production code
-- Each prompt ends with: tests passing, `flutter analyze` clean, commit, `prompt_plan.md` marked `[DONE]`
-- Pause after each prompt and wait for J-POCALYPSE review before moving to the next
+## Workflow
 
-### Tech Stack
+1. Branch per fix. Never commit to main. Never use `--no-verify`.
+2. Write a failing test first, then the fix. A bug means `docs/spec.md` missed an obligation: add that obligation to the spec along with the test that would have caught it.
+3. Tests go in `test/unit/`, `test/widget/` or `test/repository/`. Integration tests in `integration_test/` must also run in every `.github/workflows/*.yml` that builds the app.
+4. Open a PR and wait for J-POCALYPSE's review.
+5. Update a doc only if the change makes something in it false.
 
-- Flutter 3.41.x, Dart 3.11.x, Material 3
-- Package IDs: `hermit_prov_app` / `com.hermitprov`
-- No routing package yet (added when drill navigation is needed)
-- No state management package yet (added when domain layer is introduced)
-- Local persistence: TBD — decision deferred to Prompt 13 per plan
+## Code rules
 
-### Architecture
+- Every Dart file starts with two `// ABOUTME:` lines.
+- No mock frameworks. Use the `InMemory*` repositories and `FakeTtsService`.
+- Grep or read before claiming anything about the code.
 
-```
-lib/
-  main.dart
-  app.dart
-  core/
-    constants/
-    theme/
-  domain/
-  data/
-  features/
-    practice/
-    history/
-    settings/
-  ui/
-    navigation/
-test/
-  widget/
-```
+## Don't read unless the task needs it
 
-### File Rules
+These are large or historical and cost a lot of context:
+- `lib/data/local/app_database.g.dart` (generated) and `lib/data/seed/categories/*` (prompt word lists)
+- `docs/archive/` (28-prompt build plan, todo, retro)
+- `docs/spec.md` in full: read only the section for the feature you're changing
 
-- Every Dart file starts with two `ABOUTME: ` comment lines
-- No mocks — always real implementations (fake in-memory repos for tests are fine; mock frameworks are not)
-- No `--no-verify` on commits, ever
-- Tests live in `test/widget/`, `test/unit/`, `test/repository/` subdirectories by type
+## Where to look
+
+| Topic | Doc |
+|---|---|
+| Drill timer / session state machine | `docs/KT_03_DRILL_SYSTEM.md` |
+| Schema, repositories, backup format | `docs/KT_04_DATA_LAYER.md` |
+| Testing patterns | `docs/KT_05_TESTING_GUIDE.md` |
+| Release, signing, screenshots | `docs/KT_07`, `KT_08`, `KT_09` |
+| Product behavior (source of truth) | `docs/spec.md` |
