@@ -61,9 +61,16 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
 
   // Auto-advance only:
   DrillSessionController? _controller;
-  int? _lastLoopCount;
+  /// The rep the session has asked a suggestion for. The suggestion loaded
+  /// in didChangeDependencies covers rep 0.
+  int _lastLoopCount = 0;
+
+  /// The rep whose suggestion is currently in [_prompt].
+  int _promptRep = 0;
   HandsFreeAnnouncementPolicy? _policy;
-  String? _lastAnnouncedSegmentId;
+
+  /// 'rep:segmentId' of the last segment start that was announced.
+  String? _lastAnnouncedKey;
 
   bool get _handsFreeActive =>
       widget.settings.handsFreeModeEnabled && widget.ttsService != null;
@@ -83,7 +90,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
     }
   }
 
-  Future<void> _loadPrompt() async {
+  Future<void> _loadPrompt({int? rep}) async {
     setState(() => _loading = true);
     final repo =
         widget.promptRepository ?? AppServices.of(context).promptRepository;
@@ -93,6 +100,7 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       setState(() {
         _prompt = p;
         _loading = false;
+        if (rep != null) _promptRep = rep;
       });
     }
   }
@@ -119,17 +127,18 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
     if (seg == null) return;
 
     final paused = state.isPaused;
+    final key = '${state.loops}:${seg.id}';
 
-    if (_lastAnnouncedSegmentId != seg.id) {
-      _lastAnnouncedSegmentId = seg.id;
-      if (_prompt != null) {
-        policy.onSegmentStart(
-          seg.copyWith(promptPayload: _prompt),
-          paused: paused,
-        );
-      } else {
-        policy.onSegmentStart(seg, paused: paused);
-      }
+    // The single segment's id repeats every rep, so key announcements by rep
+    // as well, and wait until this rep's suggestion has loaded.
+    final promptReady =
+        !_loading && _prompt != null && _promptRep == state.loops;
+    if (_lastAnnouncedKey != key && promptReady) {
+      _lastAnnouncedKey = key;
+      policy.onSegmentStart(
+        seg.copyWith(promptPayload: _prompt),
+        paused: paused,
+      );
     }
 
     policy.onTick(seg, state.segmentRemaining, paused: paused);
@@ -263,11 +272,19 @@ class _FiveLineSessionScreenState extends State<FiveLineSessionScreen> {
       autoStart: widget.settings.handsFreeModeEnabled,
       instructions: _instructions,
       contentBuilder: (context, state) {
-        // Detect loop boundary — load a new prompt when the loop counter advances.
-        if (state.loops > (_lastLoopCount ?? -1)) {
+        // Stop resets the controller to rep 0; keep the current suggestion.
+        if (state.loops < _lastLoopCount) {
           _lastLoopCount = state.loops;
+          _promptRep = state.loops;
+        }
+        if (state.isIdle) _lastAnnouncedKey = null;
+        // Detect loop boundary — load a new prompt when the loop counter advances.
+        if (state.loops > _lastLoopCount) {
+          final rep = state.loops;
+          _lastLoopCount = rep;
           // Schedule prompt load after the current build completes.
-          WidgetsBinding.instance.addPostFrameCallback((_) => _loadPrompt());
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => _loadPrompt(rep: rep));
         }
         _handleTick(state);
         if (_loading || _prompt == null) return const SizedBox.shrink();
