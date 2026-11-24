@@ -899,6 +899,8 @@ Summary should include:
 - Longest streak.
 - Breakdown by drill.
 
+Every summary figure is computed from all logged sessions, not only the ones shown in Recent Sessions.
+
 Streaks should be quiet personal stats only.
 
 No badges, rewards, celebratory popups, leaderboards, public streaks, or pressure messaging.
@@ -1028,6 +1030,8 @@ Hermit Prov should support both export and import of user data.
 Export should generate one local JSON backup file on demand and use the phone’s native share sheet/save flow.
 
 JSON is preferred over CSV because it can preserve nested settings and multiple data types.
+
+The file is UTF-8 encoded. Any text the user can type, including smart quotes, em dashes, accented letters and emoji, must survive an export and re-import unchanged.
 
 ### Import
 
@@ -1408,6 +1412,7 @@ Test:
 - Unsupported future schema version is rejected.
 - Supported older schema version migrates correctly.
 - Current schema version imports correctly.
+- Non-ASCII text (smart quotes, emoji) survives an export/import round-trip.
 
 ### Drill Timing Tests
 

@@ -1,6 +1,8 @@
 // ABOUTME: Unit tests for LocalBackupService covering build, round-trip, merge, and validation.
 // ABOUTME: Uses in-memory repositories so no real storage is touched.
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
@@ -253,6 +255,61 @@ void main() {
     test('throws FormatException for malformed JSON', () async {
       expect(
         () => backupService.importFromJson('{not valid json}'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+  });
+
+  group('exportToBytes / importFromBytes', () {
+    // Text an iPhone keyboard produces: smart apostrophe, em dash, emoji,
+    // and an accented character.
+    const unicodeBody = 'Didn’t land the — beat 🎭 at the café';
+
+    Future<void> addUnicodeEntry() => services.journalRepository.addEntry(
+          JournalEntry(
+            id: 'entry-unicode',
+            body: unicodeBody,
+            createdAt: DateTime.utc(2024, 8),
+            updatedAt: DateTime.utc(2024, 8),
+          ),
+        );
+
+    test('exported bytes are valid UTF-8 of the JSON text', () async {
+      await addUnicodeEntry();
+      final backup = await backupService.buildBackup();
+
+      final bytes = await backupService.exportToBytes(backup);
+
+      final json = await backupService.exportToJson(backup);
+      expect(bytes, equals(utf8.encode(json)));
+      expect(utf8.decode(bytes), contains(unicodeBody));
+    });
+
+    test('non-ASCII text survives an export/import round-trip', () async {
+      await addUnicodeEntry();
+      final backup = await backupService.buildBackup();
+
+      final bytes = await backupService.exportToBytes(backup);
+      final restored = await backupService.importFromBytes(bytes);
+
+      expect(restored.journalEntries.single['body'], equals(unicodeBody));
+    });
+
+    test('importFromBytes reads a UTF-8 file with a byte order mark', () async {
+      await addUnicodeEntry();
+      final backup = await backupService.buildBackup();
+      final bytes = await backupService.exportToBytes(backup);
+
+      final restored = await backupService
+          .importFromBytes([0xEF, 0xBB, 0xBF, ...bytes]);
+
+      expect(restored.journalEntries.single['body'], equals(unicodeBody));
+    });
+
+    test('importFromBytes throws FormatException for bytes that are not UTF-8',
+        () async {
+      expect(
+        () => backupService.importFromBytes([0x7B, 0xFF, 0xFE, 0x7D]),
         throwsA(isA<FormatException>()),
       );
     });

@@ -2,6 +2,7 @@
 // ABOUTME: Serializes domain objects to JSON maps using field-level encoding matched to the existing Drift mapping pattern.
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:hermit_prov_app/data/backup/backup_service.dart';
 import 'package:hermit_prov_app/domain/backup/app_backup.dart';
@@ -82,6 +83,23 @@ class LocalBackupService implements BackupService {
     }
 
     return AppBackup.fromJson(decoded);
+  }
+
+  @override
+  Future<Uint8List> exportToBytes(AppBackup backup) async {
+    return utf8.encode(await exportToJson(backup));
+  }
+
+  @override
+  Future<AppBackup> importFromBytes(List<int> bytes) async {
+    final String json;
+    try {
+      json = utf8.decode(bytes);
+    } on FormatException {
+      throw const FormatException('Backup file is not valid UTF-8 text.');
+    }
+    // Some editors prepend a UTF-8 byte order mark; jsonDecode rejects it.
+    return importFromJson(json.startsWith('\uFEFF') ? json.substring(1) : json);
   }
 
   @override
