@@ -465,7 +465,7 @@ TTS settings apply across the whole app.
 
 For non-character drills:
 
-- The app reads the prompt aloud when it appears.
+- The app reads the prompt aloud when it appears, including the new prompt at the start of every rep.
 - Reading the prompt replaces the “begin” announcement.
 
 Timer announcements apply only to segments longer than 30 seconds.
@@ -873,6 +873,8 @@ Adding a journal entry does not count toward streaks.
 ### Session Logging
 
 A drill session is logged if the user spends at least 30 seconds in a drill.
+
+The logged duration is the whole time the timer ran in that session, across every rep of a looping drill (pauses excluded).
 
 Stored session fields:
 
@@ -1427,6 +1429,8 @@ Test:
 - Stop confirmation behavior.
 - Sessions under 30 seconds are not logged.
 - Sessions at/over 30 seconds are logged.
+- Looping drills (Cat/Clock, Two-Character Scenes, A-to-C, Five Line auto-advance) show a new suggestion every rep, not just the first.
+- A session that runs several reps logs its full duration.
 
 ### Character Creation Tests
 
