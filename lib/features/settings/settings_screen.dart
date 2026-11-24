@@ -1,8 +1,6 @@
 // ABOUTME: Settings screen with sections for appearance, TTS, drill defaults, and data management.
 // ABOUTME: Loads and persists preferences via AppServices repositories.
 
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hermit_prov_app/core/di/app_services.dart';
@@ -106,14 +104,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       final svc = _makeBackupService();
       final backup = await svc.buildBackup();
-      final json = await svc.exportToJson(backup);
+      final bytes = await svc.exportToBytes(backup);
 
       final now = DateTime.now();
       final datePart =
           '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       final fileName = 'hermit_prov_backup_$datePart.json';
 
-      final bytes = Uint8List.fromList(json.codeUnits);
       final xFile = XFile.fromData(bytes, name: fileName, mimeType: 'application/json');
       await Share.shareXFiles([xFile], fileNameOverrides: [fileName]);
 
@@ -142,19 +139,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (result == null || result.files.isEmpty) return;
 
       final file = result.files.first;
-      final String jsonString;
+      final List<int> bytes;
       if (file.bytes != null) {
-        jsonString = String.fromCharCodes(file.bytes!);
+        bytes = file.bytes!;
       } else if (file.path != null) {
         // On desktop/mobile with path access, read via XFile.
-        final xFile = XFile(file.path!);
-        jsonString = await xFile.readAsString();
+        bytes = await XFile(file.path!).readAsBytes();
       } else {
         throw const FormatException('Could not read the selected file.');
       }
 
       final svc = _makeBackupService();
-      final backup = await svc.importFromJson(jsonString);
+      final backup = await svc.importFromBytes(bytes);
       final mergeResult = await svc.mergeIntoApp(backup);
 
       // Apply restored preferences to the live UI immediately.

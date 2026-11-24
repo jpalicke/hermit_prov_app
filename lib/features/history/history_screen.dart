@@ -16,6 +16,9 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  /// How many sessions the Recent Sessions list shows.
+  static const _recentSessionLimit = 20;
+
   List<PracticeSession>? _sessions;
   bool _loading = true;
   bool _initialized = false;
@@ -37,8 +40,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       if (mounted) setState(() => _loading = false);
       return;
     }
+    // Stats need every session; only the list below is capped.
     final sessions =
-        await appServices.practiceHistoryRepository.getRecentSessions();
+        await appServices.practiceHistoryRepository.getSessions();
     if (mounted) {
       setState(() {
         _sessions = sessions;
@@ -62,6 +66,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final sessions = _sessions ?? [];
     final stats = PracticeStats.compute(sessions);
+    // getSessions() returns newest first.
+    final recentSessions = sessions.take(_recentSessionLimit).toList();
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
@@ -159,8 +165,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) =>
-                        _SessionTile(session: sessions[index]),
-                    childCount: sessions.length,
+                        _SessionTile(session: recentSessions[index]),
+                    childCount: recentSessions.length,
                   ),
                 ),
               ),
