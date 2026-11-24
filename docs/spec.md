@@ -903,6 +903,8 @@ Summary should include:
 
 Every summary figure is computed from all logged sessions, not only the ones shown in Recent Sessions.
 
+Streaks count calendar days in the device's local time zone. A daylight saving change (a 23- or 25-hour day) must never break or lengthen a streak.
+
 Streaks should be quiet personal stats only.
 
 No badges, rewards, celebratory popups, leaderboards, public streaks, or pressure messaging.
