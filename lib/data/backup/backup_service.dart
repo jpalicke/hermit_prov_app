@@ -1,6 +1,8 @@
 // ABOUTME: Abstract interface for building, exporting, importing, and merging app backups.
 // ABOUTME: Implementations collect data from repositories and produce/consume JSON strings.
 
+import 'dart:typed_data';
+
 import 'package:hermit_prov_app/domain/backup/app_backup.dart';
 
 /// Result returned by [BackupService.mergeIntoApp] describing what was applied.
@@ -31,6 +33,14 @@ abstract interface class BackupService {
   /// Parses [json] and validates the schemaVersion.
   /// Throws [FormatException] if the JSON is malformed or schemaVersion != 1.
   Future<AppBackup> importFromJson(String json);
+
+  /// Serialises [backup] to UTF-8 encoded JSON bytes for writing to a file.
+  Future<Uint8List> exportToBytes(AppBackup backup);
+
+  /// Decodes UTF-8 [bytes] (an optional byte order mark is ignored) and
+  /// parses them like [importFromJson].
+  /// Throws [FormatException] if the bytes are not valid UTF-8 or JSON.
+  Future<AppBackup> importFromBytes(List<int> bytes);
 
   /// Applies [backup] to the repositories.
   /// Custom prompts and journal entries are skipped when their id already exists.

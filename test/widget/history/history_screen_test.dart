@@ -69,6 +69,33 @@ Future<void> _setTallViewport(WidgetTester tester) async {
 
 void main() {
   group('HistoryScreen', () {
+    testWidgets('stats count every session, not only the most recent 20',
+        (WidgetTester tester) async {
+      await _setTallViewport(tester);
+      final repo = InMemoryPracticeHistoryRepository();
+      // 25 sessions on 25 consecutive days, 5 minutes each.
+      for (var i = 0; i < 25; i++) {
+        await repo.addSession(
+          _session(
+            id: 's$i',
+            drillId: DrillId.catClock,
+            loggedAt: DateTime(2025, 6, 1 + i, 12),
+          ),
+        );
+      }
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _wrap(child: const HistoryScreen(), historyRepo: repo),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Sessions: 25'), findsOneWidget);
+      expect(find.bySemanticsLabel('Total Time: 2h 5m'), findsOneWidget);
+      expect(find.bySemanticsLabel('Longest Streak: 25 days'), findsOneWidget);
+    });
+
     testWidgets('shows empty state message when no sessions exist',
         (WidgetTester tester) async {
       await tester.pumpWidget(
