@@ -292,6 +292,15 @@ If the app is hidden or sent to the background while a session is running (scree
 
 The session clock measures real running time, not the number of timer callbacks. Late timer callbacks and pause/resume must never make the countdown drift.
 
+### Configure During a Session
+
+When the user taps Configure while a session is running or paused:
+
+- Pause the session before the configure screen opens, exactly as if the user tapped Pause. The timer does not run behind the configure screen.
+- Cut off any text-to-speech announcement in progress. No announcements occur while the configure screen is open.
+- When the user leaves the configure screen, the drill restarts with the saved settings. The interrupted session is logged to Practice History under the usual 30-second rule, with only the time the timer ran. Time spent on the configure screen does not count.
+- A session is never logged twice.
+
 ### Stop / End
 
 When the user taps Stop/End:

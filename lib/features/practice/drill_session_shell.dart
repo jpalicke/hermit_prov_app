@@ -33,7 +33,9 @@ import 'package:hermit_prov_app/domain/history/practice_session.dart';
 ///
 /// [onSessionEnd] — called when Stop is tapped or a finite session completes.
 /// [onConfigure] — optional callback invoked when the user taps the gear icon.
-///                 When null, no gear icon is shown.
+///                 When null, no gear icon is shown.  A running session is
+///                 paused first, so the timer and voice stop while the user
+///                 edits settings.
 /// [contentBuilder] — builds the drill-specific content shown inside the
 ///                    session card (e.g. prompt text, character labels, etc.).
 /// [autoStart] — when true, [_handleStart] is called automatically after the
@@ -43,7 +45,9 @@ import 'package:hermit_prov_app/domain/history/practice_session.dart';
 /// [ringLabelBuilder] — optional callback returning a label to display inside
 ///                      the progress ring above the countdown text.
 /// [historyRepository] — when provided together with [drillId], sessions lasting
-///                       at least 30 seconds are silently logged on stop or auto-complete.
+///                       at least 30 seconds are silently logged on stop,
+///                       auto-complete, or when the shell is closed mid-session
+///                       (e.g. replaced after Configure).
 /// [drillId] — the drill being practiced; required for logging.
 class DrillSessionShell extends StatefulWidget {
   const DrillSessionShell({
@@ -69,7 +73,7 @@ class DrillSessionShell extends StatefulWidget {
   final String? Function(DrillSessionState)? ringLabelBuilder;
 
   /// When provided together with [drillId], sessions lasting at least 30 seconds
-  /// are silently logged on stop or auto-complete.
+  /// are silently logged on stop, auto-complete, or disposal mid-session.
   final PracticeHistoryRepository? historyRepository;
 
   /// The drill being practiced. Required for logging; ignored when [historyRepository] is null.
@@ -97,6 +101,8 @@ class _DrillSessionShellState extends State<DrillSessionShell>
   bool _keepingAwake = false;
 
   /// Set when the user taps Start; used to compute session duration for logging.
+  /// Cleared once the session has been logged (or judged too short), so it is
+  /// never logged twice.
   DateTime? _startedAt;
 
   @override
@@ -123,6 +129,9 @@ class _DrillSessionShellState extends State<DrillSessionShell>
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
     _setKeepAwake(false);
+    // A session still in progress when the shell goes away (e.g. it is
+    // replaced after Configure) is practice time too.
+    _maybeLogSession();
     super.dispose();
   }
 
@@ -210,6 +219,19 @@ class _DrillSessionShellState extends State<DrillSessionShell>
     }
   }
 
+  /// Pauses a running session, then opens configure.  The caller replaces this
+  /// session with one using the new settings; the paused session is logged
+  /// when this shell is disposed.
+  void _handleConfigure() {
+    if (widget.controller.state.isRunning) {
+      _catchUp();
+      // Catching up may have completed the session and exited the drill.
+      if (!mounted || !widget.controller.state.isRunning) return;
+      _pause();
+    }
+    widget.onConfigure?.call();
+  }
+
   // Stops the timer and returns to idle — stays in the drill.
   void _handleResetToIdle() {
     _ticker?.cancel();
@@ -220,7 +242,6 @@ class _DrillSessionShellState extends State<DrillSessionShell>
     setState(() {
       widget.controller.reset();
     });
-    _startedAt = null;
     _syncKeepAwake();
   }
 
@@ -242,6 +263,7 @@ class _DrillSessionShellState extends State<DrillSessionShell>
     final repo = widget.historyRepository;
     final drillId = widget.drillId;
     final startedAt = _startedAt;
+    _startedAt = null;
     if (repo == null || drillId == null || startedAt == null) return;
 
     final elapsed = widget.controller.state.sessionElapsed;
@@ -465,7 +487,7 @@ class _DrillSessionShellState extends State<DrillSessionShell>
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   key: const Key('session_configure_button'),
-                  onPressed: widget.onConfigure,
+                  onPressed: _handleConfigure,
                   icon: const Icon(Icons.settings),
                   label: const Text('Configure'),
                   style: OutlinedButton.styleFrom(
