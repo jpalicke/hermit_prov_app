@@ -56,11 +56,20 @@ class PracticeScreen extends StatelessWidget {
     ),
   ];
 
-  /// Pops the current session and relaunches it with fresh settings.
-  /// Called after returning from configure so the session picks up any changes.
-  void _restartWithFreshSettings(BuildContext context, DrillId drillId) {
+  /// Opens configure from inside a running session, then restarts the drill
+  /// so it picks up any changes.
+  ///
+  /// The session shell has already paused the timer; this also cuts off any
+  /// announcement in progress so the voice is quiet while the user edits
+  /// settings.  Popping the old session logs it to History.
+  Future<void> _configureMidSession(
+      BuildContext context, DrillId drillId) async {
+    unawaited(AppServices.of(context).ttsService.stop());
+    await Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => _configureScreenFor(drillId)));
+    if (!context.mounted) return;
     Navigator.of(context).pop();
-    _startDrill(context, drillId);
+    unawaited(_startDrill(context, drillId));
   }
 
   /// Navigates directly to the session screen for [drillId] using saved settings.
@@ -80,11 +89,7 @@ class PracticeScreen extends StatelessWidget {
           historyRepository: services.practiceHistoryRepository,
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const CatClockConfigureScreen()));
-            if (context.mounted) _restartWithFreshSettings(context, DrillId.catClock);
-          },
+          onConfigure: () => _configureMidSession(context, DrillId.catClock),
         );
       case DrillId.twoCharacterScenes:
         final s = settings as TwoCharacterScenesSettings;
@@ -94,11 +99,7 @@ class PracticeScreen extends StatelessWidget {
           historyRepository: services.practiceHistoryRepository,
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const TwoCharacterConfigureScreen()));
-            if (context.mounted) _restartWithFreshSettings(context, DrillId.twoCharacterScenes);
-          },
+          onConfigure: () => _configureMidSession(context, DrillId.twoCharacterScenes),
         );
       case DrillId.atoC:
         final s = settings as AtoCSettings;
@@ -108,11 +109,7 @@ class PracticeScreen extends StatelessWidget {
           historyRepository: services.practiceHistoryRepository,
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const AtoCConfigureScreen()));
-            if (context.mounted) _restartWithFreshSettings(context, DrillId.atoC);
-          },
+          onConfigure: () => _configureMidSession(context, DrillId.atoC),
         );
       case DrillId.fiveLineGame:
         final s = settings as FiveLineGameSettings;
@@ -121,11 +118,7 @@ class PracticeScreen extends StatelessWidget {
           historyRepository: services.practiceHistoryRepository,
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const FiveLineConfigureScreen()));
-            if (context.mounted) _restartWithFreshSettings(context, DrillId.fiveLineGame);
-          },
+          onConfigure: () => _configureMidSession(context, DrillId.fiveLineGame),
         );
       case DrillId.characterCreation:
         final s = settings as CharacterCreationSettings;
@@ -134,33 +127,25 @@ class PracticeScreen extends StatelessWidget {
           historyRepository: services.practiceHistoryRepository,
           ttsService: services.ttsService,
           onSessionEnd: () => Navigator.of(context).pop(),
-          onConfigure: () async {
-            await Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const CharacterCreationConfigureScreen()));
-            if (context.mounted) _restartWithFreshSettings(context, DrillId.characterCreation);
-          },
+          onConfigure: () => _configureMidSession(context, DrillId.characterCreation),
         );
     }
     if (!context.mounted) return;
     unawaited(Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen)));
   }
 
+  static Widget _configureScreenFor(DrillId drillId) => switch (drillId) {
+        DrillId.catClock => const CatClockConfigureScreen(),
+        DrillId.twoCharacterScenes => const TwoCharacterConfigureScreen(),
+        DrillId.atoC => const AtoCConfigureScreen(),
+        DrillId.fiveLineGame => const FiveLineConfigureScreen(),
+        DrillId.characterCreation => const CharacterCreationConfigureScreen(),
+      };
+
   /// Opens the configure screen for [drillId] without starting a session.
   void _configureDrill(BuildContext context, DrillId drillId) {
-    Widget screen;
-    switch (drillId) {
-      case DrillId.catClock:
-        screen = const CatClockConfigureScreen();
-      case DrillId.twoCharacterScenes:
-        screen = const TwoCharacterConfigureScreen();
-      case DrillId.atoC:
-        screen = const AtoCConfigureScreen();
-      case DrillId.fiveLineGame:
-        screen = const FiveLineConfigureScreen();
-      case DrillId.characterCreation:
-        screen = const CharacterCreationConfigureScreen();
-    }
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => _configureScreenFor(drillId)));
   }
 
   void _openTools(BuildContext context) {
