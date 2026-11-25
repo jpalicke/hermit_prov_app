@@ -170,4 +170,16 @@ void main() {
 
     expect(await history.getSessions(), isEmpty);
   });
+
+  testWidgets('a session of exactly 30 seconds is logged', (tester) async {
+    // runHandsFreeAtoC lets the session start during its settle pumps, so
+    // 29.5 s more puts the session clock at 30.x s: the 30-second boundary.
+    await runHandsFreeAtoC(tester, const Duration(milliseconds: 29500));
+    await tester.tap(find.byKey(const Key('stop_end_button')));
+    await tester.pump();
+
+    final sessions = await history.getSessions();
+    expect(sessions, hasLength(1));
+    expect(sessions.single.duration.inSeconds, 30);
+  });
 }

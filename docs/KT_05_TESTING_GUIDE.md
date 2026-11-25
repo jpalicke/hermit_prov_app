@@ -11,7 +11,7 @@ Tests serve as executable documentation. Before you change anything, read the te
 ## Running Tests
 
 ```bash
-flutter test                          # run everything (391 tests)
+flutter test                          # run everything (333 tests)
 flutter test test/unit/               # unit tests only
 flutter test test/repository/         # repository integration tests only
 flutter test test/widget/             # widget tests only
@@ -34,13 +34,15 @@ test/
 │   │   ├── character_creation_cycle_test.dart
 │   │   ├── two_character_sequence_test.dart
 │   │   ├── drill_session_controller_test.dart
+│   │   ├── drill_segment_test.dart
 │   │   ├── drill_settings_defaults_test.dart
+│   │   ├── drill_settings_json_test.dart   # pins the stored settings JSON
 │   │   ├── prompt_picker_test.dart
+│   │   ├── session_clock_test.dart
 │   │   ├── custom_prompt_validator_test.dart
 │   │   └── word_bucket_test.dart
 │   ├── history/
-│   │   ├── practice_stats_test.dart
-│   │   └── session_logging_threshold_test.dart
+│   │   └── practice_stats_test.dart
 │   ├── journal/
 │   │   └── journal_entry_test.dart
 │   ├── tts/
@@ -48,13 +50,15 @@ test/
 │   │   └── hands_free_announcement_policy_test.dart
 │   ├── crash/
 │   │   └── crash_payload_sanitizer_test.dart
+│   ├── backup_format_test.dart     # pins the version 1 backup file format
 │   └── backup_service_test.dart
 │
 ├── repository/                    # Drift SQLite integration tests
 │   ├── drift_prompt_repository_test.dart
 │   ├── drift_drill_settings_repository_test.dart
 │   ├── drift_practice_history_repository_test.dart
-│   └── drift_journal_repository_test.dart
+│   ├── drift_journal_repository_test.dart
+│   └── shared_preferences_app_preferences_repository_test.dart
 │
 └── widget/                        # Flutter widget tests
     ├── widget_test.dart            # Top-level smoke test

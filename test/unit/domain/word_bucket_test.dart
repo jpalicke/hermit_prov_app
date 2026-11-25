@@ -10,37 +10,5 @@ void main() {
       expect(PromptCategory.wordBucket.length, 8);
       expect(PromptCategory.wordBucket, containsAll(PromptCategory.values));
     });
-
-    test('contains objects', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.objects));
-    });
-
-    test('contains locations', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.locations));
-    });
-
-    test('contains relationships', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.relationships));
-    });
-
-    test('contains occupations', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.occupations));
-    });
-
-    test('contains emotions', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.emotions));
-    });
-
-    test('contains activities', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.activities));
-    });
-
-    test('contains genre', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.genre));
-    });
-
-    test('contains events', () {
-      expect(PromptCategory.wordBucket, contains(PromptCategory.events));
-    });
   });
 }

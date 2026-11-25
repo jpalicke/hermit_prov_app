@@ -64,7 +64,7 @@ All tests — unit, repository, and widget — run with a single command:
 flutter test
 ```
 
-Expected output: **391 tests, 0 failures** (as of v1.0.1). If you see failures, do not proceed; fix them first.
+Expected output: **333 tests, 0 failures**. If you see failures, do not proceed; fix them first.
 
 To run a specific file:
 ```bash

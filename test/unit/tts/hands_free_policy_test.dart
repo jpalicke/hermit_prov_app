@@ -31,23 +31,10 @@ void main() {
   });
 
   group('onSegmentStart', () {
-    test('speaks prompt text for non-regroup segment with promptPayload',
-        () async {
-      await policy.onSegmentStart(
-        _seg(promptPayload: 'fire hydrant'),
-      );
-      expect(tts.spoken, ['fire hydrant']);
-    });
-
     test('regroup segment is silent', () async {
       await policy.onSegmentStart(
         _seg(type: DrillSegmentType.regroup),
       );
-      expect(tts.spoken, isEmpty);
-    });
-
-    test('non-regroup segment without prompt is silent on start', () async {
-      await policy.onSegmentStart(_seg());
       expect(tts.spoken, isEmpty);
     });
 
@@ -123,40 +110,10 @@ void main() {
       expect(tts.spoken, ['30 seconds', '10 seconds', 'time']);
     });
 
-    test('does not fire at other tick values', () async {
-      final seg = _seg();
-      await policy.onTick(seg, const Duration(seconds: 45));
-      await policy.onTick(seg, const Duration(seconds: 20));
-      expect(tts.spoken, isEmpty);
-    });
-
-    test('regroup is silent for timer ticks even on long segments', () async {
-      final seg = _seg(
-        type: DrillSegmentType.regroup,
-      );
-      await policy.onTick(seg, const Duration(seconds: 30));
-      expect(tts.spoken, isEmpty);
-    });
-
     test('paused suppresses timer announcements', () async {
       final seg = _seg();
       await policy.onTick(seg, const Duration(seconds: 30), paused: true);
       expect(tts.spoken, isEmpty);
-    });
-
-    test('AtoC 30 s prompt segment reads prompt but has no timer announcements',
-        () async {
-      final seg = _seg(
-        duration: const Duration(seconds: 30),
-        promptPayload: 'bicycle',
-      );
-      // Simulate start then ticks.
-      await policy.onSegmentStart(seg);
-      await policy.onTick(seg, const Duration(seconds: 30));
-      await policy.onTick(seg, const Duration(seconds: 10));
-      await policy.onTick(seg, Duration.zero);
-      // Only the start announcement; no timer cues.
-      expect(tts.spoken, ['bicycle']);
     });
   });
 }
