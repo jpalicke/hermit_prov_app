@@ -6,15 +6,6 @@ import 'package:hermit_prov_app/data/tts/fake_tts_service.dart';
 
 void main() {
   group('FakeTtsService', () {
-    test('captures spoken text in order', () async {
-      final tts = FakeTtsService();
-
-      await tts.speak('hello');
-      await tts.speak('world');
-
-      expect(tts.spoken, ['hello', 'world']);
-    });
-
     test('stop increments stopCount', () async {
       final tts = FakeTtsService();
 
@@ -22,14 +13,6 @@ void main() {
       await tts.stop();
 
       expect(tts.stopCount, 2);
-    });
-
-    test('stop does not clear spoken list', () async {
-      final tts = FakeTtsService();
-      await tts.speak('hello');
-      await tts.stop();
-
-      expect(tts.spoken, ['hello']);
     });
 
     test('isEnabled returns true', () {

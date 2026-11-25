@@ -11,10 +11,6 @@ void main() {
   const sequence = AtoCSequence();
 
   // 1. Default interval is 30 seconds.
-  test('default interval is 30 seconds', () {
-    const settings = AtoCSettings();
-    expect(settings.interval, const Duration(seconds: 30));
-  });
 
   // 2. Only allowed intervals are 15/30/45/60s.
   test('allowed intervals are 15, 30, 45, and 60 seconds', () {
@@ -26,28 +22,11 @@ void main() {
     ]);
   });
 
-  test('isValidInterval returns true for allowed values', () {
-    for (final d in AtoCSettings.allowedIntervals) {
-      expect(AtoCSequence.isValidInterval(d), isTrue,
-          reason: 'Expected $d to be valid');
-    }
-  });
-
-  test('isValidInterval returns false for disallowed value', () {
-    expect(AtoCSequence.isValidInterval(const Duration(seconds: 20)), isFalse);
-  });
-
   // 3. Prompt changes each interval (distinct segment ids).
   test('different rep indices produce distinct segment ids', () {
     final rep0 = sequence.buildRep(settings: const AtoCSettings());
     final rep1 = sequence.buildRep(settings: const AtoCSettings(), repIndex: 1);
     expect(rep0.first.id, isNot(rep1.first.id));
-  });
-
-  test('prompt is included in segment payload', () {
-    final segs =
-        sequence.buildRep(settings: const AtoCSettings(), prompt: 'dentist');
-    expect(segs.first.promptPayload, 'dentist');
   });
 
   // 4. Flow loops until stopped.

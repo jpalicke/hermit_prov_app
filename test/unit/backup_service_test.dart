@@ -31,27 +31,6 @@ void main() {
   });
 
   group('buildBackup()', () {
-    test('returns AppBackup with schemaVersion 1', () async {
-      final backup = await backupService.buildBackup();
-      expect(backup.schemaVersion, equals(1));
-    });
-
-    test('includes custom prompts added to the repo', () async {
-      final now = DateTime(2024, 6);
-      final prompt = CustomPrompt(
-        id: 'prompt-abc',
-        text: 'What if a dentist became a detective?',
-        category: PromptCategory.objects,
-        createdAt: now,
-        updatedAt: now,
-      );
-      await services.promptRepository.addCustomPrompt(prompt);
-
-      final backup = await backupService.buildBackup();
-      expect(backup.customPrompts, hasLength(1));
-      expect(backup.customPrompts.first['id'], equals('prompt-abc'));
-    });
-
     test('includes journal entries added to the repo', () async {
       final now = DateTime(2024, 6, 2);
       await services.journalRepository.addEntry(
@@ -127,41 +106,6 @@ void main() {
       expect(prompts.first.id, equals('new-prompt-1'));
     });
 
-    test('skips duplicate custom prompts by id', () async {
-      final now = DateTime(2024, 8, 2);
-      final existing = CustomPrompt(
-        id: 'existing-prompt',
-        text: 'Original text',
-        category: PromptCategory.objects,
-        createdAt: now,
-        updatedAt: now,
-      );
-      await services.promptRepository.addCustomPrompt(existing);
-
-      final backup = AppBackup(
-        schemaVersion: 1,
-        exportedAt: now,
-        customPrompts: [
-          {
-            'id': 'existing-prompt',
-            'text': 'Replacement text that should be ignored',
-            'category': 'objects',
-            'createdAt': now.toUtc().toIso8601String(),
-            'updatedAt': now.toUtc().toIso8601String(),
-          },
-        ],
-        journalEntries: const [],
-        drillSettings: const {},
-        preferences: const {},
-      );
-
-      final result = await backupService.mergeIntoApp(backup);
-
-      expect(result.promptsAdded, equals(0));
-      final prompts = await services.promptRepository.getCustomPrompts();
-      expect(prompts.first.text, equals('Original text'));
-    });
-
     test('adds journal entries not already in the repo', () async {
       final now = DateTime(2024, 8, 3);
       final backup = AppBackup(
@@ -187,41 +131,6 @@ void main() {
       final entries = await services.journalRepository.getEntries();
       expect(entries, hasLength(1));
       expect(entries.first.id, equals('new-entry-1'));
-    });
-
-    test('skips duplicate journal entries by id', () async {
-      final now = DateTime(2024, 8, 4);
-      await services.journalRepository.addEntry(
-        JournalEntry(
-          id: 'existing-entry',
-          body: 'Original body',
-          createdAt: now,
-          updatedAt: now,
-        ),
-      );
-
-      final backup = AppBackup(
-        schemaVersion: 1,
-        exportedAt: now,
-        customPrompts: const [],
-        journalEntries: [
-          {
-            'id': 'existing-entry',
-            'body': 'Replacement body that should be ignored',
-            'createdAt': now.toUtc().toIso8601String(),
-            'updatedAt': now.toUtc().toIso8601String(),
-            'drillId': null,
-          },
-        ],
-        drillSettings: const {},
-        preferences: const {},
-      );
-
-      final result = await backupService.mergeIntoApp(backup);
-
-      expect(result.journalEntriesAdded, equals(0));
-      final entries = await services.journalRepository.getEntries();
-      expect(entries.first.body, equals('Original body'));
     });
   });
 

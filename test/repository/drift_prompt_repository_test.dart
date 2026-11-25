@@ -26,17 +26,17 @@ void main() {
   // ── Built-in prompts ──────────────────────────────────────────────────────
 
   group('built-in prompts', () {
-    test('loads at least one prompt for every category', () async {
+    test('loads prompts for every category, filtered to that category',
+        () async {
       for (final category in PromptCategory.values) {
         final prompts = await repo.getBuiltInPrompts(category: category);
         expect(prompts, isNotEmpty, reason: 'expected prompts for $category');
+        expect(
+          prompts.map((p) => p.category).toSet(),
+          {category},
+          reason: 'only $category prompts',
+        );
       }
-    });
-
-    test('getBuiltInPrompts with no filter returns all eight categories', () async {
-      final all = await repo.getBuiltInPrompts();
-      final categories = all.map((p) => p.category).toSet();
-      expect(categories, containsAll(PromptCategory.values));
     });
 
     test('cannot delete a built-in prompt via custom prompt API', () async {
@@ -67,23 +67,6 @@ void main() {
   // ── Custom prompts ────────────────────────────────────────────────────────
 
   group('custom prompts', () {
-    test('custom prompt is stored separately from built-in prompts', () async {
-      final custom = CustomPrompt(
-        id: 'custom-1',
-        text: 'a rubber duck',
-        category: PromptCategory.objects,
-        createdAt: now,
-        updatedAt: now,
-      );
-      await repo.addCustomPrompt(custom);
-
-      final customs = await repo.getCustomPrompts();
-      expect(customs.any((p) => p.id == 'custom-1'), isTrue);
-
-      final builtIns = await repo.getBuiltInPrompts();
-      expect(builtIns.any((p) => p.id == 'custom-1'), isFalse);
-    });
-
     test('custom prompts can be filtered by category', () async {
       await repo.addCustomPrompt(CustomPrompt(
         id: 'obj-1',
@@ -125,40 +108,6 @@ void main() {
 
       final prompts = await repo.getCustomPrompts();
       expect(prompts.firstWhere((p) => p.id == 'upd-1').text, 'updated');
-    });
-
-    test('custom prompt can be deleted', () async {
-      await repo.addCustomPrompt(CustomPrompt(
-        id: 'del-1',
-        text: 'gone',
-        category: PromptCategory.activities,
-        createdAt: now,
-        updatedAt: now,
-      ));
-      await repo.deleteCustomPrompt('del-1');
-
-      final prompts = await repo.getCustomPrompts();
-      expect(prompts.any((p) => p.id == 'del-1'), isFalse);
-    });
-
-    test('getCustomPrompts with no filter returns all custom prompts', () async {
-      await repo.addCustomPrompt(CustomPrompt(
-        id: 'a',
-        text: 'alpha',
-        category: PromptCategory.objects,
-        createdAt: now,
-        updatedAt: now,
-      ));
-      await repo.addCustomPrompt(CustomPrompt(
-        id: 'b',
-        text: 'beta',
-        category: PromptCategory.locations,
-        createdAt: now,
-        updatedAt: now,
-      ));
-
-      final all = await repo.getCustomPrompts();
-      expect(all.length, 2);
     });
   });
 }

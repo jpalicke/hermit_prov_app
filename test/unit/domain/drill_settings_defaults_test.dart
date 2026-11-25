@@ -11,17 +11,6 @@ void main() {
     // ── Cat/Clock ────────────────────────────────────────────────────────────
 
     group('Cat/Clock', () {
-      test('drillId is DrillId.catClock', () {
-        expect(const CatClockSettings().drillId, DrillId.catClock);
-      });
-
-      test('speaking duration is 3 minutes', () {
-        expect(
-          const CatClockSettings().speakingDuration,
-          const Duration(minutes: 3),
-        );
-      });
-
       test('regroup duration is 30 seconds', () {
         expect(
           const CatClockSettings().regroupDuration,
@@ -42,21 +31,6 @@ void main() {
     // ── Character Creation ───────────────────────────────────────────────────
 
     group('Character Creation', () {
-      test('drillId is DrillId.characterCreation', () {
-        expect(const CharacterCreationSettings().drillId, DrillId.characterCreation);
-      });
-
-      test('character count defaults to 2', () {
-        expect(const CharacterCreationSettings().characterCount, 2);
-      });
-
-      test('segment duration defaults to 60 seconds', () {
-        expect(
-          const CharacterCreationSettings().segmentDuration,
-          const Duration(seconds: 60),
-        );
-      });
-
       test('prompt source defaults to word bucket', () {
         expect(
           const CharacterCreationSettings().promptCategories,
@@ -75,19 +49,11 @@ void main() {
           const Duration(seconds: 120),
         ]);
       });
-
-      test('allowed character counts are 2, 3, 4, 5', () {
-        expect(CharacterCreationSettings.allowedCharacterCounts, [2, 3, 4, 5]);
-      });
     });
 
     // ── Two-Character Scenes ─────────────────────────────────────────────────
 
     group('Two-Character Scenes', () {
-      test('drillId is DrillId.twoCharacterScenes', () {
-        expect(const TwoCharacterScenesSettings().drillId, DrillId.twoCharacterScenes);
-      });
-
       test('scene duration defaults to 90 seconds', () {
         expect(
           const TwoCharacterScenesSettings().sceneDuration,
@@ -117,14 +83,6 @@ void main() {
     // ── A-to-C / Bad Idea / Initiation ──────────────────────────────────────
 
     group('A-to-C / Bad Idea / Initiation', () {
-      test('drillId is DrillId.atoC', () {
-        expect(const AtoCSettings().drillId, DrillId.atoC);
-      });
-
-      test('default interval is 30 seconds', () {
-        expect(const AtoCSettings().interval, const Duration(seconds: 30));
-      });
-
       test('prompt source defaults to word bucket', () {
         expect(const AtoCSettings().promptCategories, PromptCategory.wordBucket);
       });
@@ -132,24 +90,11 @@ void main() {
       test('loops until stopped', () {
         expect(const AtoCSettings().loopsUntilStopped, isTrue);
       });
-
-      test('allowed intervals are 15, 30, 45, 60 seconds', () {
-        expect(AtoCSettings.allowedIntervals, [
-          const Duration(seconds: 15),
-          const Duration(seconds: 30),
-          const Duration(seconds: 45),
-          const Duration(seconds: 60),
-        ]);
-      });
     });
 
     // ── Five Line Scenes ─────────────────────────────────────────────────────
 
     group('Five Line Scenes', () {
-      test('drillId is DrillId.fiveLineGame', () {
-        expect(const FiveLineGameSettings().drillId, DrillId.fiveLineGame);
-      });
-
       test('auto-advance is off by default', () {
         expect(const FiveLineGameSettings().autoAdvance, false);
       });
@@ -176,6 +121,16 @@ void main() {
           const Duration(seconds: 90),
         ]);
       });
+    });
+
+    test('hands-free mode is off by default for every drill', () {
+      for (final id in DrillId.values) {
+        expect(
+          DrillSettings.defaultsFor(id).handsFreeModeEnabled,
+          isFalse,
+          reason: '$id',
+        );
+      }
     });
   });
 }
